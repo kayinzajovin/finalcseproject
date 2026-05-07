@@ -1,0 +1,452 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Customer Deposit — NYONDO Hardware</title>
+    <style>
+      /*  COLOR PALETTE 
+       #1f2937  → Dark Navy
+       #f59e0b  → Amber/Gold
+       #ffffff  → White
+ */
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: Georgia, serif;
+      }
+      body {
+        background: #f4f6f8;
+        color: #1f2937;
+      }
+
+      /*SIDEBAR*/
+      .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 240px;
+        height: 100vh;
+        background: #1f2937;
+        color: #fff;
+        padding: 25px 20px;
+        overflow-y: auto;
+      }
+      .logo-box {
+        width: 55px;
+        height: 55px;
+        background: #f59e0b;
+        color: #1f2937;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        font-weight: bold;
+        margin: 0 auto 10px;
+      }
+      .sidebar h2 {
+        text-align: center;
+        font-size: 17px;
+        margin-bottom: 4px;
+      }
+      .sidebar p.tagline {
+        text-align: center;
+        font-size: 12px;
+        color: #94a3b8;
+        font-style: italic;
+        margin-bottom: 30px;
+      }
+      .menu a {
+        display: block;
+        color: #cbd5e1;
+        text-decoration: none;
+        padding: 11px 12px;
+        border-radius: 8px;
+        font-size: 15px;
+        margin-bottom: 4px;
+      }
+      .menu a:hover {
+        background: #374151;
+        color: #fff;
+      }
+      .menu a.active {
+        background: #f59e0b;
+        color: #1f2937;
+        font-weight: bold;
+      }
+
+      /*MAIN*/
+      .main {
+        margin-left: 240px;
+        padding: 35px 40px;
+      }
+
+      .page-title {
+        font-size: 22px;
+        font-weight: bold;
+        border-left: 5px solid #f59e0b;
+        padding-left: 12px;
+        margin-bottom: 10px;
+      }
+
+      /* Info note about deposit scheme rules */
+      .scheme-note {
+        background: #fff7ed;
+        border-left: 4px solid #f59e0b;
+        padding: 12px 16px;
+        border-radius: 8px;
+        font-size: 14px;
+        color: #374151;
+        margin-bottom: 25px;
+      }
+
+      /*DEPOSIT FORM*/
+      .form-card {
+        background: #fff;
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        margin-bottom: 35px;
+      }
+      .form-card h3 {
+        font-size: 16px;
+        color: #f59e0b;
+        border-bottom: 1px solid #e5e7eb;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+      }
+      .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+      }
+      label {
+        display: block;
+        font-size: 13px;
+        font-weight: bold;
+        margin-bottom: 6px;
+        color: #374151;
+      }
+      input,
+      select {
+        width: 100%;
+        padding: 11px 13px;
+        border: 1.5px solid #d1d5db;
+        border-radius: 8px;
+        font-size: 14px;
+        outline: none;
+      }
+      input:focus,
+      select:focus {
+        border-color: #f59e0b;
+      }
+      .full {
+        grid-column: 1 / -1;
+      }
+
+      /* Balance summary box shown after customer lookup */
+      .balance-box {
+        margin-top: 18px;
+        background: #1f2937;
+        color: #fff;
+        padding: 16px 20px;
+        border-radius: 10px;
+        font-size: 15px;
+        display: flex;
+        gap: 30px;
+        flex-wrap: wrap;
+      }
+      .balance-box .item span {
+        color: #f59e0b;
+        font-size: 20px;
+        font-weight: bold;
+        display: block;
+      }
+
+      .btn-submit {
+        margin-top: 20px;
+        background: #f59e0b;
+        color: #1f2937;
+        padding: 13px 30px;
+        border: none;
+        border-radius: 8px;
+        font-size: 15px;
+        font-weight: bold;
+        cursor: pointer;
+      }
+      .btn-submit:hover {
+        background: #1f2937;
+        color: #f59e0b;
+      }
+
+      /* Print receipt button style */
+      .btn-receipt {
+        margin-top: 20px;
+        margin-left: 12px;
+        background: #ffffff;
+        color: #1f2937;
+        padding: 13px 30px;
+        border: 2px solid #1f2937;
+        border-radius: 8px;
+        font-size: 15px;
+        font-weight: bold;
+        cursor: pointer;
+      }
+      .btn-receipt:hover {
+        background: #1f2937;
+        color: #fff;
+      }
+
+      /*DEPOSIT HISTORY TABLE*/
+      .table-section {
+        background: #fff;
+        border-radius: 12px;
+        padding: 25px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      }
+      .table-section h3 {
+        font-size: 16px;
+        margin-bottom: 18px;
+        border-left: 4px solid #f59e0b;
+        padding-left: 10px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+      }
+      th {
+        background: #1f2937;
+        color: #f59e0b;
+        padding: 12px 14px;
+        text-align: left;
+        font-size: 13px;
+      }
+      td {
+        padding: 11px 14px;
+        border-bottom: 1px solid #e5e7eb;
+        color: #374151;
+      }
+      tr:hover td {
+        background: #fff7ed;
+      }
+
+      /* Status badge styles */
+      .badge-active {
+        background: #dcfce7;
+        color: #166534;
+        padding: 3px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: bold;
+      }
+      .badge-pickup {
+        background: #fef9c3;
+        color: #854d0e;
+        padding: 3px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: bold;
+      }
+      .badge-done {
+        background: #e5e7eb;
+        color: #374151;
+        padding: 3px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: bold;
+      }
+
+      @media (max-width: 600px) {
+        .sidebar {
+          width: 100%;
+          height: auto;
+          position: relative;
+        }
+        .main {
+          margin-left: 0;
+          padding: 20px;
+        }
+        .form-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="logo-box">N</div>
+      <h2>NYONDO</h2>
+      <p class="tagline">Hardware Management System</p>
+      <div class="menu">
+        <a onclick="window.location.href = '/'">🏠 Home</a>
+        <a onclick="window.location.href = '/dashboard/admin/'">📊 Dashboard</a>
+        <a onclick="window.location.href = '/stock/'">📦 Stock</a>
+        <a onclick="window.location.href = '/sales/'">💰 Sales</a>
+        <a onclick="window.location.href = '/customer/registration/'"
+          >👥 Register Customer</a
+        >
+        <a
+          onclick="window.location.href = '/customer/deposit/'"
+          class="active"
+          >💳 Customer Deposit</a
+        >
+        <a onclick="window.location.href = '/supplier/credit/'"
+          >🚚 Supplier Credit</a
+        >
+        <a onclick="window.location.href = '/login/'">🚪 Logout</a>
+      </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main">
+      <div class="page-title">💳 Customer Deposit</div>
+
+      <!-- Scheme Rules Note -->
+      <div class="scheme-note">
+        ℹ️ <strong>Deposit Scheme Rule:</strong> When a customer comes to pick
+        up goods, the quantity issued is determined by the
+        <strong>amount paid on that day</strong> — not the total deposited. A
+        temporary receipt is printed after every deposit payment.
+      </div>
+
+      <!-- RECORD DEPOSIT FORM -->
+      <div class="form-card">
+        <h3>+ Record Deposit Payment</h3>
+        <div class="form-grid">
+          <div>
+            <label>Customer NIN or Name</label>
+            <input type="text" placeholder="Search by NIN or full name" />
+          </div>
+
+          <div>
+            <label>Product (scheme items only)</label>
+            <select>
+              <option value="">-- Select --</option>
+              <option>Cement CEM II N</option>
+              <option>Cement CEM III N</option>
+              <option>Iron Bar 10mm</option>
+              <option>Iron Bar 12mm</option>
+              <option>Iron Bar 16mm</option>
+              <option>Iron Sheets (26G)</option>
+              <option>Iron Sheets (28G)</option>
+              <option>Iron Sheets (30G)</option>
+            </select>
+          </div>
+
+          <div>
+            <label>Amount Deposited (UGX)</label>
+            <input
+              type="number"
+              id="deposit_amt"
+              placeholder="e.g. 150000"
+              oninput="calcUnits()"
+            />
+          </div>
+
+          <div>
+            <label>Unit Price (UGX) — from stock</label>
+            <input
+              type="number"
+              id="unit_p"
+              placeholder="e.g. 28000"
+              oninput="calcUnits()"
+            />
+          </div>
+
+          <div>
+            <label>Payment Date</label>
+            <input type="date" />
+          </div>
+
+          <div>
+            <label>Payment Method</label>
+            <select>
+              <option>Cash</option>
+              <option>Mobile Money</option>
+              <option>Bank Transfer</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Running balance summary for the customer -->
+        <div class="balance-box">
+          <div class="item">
+            Total Deposited<span id="total-dep">UGX 0</span>
+          </div>
+          <div class="item">
+            Units Equivalent Today<span id="units-eq">0 units</span>
+          </div>
+          <div class="item">Previous Balance<span>UGX 450,000</span></div>
+        </div>
+
+        <button class="btn-submit" onclick="alert('Deposit saved!')">
+          Save Deposit
+        </button>
+        <button class="btn-receipt" onclick="window.print()">
+          🖨 Print Temp. Receipt
+        </button>
+      </div>
+
+      <!-- DEPOSIT HISTORY TABLE -->
+      <div class="table-section">
+        <h3>Deposit History</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Customer</th>
+              <th>Product</th>
+              <th>Amount (UGX)</th>
+              <th>Date</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Sample rows — replace with backend data -->
+            <tr>
+              <td>001</td>
+              <td>NAMUTEBI SARAH</td>
+              <td>Cement CEM II N</td>
+              <td>150,000</td>
+              <td>2025-05-10</td>
+              <td><span class="badge-active">Active</span></td>
+            </tr>
+            <tr>
+              <td>002</td>
+              <td>KATO MOSES</td>
+              <td>Iron Sheets 26G</td>
+              <td>200,000</td>
+              <td>2025-05-15</td>
+              <td><span class="badge-pickup">Ready Pickup</span></td>
+            </tr>
+            <tr>
+              <td>003</td>
+              <td>NAKATO JANE</td>
+              <td>Iron Bar 12mm</td>
+              <td>300,000</td>
+              <td>2025-04-28</td>
+              <td><span class="badge-done">Collected</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <script>
+      /* Calculate how many units today's deposit can buy */
+      function calcUnits() {
+        var amt = parseFloat(document.getElementById("deposit_amt").value) || 0;
+        var price = parseFloat(document.getElementById("unit_p").value) || 1;
+        var units = Math.floor(amt / price);
+        document.getElementById("total-dep").textContent =
+          "UGX " + amt.toLocaleString();
+        document.getElementById("units-eq").textContent = units + " unit(s)";
+      }
+    </script>
+  </body>
+</html>

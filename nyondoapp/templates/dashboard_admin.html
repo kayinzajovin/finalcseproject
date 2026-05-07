@@ -1,0 +1,789 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard — NYONDO Hardware</title>
+    <style>
+      /*  COLOR PALETTE 
+       #1f2937  → Dark Navy    (sidebar, headers)
+       #f59e0b  → Amber/Gold   (accent, active, highlights)
+       #ffffff  → White        (cards, text, backgrounds)
+ */
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: Georgia, serif;
+      }
+
+      body {
+        background: #f4f6f8;
+        color: #1f2937;
+      }
+
+      /*  SIDEBAR  */
+      .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 245px;
+        height: 100vh;
+        background: #1f2937;
+        color: #fff;
+        padding: 25px 20px;
+        overflow-y: auto;
+      }
+
+      .logo-box {
+        width: 55px;
+        height: 55px;
+        background: #f59e0b;
+        color: #1f2937;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        font-weight: bold;
+        margin: 0 auto 10px;
+      }
+
+      .sidebar h2 {
+        text-align: center;
+        font-size: 17px;
+        margin-bottom: 2px;
+      }
+
+      /* Role badge shown under the name */
+      .role-badge {
+        display: block;
+        text-align: center;
+        background: #f59e0b;
+        color: #1f2937;
+        font-size: 11px;
+        font-weight: bold;
+        padding: 3px 10px;
+        border-radius: 20px;
+        margin: 6px auto 25px;
+        width: fit-content;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+      }
+
+      /* Section labels inside sidebar menu */
+      .menu-label {
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: #6b7280;
+        margin: 18px 0 6px 12px;
+      }
+
+      .menu a {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #cbd5e1;
+        text-decoration: none;
+        padding: 10px 12px;
+        border-radius: 8px;
+        font-size: 14px;
+        margin-bottom: 3px;
+      }
+      .menu a:hover {
+        background: #374151;
+        color: #fff;
+      }
+      .menu a.active {
+        background: #f59e0b;
+        color: #1f2937;
+        font-weight: bold;
+      }
+
+      /*  MAIN CONTENT  */
+      .main {
+        margin-left: 245px;
+        padding: 30px 35px;
+      }
+
+      /* Top bar with welcome + date */
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 28px;
+      }
+
+      .topbar h1 {
+        font-size: 22px;
+        color: #1f2937;
+      }
+      .topbar p {
+        font-size: 13px;
+        color: #6b7280;
+        margin-top: 3px;
+      }
+
+      .topbar .date-box {
+        background: #1f2937;
+        color: #f59e0b;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: bold;
+      }
+
+      /*  STAT CARDS  */
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 18px;
+        margin-bottom: 28px;
+      }
+
+      .card {
+        background: #fff;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+        border-left: 4px solid #f59e0b;
+        transition: transform 0.2s;
+      }
+      .card:hover {
+        transform: translateY(-3px);
+      }
+
+      .card .icon {
+        font-size: 26px;
+        margin-bottom: 10px;
+      }
+      .card h4 {
+        font-size: 12px;
+        color: #6b7280;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 6px;
+      }
+      .card .val {
+        font-size: 24px;
+        font-weight: bold;
+        color: #1f2937;
+      }
+      .card .sub {
+        font-size: 12px;
+        color: #9ca3af;
+        margin-top: 4px;
+      }
+
+      /* Alert card — red left border for warnings */
+      .card.alert {
+        border-left-color: #dc2626;
+      }
+      .card.alert .val {
+        color: #dc2626;
+      }
+
+      /*  TWO COLUMN LAYOUT  */
+      .two-col {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 22px;
+        margin-bottom: 28px;
+      }
+
+      /*  SECTION BOXES  */
+      .box {
+        background: #fff;
+        border-radius: 12px;
+        padding: 22px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+      }
+
+      .box-title {
+        font-size: 15px;
+        font-weight: bold;
+        color: #1f2937;
+        margin-bottom: 16px;
+        border-left: 4px solid #f59e0b;
+        padding-left: 10px;
+      }
+
+      /*  TABLES  */
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+      }
+      th {
+        background: #1f2937;
+        color: #f59e0b;
+        padding: 10px 12px;
+        text-align: left;
+      }
+      td {
+        padding: 10px 12px;
+        border-bottom: 1px solid #f3f4f6;
+        color: #374151;
+      }
+      tr:hover td {
+        background: #fff7ed;
+      }
+
+      /* Status badges */
+      .b-green {
+        background: #dcfce7;
+        color: #166534;
+        padding: 2px 9px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: bold;
+      }
+      .b-red {
+        background: #fee2e2;
+        color: #991b1b;
+        padding: 2px 9px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: bold;
+      }
+      .b-amber {
+        background: #fef9c3;
+        color: #854d0e;
+        padding: 2px 9px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: bold;
+      }
+
+      /*  QUICK ACTIONS  */
+      .actions {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-bottom: 28px;
+      }
+
+      .btn-action {
+        background: #f59e0b;
+        color: #1f2937;
+        padding: 11px 22px;
+        border: none;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: bold;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+      }
+      .btn-action:hover {
+        background: #1f2937;
+        color: #f59e0b;
+      }
+
+      /*  PROFIT SUMMARY BAR  */
+      .profit-bar {
+        background: #1f2937;
+        color: #fff;
+        border-radius: 12px;
+        padding: 20px 25px;
+        display: flex;
+        gap: 35px;
+        flex-wrap: wrap;
+        margin-bottom: 28px;
+      }
+      .profit-bar .item h4 {
+        font-size: 12px;
+        color: #94a3b8;
+        text-transform: uppercase;
+        margin-bottom: 5px;
+      }
+      .profit-bar .item .v {
+        font-size: 22px;
+        font-weight: bold;
+        color: #f59e0b;
+      }
+
+      /*  RESPONSIVE  */
+      @media (max-width: 900px) {
+        .cards {
+          grid-template-columns: 1fr 1fr;
+        }
+        .two-col {
+          grid-template-columns: 1fr;
+        }
+      }
+      @media (max-width: 600px) {
+        .sidebar {
+          width: 100%;
+          height: auto;
+          position: relative;
+        }
+        .main {
+          margin-left: 0;
+          padding: 20px;
+        }
+        .cards {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 
+     SIDEBAR — ADMIN (full access)
+ -->
+    <div class="sidebar">
+      <div class="logo-box">N</div>
+      <h2>NYONDO</h2>
+      <span class="role-badge">🔑 Admin</span>
+
+      <div class="menu">
+        <div class="menu-label">Overview</div>
+        <a onclick="window.location.href = 'dashboard/admin/'" class="active"
+          >📊 Dashboard</a
+        >
+
+        <div class="menu-label">Inventory</div>
+        <a onclick="window.location.href = '/stock/'">📦 Stock Management</a>
+        <a onclick="window.location.href = '/supplier/credit/'"
+          >🚚 Supplier Credit</a
+        >
+
+        <div class="menu-label">Sales</div>
+        <a onclick="window.location.href = '/sales/'">💰 Record Sale</a>
+
+        <div class="menu-label">Customers</div>
+        <a onclick="window.location.href = '/customer/registration/'"
+          >👥 Register Customer</a
+        >
+        <a onclick="window.location.href = '/customer/deposit/'"
+          >💳 Customer Deposits</a
+        >
+
+        <div class="menu-label">Admin</div>
+        <a onclick="window.location.href = '#'">👤 Manage Staff</a>
+        <a onclick="window.location.href = '#'">📈 Reports</a>
+        <a onclick="window.location.href = '#'">⚙️ Settings</a>
+
+        <div class="menu-label">Account</div>
+        <a onclick="window.location.href = '/login/'">🚪 Logout</a>
+      </div>
+    </div>
+
+    <!-- 
+     MAIN CONTENT
+ -->
+    <div class="main">
+      <!-- TOP BAR -->
+      <div class="topbar">
+        <div>
+          <h1>Admin Dashboard</h1>
+          <p>Welcome back, Administrator — full system overview</p>
+        </div>
+        <div class="date-box" id="admin-date">Loading...</div>
+      </div>
+
+      <!-- PROFIT SUMMARY -->
+      {% comment %}
+      <div class="profit-bar">
+        <div class="item">
+          <h4>Revenue This Month</h4>
+          <div class="v">UGX 18,450,000</div>
+        </div>
+        <div class="item">
+          <h4>Cost of Goods</h4>
+          <div class="v">UGX 13,200,000</div>
+        </div>
+        <div class="item">
+          <h4>Gross Profit</h4>
+          <div class="v">UGX 5,250,000</div>
+        </div>
+        <div class="item">
+          <h4>Supplier Debt</h4>
+          <div class="v">UGX 8,400,000</div>
+        </div>
+      </div>
+      {% endcomment %}
+
+      <div class="profit-bar">
+        <div class="item">
+          <h4>Revenue This Month</h4>
+          <div class="v">UGX {{ revenue_month|floatformat:0 }}</div>
+        </div>
+        <div class="item">
+          <h4>Cost of Goods</h4>
+          <div class="v">UGX {{ cost_month|floatformat:0 }}</div>
+        </div>
+        <div class="item">
+          <h4>Gross Profit</h4>
+          <div class="v">UGX {{ gross_profit|floatformat:0 }}</div>
+        </div>
+        <div class="item">
+          <h4>Supplier Debt</h4>
+          <div class="v">UGX {{ supplier_credit_total|floatformat:0 }}</div>
+        </div>
+      </div>
+
+      <!-- STAT CARDS -->
+      {% comment %}
+      <div class="cards">
+        <div class="card">
+          <div class="icon">📦</div>
+          <h4>Total Stock Items</h4>
+          <div class="val">250</div>
+          <div class="sub">Across all products</div>
+        </div>
+        <div class="card">
+          <div class="icon">💰</div>
+          <h4>Sales Today</h4>
+          <div class="val">UGX 1,250,000</div>
+          <div class="sub">8 transactions</div>
+        </div>
+        <div class="card alert">
+          <div class="icon">⚠️</div>
+          <h4>Low Stock Items</h4>
+          <div class="val">12</div>
+          <div class="sub">Needs restocking</div>
+        </div>
+        <div class="card">
+          <div class="icon">👥</div>
+          <h4>Deposit Members</h4>
+          <div class="val">38</div>
+          <div class="sub">Active scheme accounts</div>
+        </div>
+        <div class="card">
+          <div class="icon">🚚</div>
+          <h4>Supplier Credit</h4>
+          <div class="val">UGX 8.4M</div>
+          <div class="sub">5 suppliers</div>
+        </div>
+        <div class="card">
+          <div class="icon">👤</div>
+          <h4>Staff Accounts</h4>
+          <div class="val">4</div>
+          <div class="sub">Active users</div>
+        </div>
+        <div class="card">
+          <div class="icon">💳</div>
+          <h4>Pending Pickups</h4>
+          <div class="val">7</div>
+          <div class="sub">Deposit scheme orders</div>
+        </div>
+        <div class="card">
+          <div class="icon">📈</div>
+          <h4>Monthly Sales</h4>
+          <div class="val">UGX 18.4M</div>
+          <div class="sub">June 2025</div>
+        </div>
+      </div>
+      {% endcomment %}
+
+      <div class="cards">
+        <div class="card">
+          <div class="icon">📦</div>
+          <h4>Total Stock Items</h4>
+          <div class="val">{{ total_stock }}</div>
+          <div class="sub">Across all products</div>
+        </div>
+        <div class="card">
+          <div class="icon">💰</div>
+          <h4>Sales Today</h4>
+          <div class="val">UGX {{ sales_today_total|floatformat:0 }}</div>
+          <div class="sub">{{ sales_today_count }} transactions</div>
+        </div>
+        <div class="card alert">
+          <div class="icon">⚠️</div>
+          <h4>Low Stock Items</h4>
+          <div class="val">{{ low_stock_count }}</div>
+          <div class="sub">Needs restocking</div>
+        </div>
+        <div class="card">
+          <div class="icon">👥</div>
+          <h4>Deposit Members</h4>
+          <div class="val">{{ deposit_members }}</div>
+          <div class="sub">Active scheme accounts</div>
+        </div>
+        <div class="card">
+          <div class="icon">🚚</div>
+          <h4>Supplier Credit</h4>
+          <div class="val">UGX {{ supplier_credit_total|floatformat:0 }}</div>
+          <div class="sub">{{ supplier_count }} suppliers</div>
+        </div>
+        <div class="card">
+          <div class="icon">💳</div>
+          <h4>Pending Pickups</h4>
+          <div class="val">{{ pending_pickups }}</div>
+          <div class="sub">Deposit scheme orders</div>
+        </div>
+        <div class="card">
+          <div class="icon">📈</div>
+          <h4>Monthly Sales</h4>
+          <div class="val">UGX {{ revenue_month|floatformat:0 }}</div>
+          <div class="sub">This month</div>
+        </div>
+      </div>
+
+      <!-- QUICK ACTIONS -->
+      <div class="actions">
+        <button class="btn-action" onclick="window.location.href = '/stock/'">
+          + Add Stock
+        </button>
+        <button class="btn-action" onclick="window.location.href = '/sales/'">
+          + Record Sale
+        </button>
+        <button
+          class="btn-action"
+          onclick="window.location.href = '/customer_registration/'"
+        >
+          + New Customer
+        </button>
+        <button
+          class="btn-action"
+          onclick="window.location.href = '/customer_deposit/'"
+        >
+          + Record Deposit
+        </button>
+        <button
+          class="btn-action"
+          onclick="window.location.href = '/supplier_credit/'"
+        >
+          + Supplier Credit
+        </button>
+      </div>
+
+      <!-- TWO COLUMN: Recent Sales + Low Stock -->
+      <div class="two-col">
+        <!-- Recent Sales -->
+        {% comment %}
+        <div class="box">
+          <div class="box-title">Recent Sales</div>
+          <table>
+            <thead>
+              <tr>
+                <th>Customer</th>
+                <th>Product</th>
+                <th>Amount</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>John Mukasa</td>
+                <td>Cement CEM II</td>
+                <td>560,000</td>
+                <td><span class="b-green">Paid</span></td>
+              </tr>
+              <tr>
+                <td>Sarah Namutebi</td>
+                <td>Iron Bar 12mm</td>
+                <td>405,000</td>
+                <td><span class="b-green">Paid</span></td>
+              </tr>
+              <tr>
+                <td>Moses Kato</td>
+                <td>Iron Sheets 26G</td>
+                <td>900,000</td>
+                <td><span class="b-green">Paid</span></td>
+              </tr>
+              <tr>
+                <td>Grace Tendo</td>
+                <td>Nails 3 inch</td>
+                {% endcomment %} {% comment %}
+                <td>85,000</td>
+                <td><span class="b-green">Paid</span></td>
+              </tr>
+            </tbody>
+          </table>
+          {% endcomment %}
+
+          <div class="box">
+            <div class="box-title">Recent Sales</div>
+            <table>
+              <thead>
+                <tr>
+                  <th>Product</th>
+                  <th>Qty</th>
+                  <th>Amount</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for sale in recent_sales %}
+                <tr>
+                  <td>{{ sale.product.name }}</td>
+                  <td>{{ sale.quantity }}</td>
+                  <td>UGX {{ sale.total_price|floatformat:0 }}</td>
+                  <td><span class="b-green">Paid</span></td>
+                </tr>
+                {% empty %}
+                <tr>
+                  <td colspan="4" style="text-align: center; color: #9ca3af">
+                    No sales yet
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Low Stock Alert -->
+        {% comment %}
+        <div class="box">
+          <div class="box-title">⚠️ Low Stock Alerts</div>
+          <table>
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>Qty Left</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Iron Bar 12mm</td>
+                <td>8 bundles</td>
+                <td><span class="b-red">Critical</span></td>
+              </tr>
+              <tr>
+                <td>Nails 3 inch</td>
+                <td>5 packs</td>
+                <td><span class="b-red">Critical</span></td>
+              </tr>
+              <tr>
+                <td>Barbed Wire (High)</td>
+                <td>12 rolls</td>
+                <td><span class="b-amber">Low</span></td>
+              </tr>
+              <tr>
+                <td>Wheelbarrow</td>
+                <td>3 pcs</td>
+                <td><span class="b-amber">Low</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      {% endcomment %}
+
+      <div class="box">
+        <div class="box-title">⚠️ Low Stock Alerts</div>
+        <table>
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Qty Left</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for product in low_stock %}
+            <tr>
+              <td>{{ product.name }}</td>
+              <td>{{ product.quantity }}</td>
+              <td>
+                {% if product.quantity < 5 %}
+                <span class="b-red">Critical</span>
+                {% else %}
+                <span class="b-amber">Low</span>
+                {% endif %}
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="3" style="text-align: center; color: #9ca3af">
+                All stock levels OK
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Supplier Credit Overview -->
+      {% comment %}
+      <div class="box">
+        <div class="box-title">Supplier Credit Overview</div>
+        <table>
+          <thead>
+            <tr>
+              <th>Supplier</th>
+              <th>Product</th>
+              <th>Amount Owed</th>
+              <th>Due Date</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Hima Cement</td>
+              <td>Cement CEM II N</td>
+              <td>UGX 7,500,000</td>
+              <td>2025-06-30</td>
+              <td><span class="b-red">Unpaid</span></td>
+            </tr>
+            <tr>
+              <td>Steel & Tubes Ltd</td>
+              <td>Iron Bar 12mm</td>
+              <td>UGX 1,440,000</td>
+              <td>2025-06-15</td>
+              <td><span class="b-amber">Partial</span></td>
+            </tr>
+            <tr>
+              <td>Roofing Centre</td>
+              <td>Iron Sheets 26G</td>
+              <td>UGX 1,800,000</td>
+              <td>2025-05-20</td>
+              <td><span class="b-green">Paid</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    {% endcomment %}
+
+    <div class="box">
+      <div class="box-title">Supplier Credit Overview</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Supplier</th>
+            <th>Phone</th>
+            <th>Amount Owed</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for supplier in suppliers %}
+          <tr>
+            <td>{{ supplier.name }}</td>
+            <td>{{ supplier.phone }}</td>
+            <td>UGX {{ supplier.credit_amount|floatformat:0 }}</td>
+            <td>
+              {% if supplier.credit_amount > 0 %}
+              <span class="b-red">Unpaid</span>
+              {% else %}
+              <span class="b-green">Cleared</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="4" style="text-align: center; color: #9ca3af">
+              No suppliers added yet
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <script>
+      /* Show current date in top bar */
+      var d = new Date();
+      document.getElementById("admin-date").textContent = d.toDateString();
+    </script>
+  </body>
+</html>

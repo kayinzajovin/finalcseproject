@@ -1,0 +1,439 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Supplier Credit — NYONDO Hardware</title>
+    <style>
+      /*  COLOR PALETTE 
+       #1f2937  → Dark Navy
+       #f59e0b  → Amber/Gold
+       #ffffff  → White
+     */
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: Georgia, serif;
+      }
+      body {
+        background: #f4f6f8;
+        color: #1f2937;
+      }
+
+      /*SIDEBAR*/
+      .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 240px;
+        height: 100vh;
+        background: #1f2937;
+        color: #fff;
+        padding: 25px 20px;
+        overflow-y: auto;
+      }
+      .logo-box {
+        width: 55px;
+        height: 55px;
+        background: #f59e0b;
+        color: #1f2937;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        font-weight: bold;
+        margin: 0 auto 10px;
+      }
+      .sidebar h2 {
+        text-align: center;
+        font-size: 17px;
+        margin-bottom: 4px;
+      }
+      .sidebar p.tagline {
+        text-align: center;
+        font-size: 12px;
+        color: #94a3b8;
+        font-style: italic;
+        margin-bottom: 30px;
+      }
+      .menu a {
+        display: block;
+        color: #cbd5e1;
+        text-decoration: none;
+        padding: 11px 12px;
+        border-radius: 8px;
+        font-size: 15px;
+        margin-bottom: 4px;
+      }
+      .menu a:hover {
+        background: #374151;
+        color: #fff;
+      }
+      .menu a.active {
+        background: #f59e0b;
+        color: #1f2937;
+        font-weight: bold;
+      }
+
+      /*MAIN*/
+      .main {
+        margin-left: 240px;
+        padding: 35px 40px;
+      }
+
+      .page-title {
+        font-size: 22px;
+        font-weight: bold;
+        border-left: 5px solid #f59e0b;
+        padding-left: 12px;
+        margin-bottom: 25px;
+      }
+
+      /*SUMMARY CARDS*/
+      .summary-cards {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        margin-bottom: 30px;
+      }
+      .s-card {
+        background: #fff;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        border-top: 4px solid #f59e0b;
+      }
+      .s-card h4 {
+        font-size: 13px;
+        color: #6b7280;
+        text-transform: uppercase;
+        margin-bottom: 8px;
+      }
+      .s-card .val {
+        font-size: 24px;
+        font-weight: bold;
+        color: #1f2937;
+      }
+
+      /*FORM*/
+      .form-card {
+        background: #fff;
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        margin-bottom: 35px;
+      }
+      .form-card h3 {
+        font-size: 16px;
+        color: #f59e0b;
+        border-bottom: 1px solid #e5e7eb;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+      }
+      .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+      }
+      label {
+        display: block;
+        font-size: 13px;
+        font-weight: bold;
+        margin-bottom: 6px;
+        color: #374151;
+      }
+      input,
+      select {
+        width: 100%;
+        padding: 11px 13px;
+        border: 1.5px solid #d1d5db;
+        border-radius: 8px;
+        font-size: 14px;
+        outline: none;
+      }
+      input:focus,
+      select:focus {
+        border-color: #f59e0b;
+      }
+
+      .btn-submit {
+        margin-top: 20px;
+        background: #f59e0b;
+        color: #1f2937;
+        padding: 13px 30px;
+        border: none;
+        border-radius: 8px;
+        font-size: 15px;
+        font-weight: bold;
+        cursor: pointer;
+      }
+      .btn-submit:hover {
+        background: #1f2937;
+        color: #f59e0b;
+      }
+
+      /*TABLE*/
+      .table-section {
+        background: #fff;
+        border-radius: 12px;
+        padding: 25px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      }
+      .table-section h3 {
+        font-size: 16px;
+        margin-bottom: 18px;
+        border-left: 4px solid #f59e0b;
+        padding-left: 10px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+      }
+      th {
+        background: #1f2937;
+        color: #f59e0b;
+        padding: 12px 14px;
+        text-align: left;
+        font-size: 13px;
+      }
+      td {
+        padding: 11px 14px;
+        border-bottom: 1px solid #e5e7eb;
+        color: #374151;
+      }
+      tr:hover td {
+        background: #fff7ed;
+      }
+
+      /* Status badges */
+      .badge-unpaid {
+        background: #fee2e2;
+        color: #991b1b;
+        padding: 3px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: bold;
+      }
+      .badge-partial {
+        background: #fef9c3;
+        color: #854d0e;
+        padding: 3px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: bold;
+      }
+      .badge-paid {
+        background: #dcfce7;
+        color: #166534;
+        padding: 3px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: bold;
+      }
+
+      @media (max-width: 600px) {
+        .sidebar {
+          width: 100%;
+          height: auto;
+          position: relative;
+        }
+        .main {
+          margin-left: 0;
+          padding: 20px;
+        }
+        .form-grid {
+          grid-template-columns: 1fr;
+        }
+        .summary-cards {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="logo-box">N</div>
+      <h2>NYONDO</h2>
+      <p class="tagline">Hardware Management System</p>
+      <div class="menu">
+        <a onclick="window.location.href = '/'">🏠 Home</a>
+        <a onclick="window.location.href = '/dashboard/admin'">📊 Dashboard</a>
+        <a onclick="window.location.href = '/stock/'">📦 Stock</a>
+        <a onclick="window.location.href = '/sales/'">💰 Sales</a>
+        <a onclick="window.location.href = '/customer/registration/'"
+          >👥 Register Customer</a
+        >
+        <a onclick="window.location.href = '/customer/deposit/'"
+          >💳 Customer Deposit</a
+        >
+        <a
+          onclick="window.location.href = '/supplier/credit/'"
+          class="active"
+          >🚚 Supplier Credit</a
+        >
+        <a onclick="window.location.href = '/login/'">🚪 Logout</a>
+      </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main">
+      <div class="page-title">🚚 Supplier Credit</div>
+
+      <!-- Summary Cards -->
+      <div class="summary-cards">
+        <div class="s-card">
+          <h4>Total Owed to Suppliers</h4>
+          <div class="val">UGX 8,400,000</div>
+        </div>
+        <div class="s-card">
+          <h4>Suppliers on Credit</h4>
+          <div class="val">5 Suppliers</div>
+        </div>
+        <div class="s-card">
+          <h4>Paid This Month</h4>
+          <div class="val">UGX 2,100,000</div>
+        </div>
+      </div>
+
+      <!-- RECORD CREDIT SUPPLY FORM -->
+      <div class="form-card">
+        <h3>+ Record Credit Supply</h3>
+        <div class="form-grid">
+          <div>
+            <label>Supplier Name</label>
+            <input type="text" placeholder="e.g. Hima Cement Factory" />
+          </div>
+
+          <div>
+            <label>Supplier Phone / Contact</label>
+            <input type="text" placeholder="e.g. 0414-123456" />
+          </div>
+
+          <div>
+            <label>Product Supplied</label>
+            <select>
+              <option value="">-- Select Product --</option>
+              <option>Cement CEM II N (50kg)</option>
+              <option>Cement CEM III N (50kg)</option>
+              <option>Iron Bar 10mm</option>
+              <option>Iron Bar 12mm</option>
+              <option>Iron Bar 16mm</option>
+              <option>Nails 1 inch (5kg)</option>
+              <option>Nails 3 inch (5kg)</option>
+              <option>Nails 4 inch (5kg)</option>
+              <option>Roofing Nails (5kg)</option>
+              <option>Wheelbarrow</option>
+              <option>Wire Mesh</option>
+              <option>Barbed Wire (High Tensile)</option>
+              <option>Barbed Wire (Low Tensile)</option>
+              <option>Iron Sheets (26G)</option>
+              <option>Iron Sheets (28G)</option>
+            </select>
+          </div>
+
+          <div>
+            <label>Quantity Received</label>
+            <input type="number" placeholder="e.g. 500" />
+          </div>
+
+          <div>
+            <label>Unit Cost (UGX)</label>
+            <input
+              type="number"
+              id="uc"
+              placeholder="e.g. 25000"
+              oninput="calcCredit()"
+            />
+          </div>
+
+          <div>
+            <label>Total Credit Amount (UGX)</label>
+            <input
+              type="number"
+              id="credit_total"
+              placeholder="Auto-calculated"
+            />
+          </div>
+
+          <div>
+            <label>Date Supplied</label>
+            <input type="date" />
+          </div>
+
+          <div>
+            <label>Expected Payment Date</label>
+            <input type="date" />
+          </div>
+        </div>
+        <button class="btn-submit">Save Supplier Credit</button>
+      </div>
+
+      <!-- CREDIT RECORDS TABLE -->
+      <div class="table-section">
+        <h3>Supplier Credit Records</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Supplier</th>
+              <th>Product</th>
+              <th>Qty</th>
+              <th>Total (UGX)</th>
+              <th>Due Date</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Sample rows — replace with backend data -->
+            <tr>
+              <td>001</td>
+              <td>Hima Cement</td>
+              <td>Cement CEM II N</td>
+              <td>300 bags</td>
+              <td>7,500,000</td>
+              <td>2025-06-30</td>
+              <td><span class="badge-unpaid">Unpaid</span></td>
+            </tr>
+            <tr>
+              <td>002</td>
+              <td>Steel & Tubes Ltd</td>
+              <td>Iron Bar 12mm</td>
+              <td>20 bundles</td>
+              <td>1,440,000</td>
+              <td>2025-06-15</td>
+              <td><span class="badge-partial">Partial</span></td>
+            </tr>
+            <tr>
+              <td>003</td>
+              <td>Roofing Centre</td>
+              <td>Iron Sheets 26G</td>
+              <td>100 sheets</td>
+              <td>1,800,000</td>
+              <td>2025-05-20</td>
+              <td><span class="badge-paid">Paid</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <script>
+      /* Auto-fill total credit from qty × unit cost */
+      function calcCredit() {
+        var qty =
+          parseFloat(
+            document.querySelector('input[placeholder="e.g. 500"]').value,
+          ) || 0;
+        var uc = parseFloat(document.getElementById("uc").value) || 0;
+        document.getElementById("credit_total").value = (
+          qty * uc
+        ).toLocaleString();
+      }
+    </script>
+  </body>
+</html>

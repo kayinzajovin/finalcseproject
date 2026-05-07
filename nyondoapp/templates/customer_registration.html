@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register Customer — NYONDO Hardware</title>
+    <style>
+      /*  COLOR PALETTE 
+       #1f2937  → Dark Navy
+       #f59e0b  → Amber/Gold
+       #ffffff  → White
+ */
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: Georgia, serif;
+      }
+      body {
+        background: #f4f6f8;
+        color: #1f2937;
+      }
+
+      /*  SIDEBAR  */
+      .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 240px;
+        height: 100vh;
+        background: #1f2937;
+        color: #fff;
+        padding: 25px 20px;
+        overflow-y: auto;
+      }
+      .logo-box {
+        width: 55px;
+        height: 55px;
+        background: #f59e0b;
+        color: #1f2937;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        font-weight: bold;
+        margin: 0 auto 10px;
+      }
+      .sidebar h2 {
+        text-align: center;
+        font-size: 17px;
+        margin-bottom: 4px;
+      }
+      .sidebar p.tagline {
+        text-align: center;
+        font-size: 12px;
+        color: #94a3b8;
+        font-style: italic;
+        margin-bottom: 30px;
+      }
+      .menu a {
+        display: block;
+        color: #cbd5e1;
+        text-decoration: none;
+        padding: 11px 12px;
+        border-radius: 8px;
+        font-size: 15px;
+        margin-bottom: 4px;
+      }
+      .menu a:hover {
+        background: #374151;
+        color: #fff;
+      }
+      .menu a.active {
+        background: #f59e0b;
+        color: #1f2937;
+        font-weight: bold;
+      }
+
+      /*  MAIN  */
+      .main {
+        margin-left: 240px;
+        padding: 35px 40px;
+      }
+
+      .page-title {
+        font-size: 22px;
+        font-weight: bold;
+        border-left: 5px solid #f59e0b;
+        padding-left: 12px;
+        margin-bottom: 10px;
+      }
+
+      /* Info notice about the scheme */
+      .scheme-note {
+        background: #fff7ed;
+        border-left: 4px solid #f59e0b;
+        padding: 12px 16px;
+        border-radius: 8px;
+        font-size: 14px;
+        color: #374151;
+        margin-bottom: 25px;
+      }
+
+      /*  REGISTRATION FORM  */
+      .form-card {
+        background: #fff;
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        margin-bottom: 35px;
+      }
+      .form-card h3 {
+        font-size: 16px;
+        color: #f59e0b;
+        border-bottom: 1px solid #e5e7eb;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+      }
+      .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+      }
+
+      label {
+        display: block;
+        font-size: 13px;
+        font-weight: bold;
+        margin-bottom: 6px;
+        color: #374151;
+      }
+      input,
+      select {
+        width: 100%;
+        padding: 11px 13px;
+        border: 1.5px solid #d1d5db;
+        border-radius: 8px;
+        font-size: 14px;
+        outline: none;
+      }
+      input:focus,
+      select:focus {
+        border-color: #f59e0b;
+      }
+
+      /* Full-width field */
+      .full {
+        grid-column: 1 / -1;
+      }
+
+      .btn-submit {
+        margin-top: 20px;
+        background: #f59e0b;
+        color: #1f2937;
+        padding: 13px 30px;
+        border: none;
+        border-radius: 8px;
+        font-size: 15px;
+        font-weight: bold;
+        cursor: pointer;
+      }
+      .btn-submit:hover {
+        background: #1f2937;
+        color: #f59e0b;
+      }
+
+      /*  REGISTERED CUSTOMERS TABLE  */
+      .table-section {
+        background: #fff;
+        border-radius: 12px;
+        padding: 25px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      }
+      .table-section h3 {
+        font-size: 16px;
+        margin-bottom: 18px;
+        border-left: 4px solid #f59e0b;
+        padding-left: 10px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+      }
+      th {
+        background: #1f2937;
+        color: #f59e0b;
+        padding: 12px 14px;
+        text-align: left;
+        font-size: 13px;
+      }
+      td {
+        padding: 11px 14px;
+        border-bottom: 1px solid #e5e7eb;
+        color: #374151;
+      }
+      tr:hover td {
+        background: #fff7ed;
+      }
+
+      @media (max-width: 600px) {
+        .sidebar {
+          width: 100%;
+          height: auto;
+          position: relative;
+        }
+        .main {
+          margin-left: 0;
+          padding: 20px;
+        }
+        .form-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="logo-box">N</div>
+      <h2>NYONDO</h2>
+      <p class="tagline">Hardware Management System</p>
+      <div class="menu">
+        <a onclick="window.location.href = '/'">🏠 Home</a>
+        <a onclick="window.location.href = '/dashboard/admin'">📊 Dashboard</a>
+        <a onclick="window.location.href = '/stock/'">📦 Stock</a>
+        <a onclick="window.location.href = '/sales/'">💰 Sales</a>
+        <a
+          onclick="window.location.href = '/customer/registration/'"
+          class="active"
+          >👥 Register Customer</a
+        >
+        <a onclick="window.location.href = '/customer/deposit/'"
+          >💳 Customer Deposit</a
+        >
+        <a onclick="window.location.href = '/supplier/credit/'"
+          >🚚 Supplier Credit</a
+        >
+        <a onclick="window.location.href = '/login/'">🚪 Logout</a>
+      </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main">
+      <div class="page-title">👥 Customer Registration</div>
+
+      <!-- Scheme Info Note -->
+      <div class="scheme-note">
+        ℹ️ <strong>Deposit Scheme:</strong> This form registers salary earners
+        into the deposit scheme. Only
+        <strong>Cement, Iron Sheets, and Iron Bars</strong> are available under
+        this program. Customer names must match their
+        <strong>National ID (NIN)</strong> exactly.
+      </div>
+
+      <!-- REGISTRATION FORM -->
+      <div class="form-card">
+        <h3>+ New Customer Registration</h3>
+        <div class="form-grid">
+          <div>
+            <label>Full Name (as on National ID)</label>
+            <input type="text" placeholder="e.g. NAMUTEBI SARAH" />
+          </div>
+
+          <div>
+            <label>NIN (National Identification Number)</label>
+            <input
+              type="text"
+              placeholder="e.g. CF12345678ABCD"
+              maxlength="14"
+            />
+          </div>
+
+          <div>
+            <label>Phone Number</label>
+            <input type="tel" placeholder="e.g. 0701234567" />
+          </div>
+
+          <div>
+            <label>Employer / Workplace</label>
+            <input type="text" placeholder="e.g. Kampala City Council" />
+          </div>
+
+          <div>
+            <label>Preferred Product</label>
+            <select>
+              <option value="">-- Select Product --</option>
+              <option>Cement CEM II N</option>
+              <option>Cement CEM III N</option>
+              <option>Iron Bar 10mm</option>
+              <option>Iron Bar 12mm</option>
+              <option>Iron Bar 16mm</option>
+              <option>Iron Sheets (26G)</option>
+              <option>Iron Sheets (28G)</option>
+              <option>Iron Sheets (30G)</option>
+            </select>
+          </div>
+
+          <div>
+            <label>Registration Date</label>
+            <input type="date" />
+          </div>
+
+          <!-- Full-width address field -->
+          <div class="full">
+            <label>Physical Address / Area</label>
+            <input type="text" placeholder="e.g. Nansana, Wakiso District" />
+          </div>
+        </div>
+        <button class="btn-submit">Register Customer</button>
+      </div>
+
+      <!-- REGISTERED CUSTOMERS LIST -->
+      <div class="table-section">
+        <h3>Registered Scheme Members</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Full Name</th>
+              <th>NIN</th>
+              <th>Phone</th>
+              <th>Product</th>
+              <th>Registered On</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Sample rows — replace with backend data -->
+            <tr>
+              <td>001</td>
+              <td>NAMUTEBI SARAH</td>
+              <td>CF12345678ABCD</td>
+              <td>0701234567</td>
+              <td>Cement CEM II N</td>
+              <td>2025-01-15</td>
+            </tr>
+            <tr>
+              <td>002</td>
+              <td>KATO MOSES</td>
+              <td>CM98765432EFGH</td>
+              <td>0772345678</td>
+              <td>Iron Sheets 26G</td>
+              <td>2025-02-03</td>
+            </tr>
+            <tr>
+              <td>003</td>
+              <td>NAKATO JANE</td>
+              <td>CF55544433IJKL</td>
+              <td>0753456789</td>
+              <td>Iron Bar 12mm</td>
+              <td>2025-03-20</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </body>
+</html>

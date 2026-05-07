@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Stock — NYONDO Hardware</title>
+    <style>
+      /*  COLOR PALETTE 
+       #1f2937  → Dark Navy
+       #f59e0b  → Amber/Gold
+       #ffffff  → White
+   */
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: Georgia, serif;
+      }
+
+      body {
+        background: #f4f6f8;
+        color: #1f2937;
+      }
+
+      /*SIDEBAR*/
+      .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 240px;
+        height: 100vh;
+        background: #1f2937;
+        color: #fff;
+        padding: 25px 20px;
+        overflow-y: auto;
+      }
+      .logo-box {
+        width: 55px;
+        height: 55px;
+        background: #f59e0b;
+        color: #1f2937;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        font-weight: bold;
+        margin: 0 auto 10px;
+      }
+      .sidebar h2 {
+        text-align: center;
+        font-size: 17px;
+        margin-bottom: 4px;
+      }
+      .sidebar p.tagline {
+        text-align: center;
+        font-size: 12px;
+        color: #94a3b8;
+        font-style: italic;
+        margin-bottom: 30px;
+      }
+      .menu a {
+        display: block;
+        color: #cbd5e1;
+        text-decoration: none;
+        padding: 11px 12px;
+        border-radius: 8px;
+        font-size: 15px;
+        margin-bottom: 4px;
+        cursor: pointer;
+      }
+      .menu a:hover {
+        background: #374151;
+        color: #fff;
+      }
+      .menu a.active {
+        background: #f59e0b;
+        color: #1f2937;
+        font-weight: bold;
+      }
+
+      /*MAIN AREA*/
+      .main {
+        margin-left: 240px;
+        padding: 35px 40px;
+      }
+
+      .page-title {
+        font-size: 22px;
+        font-weight: bold;
+        color: #1f2937;
+        margin-bottom: 25px;
+        border-left: 5px solid #f59e0b;
+        padding-left: 12px;
+      }
+
+      /*ADD STOCK FORM CARD*/
+      .form-card {
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 30px 30px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        margin-bottom: 35px;
+      }
+
+      .form-card h3 {
+        font-size: 16px;
+        margin-bottom: 20px;
+        color: #f59e0b;
+        border-bottom: 1px solid #e5e7eb;
+        padding-bottom: 10px;
+      }
+
+      /* two-column form grid */
+      .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+      }
+
+      label {
+        display: block;
+        font-size: 13px;
+        font-weight: bold;
+        margin-bottom: 6px;
+        color: #374151;
+      }
+
+      input,
+      select {
+        width: 100%;
+        padding: 11px 13px;
+        border: 1.5px solid #d1d5db;
+        border-radius: 8px;
+        font-size: 14px;
+        outline: none;
+      }
+
+      input:focus,
+      select:focus {
+        border-color: #f59e0b;
+      }
+
+      /* submit button */
+      .btn-submit {
+        margin-top: 20px;
+        background: #f59e0b;
+        color: #1f2937;
+        padding: 13px 30px;
+        border: none;
+        border-radius: 8px;
+        font-size: 15px;
+        font-weight: bold;
+        cursor: pointer;
+      }
+      .btn-submit:hover {
+        background: #1f2937;
+        color: #f59e0b;
+      }
+
+      /*STOCK TABLE*/
+      .table-section {
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 25px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      }
+
+      .table-section h3 {
+        font-size: 16px;
+        margin-bottom: 18px;
+        color: #1f2937;
+        border-left: 4px solid #f59e0b;
+        padding-left: 10px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+      }
+      th {
+        background: #1f2937;
+        color: #f59e0b;
+        padding: 12px 14px;
+        text-align: left;
+        font-size: 13px;
+      }
+      td {
+        padding: 11px 14px;
+        border-bottom: 1px solid #e5e7eb;
+        color: #374151;
+      }
+      tr:hover td {
+        background: #fff7ed;
+      }
+
+      /* low stock warning */
+      .low {
+        color: #dc2626;
+        font-weight: bold;
+      }
+
+      /* success message — green */
+      .alert-success {
+        background: #dcfce7;
+        color: #166534;
+        padding: 12px 16px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        font-weight: bold;
+        font-size: 14px;
+      }
+
+      /* error message — red */
+      .alert-error {
+        background: #fee2e2;
+        color: #991b1b;
+        padding: 12px 16px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        font-weight: bold;
+        font-size: 14px;
+      }
+
+      @media (max-width: 600px) {
+        .sidebar {
+          width: 100%;
+          height: auto;
+          position: relative;
+        }
+        .main {
+          margin-left: 0;
+          padding: 20px;
+        }
+        .form-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="logo-box">N</div>
+      <h2>NYONDO</h2>
+      <p class="tagline">Hardware Management System</p>
+      <div class="menu">
+        <a onclick="window.location.href = '/'">🏠 Home</a>
+        <a onclick="window.location.href = '/dashboard/admin/'">📊 Dashboard</a>
+        <a onclick="window.location.href = '/stock/'" class="active">📦 Stock</a>
+        <a onclick="window.location.href = '/sales/'">💰 Sales</a>
+        <a onclick="window.location.href = '/customer_registration/'">👥 Register Customer</a>
+        <a onclick="window.location.href = '/customer_deposit/'">💳 Customer Deposit</a>
+        <a onclick="window.location.href = '/supplier_credit/'">🚚 Supplier Credit</a>
+        <a onclick="window.location.href = '/login/'">🚪 Logout</a>
+      </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main">
+      <div class="page-title">📦 Stock Management</div>
+
+      <!-- show success or error messages after form submission -->
+      {% if messages %}
+        {% for message in messages %}
+          {% if message.tags == 'error' %}
+            <div class="alert-error">❌ {{ message }}</div>
+          {% else %}
+            <div class="alert-success">✅ {{ message }}</div>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+
+      <!-- ADD STOCK FORM -->
+      <div class="form-card">
+        <h3>+ Add New Stock Arrival</h3>
+
+        <!-- form posts to /stock/ with csrf protection -->
+        <form method="POST" action="/stock/">
+          {% csrf_token %}
+          <div class="form-grid">
+
+            <div>
+              <label>Product Name</label>
+              <select name="product_name">
+                <option value="">-- Select Product --</option>
+                <option>Cement CEM II N (50kg)</option>
+                <option>Cement CEM III N (50kg)</option>
+                <option>Iron Bar 10mm</option>
+                <option>Iron Bar 12mm</option>
+                <option>Iron Bar 16mm</option>
+                <option>Nails 1 inch (5kg)</option>
+                <option>Nails 3 inch (5kg)</option>
+                <option>Nails 4 inch (5kg)</option>
+                <option>Nails 5 inch (5kg)</option>
+                <option>Roofing Nails (5kg)</option>
+                <option>Wheelbarrow</option>
+                <option>Wire Mesh</option>
+                <option>Barbed Wire (High Tensile)</option>
+                <option>Barbed Wire (Low Tensile)</option>
+                <option>Iron Sheets (26G)</option>
+                <option>Iron Sheets (28G)</option>
+                <option>Iron Sheets (30G)</option>
+              </select>
+            </div>
+
+            <div>
+              <label>Supplier Name</label>
+              <input type="text" name="supplier_name" placeholder="e.g. Hima Cement Depot" />
+            </div>
+
+            <div>
+              <label>Quantity Received</label>
+              <input type="number" name="quantity" placeholder="e.g. 200" min="1" />
+            </div>
+
+            <div>
+              <label>Unit of Measure</label>
+              <select name="unit">
+                <option>Bags</option>
+                <option>Bundles</option>
+                <option>Pieces</option>
+                <option>Packs (5kg)</option>
+                <option>Rolls</option>
+                <option>Sheets</option>
+              </select>
+            </div>
+
+            <div>
+              <label>Unit Cost (UGX) — price paid per unit</label>
+              <input type="number" name="unit_cost" placeholder="e.g. 25000" min="0" />
+            </div>
+
+            <div>
+              <label>Unit Selling Price (UGX) — price to sell per unit</label>
+              <input type="number" name="unit_price" placeholder="e.g. 28000" min="0" />
+            </div>
+
+            <div>
+              <label>Date of Arrival</label>
+              <input type="date" name="date" />
+            </div>
+
+            <div>
+              <label>Supply Mode</label>
+              <select name="supply_mode">
+                <option>Cash Purchase</option>
+                <option>Supplier Credit</option>
+              </select>
+            </div>
+
+          </div>
+          <!-- save stock button -->
+          <button class="btn-submit" type="submit">Save Stock</button>
+        </form>
+      </div>
+
+      <!-- CURRENT STOCK TABLE — real data from database -->
+      <div class="table-section">
+        <h3>Current Stock Levels</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Product</th>
+              <th>Qty in Stock</th>
+              <th>Unit Cost (UGX)</th>
+              <th>Selling Price (UGX)</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for product in products %}
+            <tr>
+              <td>{{ forloop.counter }}</td>
+              <td>{{ product.name }}</td>
+              <td>{{ product.quantity }}</td>
+              <td>{{ product.unit_cost|floatformat:0 }}</td>
+              <td>{{ product.unit_price|floatformat:0 }}</td>
+              <td>
+                {% if product.quantity < 10 %}
+                  <span class="low">⚠ Low</span>
+                {% else %}
+                  OK
+                {% endif %}
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="6" style="text-align:center; color:#9ca3af;">
+                No stock added yet
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </body>
+</html>

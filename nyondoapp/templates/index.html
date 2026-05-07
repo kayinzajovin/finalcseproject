@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NYONDO General Hardware LTD</title>
+  <style>
+    /* COLOR PALETTE
+       #1f2937  → Dark Navy    (primary background, sidebar)
+       #f59e0b  → Amber/Gold   (accent, buttons, highlights)
+       #ffffff  → White        (text, cards, backgrounds)
+  */
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Georgia, serif;
+    }
+
+    body {
+      background: #1f2937;
+      color: #ffffff;
+      min-height: 100vh;
+    }
+
+    /* TOP NAVIGATION */
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 50px;
+      background: #1f2937;
+      border-bottom: 2px solid #f59e0b;
+    }
+
+    /* Logo area */
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .nav-logo .n-box {
+      width: 45px;
+      height: 45px;
+      background: #f59e0b;
+      color: #1f2937;
+      font-size: 24px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+    }
+
+    .nav-logo span {
+      font-size: 20px;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+
+    /* Navigation links */
+    .nav-links a {
+      color: #ffffff;
+      text-decoration: none;
+      margin-left: 25px;
+      font-size: 15px;
+    }
+
+    .nav-links a:hover {
+      color: #f59e0b;
+    }
+
+    /* Login button in nav */
+    .nav-links .btn-login {
+      background: #f59e0b;
+      color: #1f2937;
+      padding: 8px 20px;
+      border-radius: 6px;
+      font-weight: bold;
+    }
+
+    /* HERO SECTION */
+    .hero {
+      text-align: center;
+      padding: 80px 30px 60px;
+    }
+
+    .hero h1 {
+      font-size: 42px;
+      color: #f59e0b;
+      margin-bottom: 15px;
+    }
+
+    .hero p {
+      font-size: 17px;
+      color: #cbd5e1;
+      max-width: 600px;
+      margin: 0 auto 35px;
+      line-height: 1.7;
+    }
+
+    /* Hero action buttons */
+    .hero-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      background: #f59e0b;
+      color: #1f2937;
+      padding: 14px 32px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: #f59e0b;
+      padding: 14px 32px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      text-decoration: none;
+      border: 2px solid #f59e0b;
+      cursor: pointer;
+    }
+
+    .btn-primary:hover { opacity: 0.9; }
+    .btn-secondary:hover { background: #f59e0b; color: #1f2937; }
+
+    /* FEATURES SECTION */
+    .features {
+      padding: 60px 50px;
+      text-align: center;
+    }
+
+    .features h2 {
+      color: #f59e0b;
+      font-size: 28px;
+      margin-bottom: 40px;
+    }
+
+    /* Feature cards grid */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 25px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .feature-card {
+      background: #ffffff;
+      color: #1f2937;
+      padding: 30px 20px;
+      border-radius: 12px;
+      border-top: 4px solid #f59e0b;
+    }
+
+    .feature-card .icon {
+      font-size: 36px;
+      margin-bottom: 12px;
+    }
+
+    .feature-card h3 {
+      font-size: 17px;
+      margin-bottom: 8px;
+    }
+
+    .feature-card p {
+      font-size: 14px;
+      color: #555;
+      line-height: 1.6;
+    }
+
+    /* FOOTER */
+    footer {
+      text-align: center;
+      padding: 25px;
+      background: #111827;
+      color: #94a3b8;
+      font-size: 13px;
+      border-top: 1px solid #f59e0b;
+    }
+
+    /* RESPONSIVE: PHONES */
+    @media (max-width: 600px) {
+      nav { padding: 15px 20px; }
+      .hero h1 { font-size: 28px; }
+      .feature-grid { grid-template-columns: 1fr; }
+      .features { padding: 40px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP NAVIGATION BAR -->
+  <nav>
+    <div class="nav-logo">
+      <div class="n-box">N</div>
+      <span>NYONDO HARDWARE</span>
+    </div>
+    <div class="nav-links">
+      <a onclick="window.location.href='/'">Home</a>
+      <a onclick="window.location.href='/login/'" class="btn-login">Login</a>
+    </div>
+  </nav>
+
+  <!-- HERO / WELCOME SECTION -->
+  <div class="hero">
+    <h1>NYONDO General Hardware LTD</h1>
+    <p>
+      Your trusted wholesale & retail hardware partner in Nansana.
+      Cement, Iron Bars, Iron Sheets, Nails & more — managed smartly.
+    </p>
+    <div class="hero-buttons">
+      <button class="btn-primary" onclick="window.location.href='/login/'">Get Started</button>
+      <button class="btn-secondary" onclick="document.getElementById('features').scrollIntoView()">Learn More</button>
+    </div>
+  </div>
+
+  <!-- FEATURES SECTION -->
+  <div class="features" id="features">
+    <h2>What This System Does</h2>
+    <div class="feature-grid">
+
+      <div class="feature-card">
+        <div class="icon">📦</div>
+        <h3>Stock Management</h3>
+        <p>Track all products with unit cost and selling price. Know your inventory at any time.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="icon">💰</div>
+        <h3>Sales Recording</h3>
+        <p>Record every sale with automatic transport charge calculation for deliveries.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="icon">👥</div>
+        <h3>Deposit Scheme</h3>
+        <p>Manage salary-earner deposits for cement, iron sheets & bars with receipts.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="icon">🚚</div>
+        <h3>Supplier Credit</h3>
+        <p>Track goods received on credit from suppliers and manage payment records.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="icon">📊</div>
+        <h3>Reports</h3>
+        <p>View daily sales summaries, low stock alerts and deposit balances at a glance.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="icon">🔐</div>
+        <h3>Secure Access</h3>
+        <p>Staff login protects business data. Only authorized users can access the system.</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    &copy; 2025 NYONDO General Hardware LTD — Nansana. All Rights Reserved.
+  </footer>
+
+</body>
+</html>

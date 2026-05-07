@@ -1,0 +1,653 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sales Dashboard — NYONDO Hardware</title>
+    <style>
+      /*  COLOR PALETTE 
+       #1f2937  → Dark Navy
+       #f59e0b  → Amber/Gold
+       #ffffff  → White
+ */
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: Georgia, serif;
+      }
+
+      body {
+        background: #f4f6f8;
+        color: #1f2937;
+      }
+
+      /*  SIDEBAR  */
+      .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 245px;
+        height: 100vh;
+        background: #1f2937;
+        color: #fff;
+        padding: 25px 20px;
+        overflow-y: auto;
+      }
+
+      .logo-box {
+        width: 55px;
+        height: 55px;
+        background: #f59e0b;
+        color: #1f2937;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        font-weight: bold;
+        margin: 0 auto 10px;
+      }
+
+      .sidebar h2 {
+        text-align: center;
+        font-size: 17px;
+        margin-bottom: 2px;
+      }
+
+      /* Role badge — different label from admin */
+      .role-badge {
+        display: block;
+        text-align: center;
+        background: #f59e0b;
+        color: #1f2937;
+        font-size: 11px;
+        font-weight: bold;
+        padding: 3px 10px;
+        border-radius: 20px;
+        margin: 6px auto 25px;
+        width: fit-content;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+      }
+
+      .menu-label {
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: #6b7280;
+        margin: 18px 0 6px 12px;
+      }
+
+      .menu a {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #cbd5e1;
+        text-decoration: none;
+        padding: 10px 12px;
+        border-radius: 8px;
+        font-size: 14px;
+        margin-bottom: 3px;
+      }
+      .menu a:hover {
+        background: #374151;
+        color: #fff;
+      }
+      .menu a.active {
+        background: #f59e0b;
+        color: #1f2937;
+        font-weight: bold;
+      }
+
+      /* Locked menu item — grayed out, not clickable */
+      .menu .locked {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #4b5563;
+        padding: 10px 12px;
+        font-size: 14px;
+        margin-bottom: 3px;
+        cursor: not-allowed;
+        border-radius: 8px;
+      }
+
+      /*  MAIN  */
+      .main {
+        margin-left: 245px;
+        padding: 30px 35px;
+      }
+
+      /* Top bar */
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 28px;
+      }
+      .topbar h1 {
+        font-size: 22px;
+      }
+      .topbar p {
+        font-size: 13px;
+        color: #6b7280;
+        margin-top: 3px;
+      }
+      .topbar .date-box {
+        background: #1f2937;
+        color: #f59e0b;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: bold;
+      }
+
+      /*  MY SALES TODAY SUMMARY  */
+      .my-summary {
+        background: #1f2937;
+        color: #fff;
+        border-radius: 12px;
+        padding: 20px 25px;
+        display: flex;
+        gap: 35px;
+        flex-wrap: wrap;
+        margin-bottom: 28px;
+      }
+      .my-summary .item h4 {
+        font-size: 12px;
+        color: #94a3b8;
+        text-transform: uppercase;
+        margin-bottom: 5px;
+      }
+      .my-summary .item .v {
+        font-size: 22px;
+        font-weight: bold;
+        color: #f59e0b;
+      }
+
+      /*  STAT CARDS  */
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 18px;
+        margin-bottom: 28px;
+      }
+      .card {
+        background: #fff;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+        border-left: 4px solid #f59e0b;
+        transition: transform 0.2s;
+      }
+      .card:hover {
+        transform: translateY(-3px);
+      }
+      .card .icon {
+        font-size: 26px;
+        margin-bottom: 10px;
+      }
+      .card h4 {
+        font-size: 12px;
+        color: #6b7280;
+        text-transform: uppercase;
+        margin-bottom: 6px;
+      }
+      .card .val {
+        font-size: 24px;
+        font-weight: bold;
+        color: #1f2937;
+      }
+      .card .sub {
+        font-size: 12px;
+        color: #9ca3af;
+        margin-top: 4px;
+      }
+
+      /*  QUICK ACTIONS  */
+      .actions {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-bottom: 28px;
+      }
+      .btn-action {
+        background: #f59e0b;
+        color: #1f2937;
+        padding: 11px 22px;
+        border: none;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: bold;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+      }
+      .btn-action:hover {
+        background: #1f2937;
+        color: #f59e0b;
+      }
+
+      /*  LAYOUT  */
+      .two-col {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 22px;
+        margin-bottom: 28px;
+      }
+
+      .box {
+        background: #fff;
+        border-radius: 12px;
+        padding: 22px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+      }
+      .box-title {
+        font-size: 15px;
+        font-weight: bold;
+        color: #1f2937;
+        margin-bottom: 16px;
+        border-left: 4px solid #f59e0b;
+        padding-left: 10px;
+      }
+
+      /*  TRANSPORT CALCULATOR  */
+      .calc-box {
+        background: #fff7ed;
+        border-radius: 10px;
+        padding: 18px;
+        margin-bottom: 28px;
+        border: 1px solid #f59e0b;
+      }
+      .calc-box h3 {
+        font-size: 15px;
+        margin-bottom: 15px;
+        color: #1f2937;
+      }
+      .calc-row {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+        align-items: flex-end;
+      }
+      .calc-row .field {
+        flex: 1;
+        min-width: 130px;
+      }
+      .calc-row label {
+        display: block;
+        font-size: 12px;
+        font-weight: bold;
+        margin-bottom: 5px;
+        color: #374151;
+      }
+      .calc-row input {
+        width: 100%;
+        padding: 9px 12px;
+        border: 1.5px solid #d1d5db;
+        border-radius: 7px;
+        font-size: 14px;
+        outline: none;
+      }
+      .calc-row input:focus {
+        border-color: #f59e0b;
+      }
+      .calc-result {
+        margin-top: 14px;
+        background: #1f2937;
+        color: #fff;
+        padding: 12px 16px;
+        border-radius: 8px;
+        font-size: 14px;
+      }
+      .calc-result span {
+        color: #f59e0b;
+        font-weight: bold;
+        font-size: 16px;
+      }
+
+      /*  TABLES  */
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+      }
+      th {
+        background: #1f2937;
+        color: #f59e0b;
+        padding: 10px 12px;
+        text-align: left;
+      }
+      td {
+        padding: 10px 12px;
+        border-bottom: 1px solid #f3f4f6;
+        color: #374151;
+      }
+      tr:hover td {
+        background: #fff7ed;
+      }
+
+      .b-green {
+        background: #dcfce7;
+        color: #166534;
+        padding: 2px 9px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: bold;
+      }
+      .b-amber {
+        background: #fef9c3;
+        color: #854d0e;
+        padding: 2px 9px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: bold;
+      }
+      .b-red {
+        background: #fee2e2;
+        color: #991b1b;
+        padding: 2px 9px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: bold;
+      }
+
+      @media (max-width: 900px) {
+        .cards {
+          grid-template-columns: 1fr 1fr;
+        }
+        .two-col {
+          grid-template-columns: 1fr;
+        }
+      }
+      @media (max-width: 600px) {
+        .sidebar {
+          width: 100%;
+          height: auto;
+          position: relative;
+        }
+        .main {
+          margin-left: 0;
+          padding: 20px;
+        }
+        .cards {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 
+     SIDEBAR — SALESPERSON
+     (limited to sales-related pages)
+ -->
+    <div class="sidebar">
+      <div class="logo-box">N</div>
+      <h2>NYONDO</h2>
+      <span class="role-badge">💰 Salesperson</span>
+
+      <div class="menu">
+        <div class="menu-label">Overview</div>
+        <a
+          onclick="window.location.href = '/dashboard/salesperson/'"
+          class="active"
+          >📊 My Dashboard</a
+        >
+
+        <div class="menu-label">Sales</div>
+        <a onclick="window.location.href = '/sales/'">💰 Record a Sale</a>
+
+        <div class="menu-label">Customers</div>
+        <a onclick="window.location.href = '/customer/registration/'"
+          >👥 Register Customer</a
+        >
+        <a onclick="window.location.href = '/customer/deposit/'"
+          >💳 Customer Deposit</a
+        >
+
+        <div class="menu-label">Stock (View Only)</div>
+        <a onclick="window.location.href = '/stock/'"
+          >📦 Check Stock Levels</a
+        >
+
+        <!-- These are locked for salesperson -->
+        <div class="menu-label">Restricted</div>
+        <span class="locked">🔒 Supplier Credit</span>
+        <span class="locked">🔒 Reports</span>
+        <span class="locked">🔒 Staff Management</span>
+
+        <div class="menu-label">Account</div>
+        <a onclick="window.location.href = '/login/'">🚪 Logout</a>
+      </div>
+    </div>
+
+    <!-- 
+     MAIN CONTENT
+ -->
+    <div class="main">
+      <!-- TOP BAR -->
+      <div class="topbar">
+        <div>
+          <h1>Sales Dashboard</h1>
+          <p>Good morning, Sales Staff — track your sales for today</p>
+        </div>
+        <div class="date-box" id="sp-date">Loading...</div>
+      </div>
+
+      <!-- MY SALES TODAY SUMMARY -->
+      <div class="my-summary">
+        <div class="item">
+          <h4>My Sales Today</h4>
+          <div class="v">UGX 1,250,000</div>
+        </div>
+        <div class="item">
+          <h4>Transactions Today</h4>
+          <div class="v">8</div>
+        </div>
+        <div class="item">
+          <h4>Customers Served</h4>
+          <div class="v">6</div>
+        </div>
+        <div class="item">
+          <h4>Deposits Recorded</h4>
+          <div class="v">3</div>
+        </div>
+      </div>
+
+      <!-- STAT CARDS -->
+      <div class="cards">
+        <div class="card">
+          <div class="icon">💰</div>
+          <h4>Sales Today</h4>
+          <div class="val">UGX 1,250,000</div>
+          <div class="sub">8 transactions</div>
+        </div>
+        <div class="card">
+          <div class="icon">💳</div>
+          <h4>Deposits Today</h4>
+          <div class="val">UGX 450,000</div>
+          <div class="sub">3 deposit payments</div>
+        </div>
+        <div class="card">
+          <div class="icon">📦</div>
+          <h4>Items Available</h4>
+          <div class="val">238</div>
+          <div class="sub">In stock right now</div>
+        </div>
+        <div class="card">
+          <div class="icon">👥</div>
+          <h4>New Customers</h4>
+          <div class="val">2</div>
+          <div class="sub">Registered today</div>
+        </div>
+        <div class="card">
+          <div class="icon">🚚</div>
+          <h4>Transport Charged</h4>
+          <div class="val">UGX 60,000</div>
+          <div class="sub">2 deliveries today</div>
+        </div>
+        <div class="card">
+          <div class="icon">⏳</div>
+          <h4>Pending Pickups</h4>
+          <div class="val">7</div>
+          <div class="sub">Awaiting collection</div>
+        </div>
+      </div>
+
+      <!-- QUICK ACTIONS -->
+      <div class="actions">
+        <button
+          class="btn-action"
+          onclick="window.location.href = '/sales/'"
+        >
+          + Record Sale
+        </button>
+        <button
+          class="btn-action"
+          onclick="window.location.href = '/customer/deposit/'"
+        >
+          + Record Deposit
+        </button>
+        <button
+          class="btn-action"
+          onclick="window.location.href = '/customer/registration/'"
+        >
+          + New Customer
+        </button>
+        <button
+          class="btn-action"
+          onclick="window.location.href = '/stock/'"
+        >
+          📦 Check Stock
+        </button>
+      </div>
+
+      <!-- TRANSPORT CHARGE CALCULATOR -->
+      <div class="calc-box">
+        <h3>🚚 Quick Transport Charge Calculator</h3>
+        <div class="calc-row">
+          <div class="field">
+            <label>Order Amount (UGX)</label>
+            <input
+              type="number"
+              id="c-amt"
+              placeholder="e.g. 480000"
+              oninput="calcTransport()"
+            />
+          </div>
+          <div class="field">
+            <label>Distance (km)</label>
+            <input
+              type="number"
+              id="c-dist"
+              placeholder="e.g. 8"
+              oninput="calcTransport()"
+            />
+          </div>
+        </div>
+        <div class="calc-result">
+          Transport Charge: <span id="c-result">Enter values above</span>
+        </div>
+      </div>
+
+      <!-- TWO COL: My Sales + Deposit Members -->
+      <div class="two-col">
+        <!-- Today's Sales -->
+        <div class="box">
+          <div class="box-title">My Sales Today</div>
+          <table>
+            <thead>
+              <tr>
+                <th>Customer</th>
+                <th>Product</th>
+                <th>Total</th>
+                <th>Transport</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>John Mukasa</td>
+                <td>Cement CEM II</td>
+                <td>560,000</td>
+                <td><span class="b-green">Free</span></td>
+              </tr>
+              <tr>
+                <td>Sarah Namutebi</td>
+                <td>Iron Bar 12mm</td>
+                <td>405,000</td>
+                <td><span class="b-amber">+30k</span></td>
+              </tr>
+              <tr>
+                <td>Moses Kato</td>
+                <td>Iron Sheets 26G</td>
+                <td>900,000</td>
+                <td><span class="b-green">Free</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Customers Ready to Pick Up -->
+        <div class="box">
+          <div class="box-title">⏳ Ready for Pickup</div>
+          <table>
+            <thead>
+              <tr>
+                <th>Customer</th>
+                <th>Product</th>
+                <th>Balance</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Kato Moses</td>
+                <td>Iron Sheets 26G</td>
+                <td>UGX 200,000</td>
+                <td><span class="b-amber">Ready</span></td>
+              </tr>
+              <tr>
+                <td>Tendo Grace</td>
+                <td>Cement CEM II</td>
+                <td>UGX 336,000</td>
+                <td><span class="b-amber">Ready</span></td>
+              </tr>
+              <tr>
+                <td>Nakato Jane</td>
+                <td>Iron Bar 12mm</td>
+                <td>UGX 300,000</td>
+                <td><span class="b-green">Collected</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      /* Show date */
+      document.getElementById("sp-date").textContent =
+        new Date().toDateString();
+
+      /* Transport calculator */
+      function calcTransport() {
+        var amt = parseFloat(document.getElementById("c-amt").value) || 0;
+        var dist = parseFloat(document.getElementById("c-dist").value) || 0;
+        var charge = 0;
+        var msg = "";
+
+        if (amt === 0 || dist === 0) {
+          msg = "Enter values above";
+        } else if (dist <= 10 && amt >= 500000) {
+          msg = "<span>FREE</span> — order ≥ UGX 500,000 within 10km";
+        } else if (dist > 0) {
+          charge = 30000;
+          msg = "<span>UGX 30,000</span> transport charge applies";
+        }
+        document.getElementById("c-result").innerHTML = msg;
+      }
+    </script>
+  </body>
+</html>
