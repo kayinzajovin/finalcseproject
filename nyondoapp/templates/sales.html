@@ -1,273 +1,434 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Sales — NYONDO Hardware</title>
-  <style>
-    /* ===== COLOR PALETTE =====
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sales — NYONDO Hardware</title>
+    <style>
+      /* ===== COLOR PALETTE =====
        #1f2937  → Dark Navy
        #f59e0b  → Amber/Gold
        #ffffff  → White
     ========================= */
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: Georgia, serif; }
-    body { background: #f4f6f8; color: #1f2937; }
-
-    /* ── SIDEBAR (same across all pages) ── */
-    .sidebar {
-      position: fixed; left: 0; top: 0;
-      width: 240px; height: 100vh;
-      background: #1f2937; color: #fff;
-      padding: 25px 20px; overflow-y: auto;
-    }
-    .logo-box {
-      width: 55px; height: 55px; background: #f59e0b;
-      color: #1f2937; border-radius: 10px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 28px; font-weight: bold; margin: 0 auto 10px;
-    }
-    .sidebar h2 { text-align: center; font-size: 17px; margin-bottom: 4px; }
-    .sidebar p.tagline { text-align: center; font-size: 12px; color: #94a3b8; font-style: italic; margin-bottom: 30px; }
-    .menu a {
-      display: block; color: #cbd5e1; text-decoration: none;
-      padding: 11px 12px; border-radius: 8px; font-size: 15px; margin-bottom: 4px;
-    }
-    .menu a:hover { background: #374151; color: #fff; }
-    .menu a.active { background: #f59e0b; color: #1f2937; font-weight: bold; }
-
-    /* ── MAIN ── */
-    .main { margin-left: 240px; padding: 35px 40px; }
-
-    .page-title {
-      font-size: 22px; font-weight: bold;
-      border-left: 5px solid #f59e0b; padding-left: 12px;
-      margin-bottom: 25px;
-    }
-
-    /* ── FORM CARD ── */
-    .form-card {
-      background: #fff; border-radius: 12px;
-      padding: 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-      margin-bottom: 35px;
-    }
-    .form-card h3 {
-      font-size: 16px; color: #f59e0b;
-      border-bottom: 1px solid #e5e7eb; padding-bottom: 10px; margin-bottom: 20px;
-    }
-    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
-    label { display: block; font-size: 13px; font-weight: bold; margin-bottom: 6px; color: #374151; }
-    input, select { width: 100%; padding: 11px 13px; border: 1.5px solid #d1d5db; border-radius: 8px; font-size: 14px; outline: none; }
-    input:focus, select:focus { border-color: #f59e0b; }
-
-    /* Transport note box — shows automatically based on amount */
-    .transport-note {
-      margin-top: 18px;
-      background: #fff7ed;
-      border-left: 4px solid #f59e0b;
-      padding: 12px 16px;
-      border-radius: 8px;
-      font-size: 14px;
-      color: #1f2937;
-    }
-
-    /* Order total summary box */
-    .total-box {
-      margin-top: 18px;
-      background: #1f2937;
-      color: #ffffff;
-      padding: 16px 20px;
-      border-radius: 10px;
-      font-size: 16px;
-    }
-    .total-box span { color: #f59e0b; font-size: 20px; font-weight: bold; }
-
-    .btn-submit {
-      margin-top: 20px;
-      background: #f59e0b; color: #1f2937;
-      padding: 13px 30px; border: none; border-radius: 8px;
-      font-size: 15px; font-weight: bold; cursor: pointer;
-    }
-    .btn-submit:hover { background: #1f2937; color: #f59e0b; }
-
-    /* ── SALES HISTORY TABLE ── */
-    .table-section {
-      background: #fff; border-radius: 12px;
-      padding: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    }
-    .table-section h3 { font-size: 16px; margin-bottom: 18px; border-left: 4px solid #f59e0b; padding-left: 10px; }
-    table { width: 100%; border-collapse: collapse; font-size: 14px; }
-    th { background: #1f2937; color: #f59e0b; padding: 12px 14px; text-align: left; font-size: 13px; }
-    td { padding: 11px 14px; border-bottom: 1px solid #e5e7eb; color: #374151; }
-    tr:hover td { background: #fff7ed; }
-
-    @media (max-width: 600px) {
-      .sidebar { width: 100%; height: auto; position: relative; }
-      .main { margin-left: 0; padding: 20px; }
-      .form-grid { grid-template-columns: 1fr; }
-    }
-  </style>
-</head>
-<body>
-
-  <!-- SIDEBAR -->
-  <div class="sidebar">
-    <div class="logo-box">N</div>
-    <h2>NYONDO</h2>
-    <p class="tagline">Hardware Management System</p>
-    <div class="menu">
-      <a onclick="window.location.href='/'">🏠 Home</a>
-      <a onclick="window.location.href='/dashboard/admin/'">📊 Dashboard</a>
-      <a onclick="window.location.href='/stock/'">📦 Stock</a>
-      <a onclick="window.location.href='/sales/'" class="active">💰 Sales</a>
-      <a onclick="window.location.href='/customer/registration/'">👥 Register Customer</a>
-      <a onclick="window.location.href='/customer/deposit/'">💳 Customer Deposit</a>
-      <a onclick="window.location.href='/supplier/credit/'">🚚 Supplier Credit</a>
-      <a onclick="window.location.href='/login/'">🚪 Logout</a>
-    </div>
-  </div>
-
-  <!-- MAIN CONTENT -->
-  <div class="main">
-    <div class="page-title">💰 Record a Sale</div>
-
-    <!-- SALE ENTRY FORM -->
-    <div class="form-card">
-      <h3>+ New Sale Entry</h3>
-      <div class="form-grid">
-
-        <div>
-          <label>Customer Name</label>
-          <input type="text" placeholder="e.g. John Mukasa"/>
-        </div>
-
-        <div>
-          <label>Customer Phone</label>
-          <input type="text" placeholder="e.g. 0701234567"/>
-        </div>
-
-        <div>
-          <label>Product</label>
-          <select>
-            <option value="">-- Select Product --</option>
-            <option>Cement CEM II N (50kg)</option>
-            <option>Cement CEM III N (50kg)</option>
-            <option>Iron Bar 10mm</option>
-            <option>Iron Bar 12mm</option>
-            <option>Iron Bar 16mm</option>
-            <option>Nails 1 inch (5kg)</option>
-            <option>Nails 3 inch (5kg)</option>
-            <option>Nails 4 inch (5kg)</option>
-            <option>Nails 5 inch (5kg)</option>
-            <option>Roofing Nails (5kg)</option>
-            <option>Wheelbarrow</option>
-            <option>Wire Mesh</option>
-            <option>Barbed Wire (High Tensile)</option>
-            <option>Barbed Wire (Low Tensile)</option>
-            <option>Iron Sheets (26G)</option>
-            <option>Iron Sheets (28G)</option>
-          </select>
-        </div>
-
-        <div>
-          <label>Quantity</label>
-          <input type="number" id="qty" placeholder="e.g. 10" oninput="calcTotal()"/>
-        </div>
-
-        <div>
-          <label>Unit Price (UGX)</label>
-          <input type="number" id="unit_price" placeholder="Auto-filled from stock" oninput="calcTotal()"/>
-        </div>
-
-        <div>
-          <label>Sale Date</label>
-          <input type="date"/>
-        </div>
-
-        <div>
-          <label>Delivery Distance (km)</label>
-          <input type="number" id="distance" placeholder="0 if customer picks up" oninput="calcTotal()"/>
-        </div>
-
-        <div>
-          <label>Customer Type</label>
-          <select>
-            <option>Individual Buyer</option>
-            <option>Retailer</option>
-            <option>Wholesaler</option>
-          </select>
-        </div>
-
-      </div>
-
-      <!-- Transport Charge Rule Note -->
-      <div class="transport-note">
-        🚚 <strong>Transport Rule:</strong> Free delivery within 10km for orders ≥ UGX 500,000.
-        Otherwise, an extra <strong>UGX 30,000</strong> is charged.
-      </div>
-
-      <!-- Auto-calculated order total -->
-      <div class="total-box" id="total-box">
-        Order Total: <span id="total-display">UGX 0</span>
-        &nbsp;|&nbsp; Transport: <span id="transport-display">UGX 0</span>
-        &nbsp;|&nbsp; <strong>Grand Total: <span id="grand-display">UGX 0</span></strong>
-      </div>
-
-      <button class="btn-submit">Save Sale & Print Receipt</button>
-    </div>
-
-    <!-- SALES HISTORY TABLE -->
-    <div class="table-section">
-      <h3>Today's Sales</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>#</th><th>Customer</th><th>Product</th>
-            <th>Qty</th><th>Amount (UGX)</th><th>Transport</th><th>Total (UGX)</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>001</td><td>John Mukasa</td><td>Cement CEM II</td>
-            <td>20 bags</td><td>560,000</td><td>Free</td><td>560,000</td>
-          </tr>
-          <tr>
-            <td>002</td><td>Sarah Namutebi</td><td>Iron Bar 12mm</td>
-            <td>5 bundles</td><td>375,000</td><td>30,000</td><td>405,000</td>
-          </tr>
-          <tr>
-            <td>003</td><td>Moses Kato</td><td>Iron Sheets 26G</td>
-            <td>30 sheets</td><td>900,000</td><td>Free</td><td>900,000</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- TRANSPORT CALCULATION SCRIPT -->
-  <script>
-    /* Calculates order total and transport charge automatically */
-    function calcTotal() {
-      var qty = parseFloat(document.getElementById('qty').value) || 0;
-      var price = parseFloat(document.getElementById('unit_price').value) || 0;
-      var dist = parseFloat(document.getElementById('distance').value) || 0;
-
-      var subtotal = qty * price;
-
-      /* Transport rule: free if ≥500,000 AND within 10km, else +30,000 */
-      var transport = 0;
-      if (dist > 0) {
-        transport = (subtotal >= 500000 && dist <= 10) ? 0 : 30000;
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: Georgia, serif;
+      }
+      body {
+        background: #f4f6f8;
+        color: #1f2937;
       }
 
-      var grand = subtotal + transport;
+      /* ── SIDEBAR (same across all pages) ── */
+      .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 240px;
+        height: 100vh;
+        background: #1f2937;
+        color: #fff;
+        padding: 25px 20px;
+        overflow-y: auto;
+      }
+      .logo-box {
+        width: 55px;
+        height: 55px;
+        background: #f59e0b;
+        color: #1f2937;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        font-weight: bold;
+        margin: 0 auto 10px;
+      }
+      .sidebar h2 {
+        text-align: center;
+        font-size: 17px;
+        margin-bottom: 4px;
+      }
+      .sidebar p.tagline {
+        text-align: center;
+        font-size: 12px;
+        color: #94a3b8;
+        font-style: italic;
+        margin-bottom: 30px;
+      }
+      .menu a {
+        display: block;
+        color: #cbd5e1;
+        text-decoration: none;
+        padding: 11px 12px;
+        border-radius: 8px;
+        font-size: 15px;
+        margin-bottom: 4px;
+      }
+      .menu a:hover {
+        background: #374151;
+        color: #fff;
+      }
+      .menu a.active {
+        background: #f59e0b;
+        color: #1f2937;
+        font-weight: bold;
+      }
 
-      /* Format numbers with commas */
-      document.getElementById('total-display').textContent = 'UGX ' + subtotal.toLocaleString();
-      document.getElementById('transport-display').textContent = 'UGX ' + transport.toLocaleString();
-      document.getElementById('grand-display').textContent = 'UGX ' + grand.toLocaleString();
-    }
-  </script>
+      /* ── MAIN ── */
+      .main {
+        margin-left: 240px;
+        padding: 35px 40px;
+      }
 
-</body>
+      .page-title {
+        font-size: 22px;
+        font-weight: bold;
+        border-left: 5px solid #f59e0b;
+        padding-left: 12px;
+        margin-bottom: 25px;
+      }
+
+      /* ── FORM CARD ── */
+      .form-card {
+        background: #fff;
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        margin-bottom: 35px;
+      }
+      .form-card h3 {
+        font-size: 16px;
+        color: #f59e0b;
+        border-bottom: 1px solid #e5e7eb;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+      }
+      .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+      }
+      label {
+        display: block;
+        font-size: 13px;
+        font-weight: bold;
+        margin-bottom: 6px;
+        color: #374151;
+      }
+      input,
+      select {
+        width: 100%;
+        padding: 11px 13px;
+        border: 1.5px solid #d1d5db;
+        border-radius: 8px;
+        font-size: 14px;
+        outline: none;
+      }
+      input:focus,
+      select:focus {
+        border-color: #f59e0b;
+      }
+
+      /* Transport note box — shows automatically based on amount */
+      .transport-note {
+        margin-top: 18px;
+        background: #fff7ed;
+        border-left: 4px solid #f59e0b;
+        padding: 12px 16px;
+        border-radius: 8px;
+        font-size: 14px;
+        color: #1f2937;
+      }
+
+      /* Order total summary box */
+      .total-box {
+        margin-top: 18px;
+        background: #1f2937;
+        color: #ffffff;
+        padding: 16px 20px;
+        border-radius: 10px;
+        font-size: 16px;
+      }
+      .total-box span {
+        color: #f59e0b;
+        font-size: 20px;
+        font-weight: bold;
+      }
+
+      .btn-submit {
+        margin-top: 20px;
+        background: #f59e0b;
+        color: #1f2937;
+        padding: 13px 30px;
+        border: none;
+        border-radius: 8px;
+        font-size: 15px;
+        font-weight: bold;
+        cursor: pointer;
+      }
+      .btn-submit:hover {
+        background: #1f2937;
+        color: #f59e0b;
+      }
+
+      /* ── SALES HISTORY TABLE ── */
+      .table-section {
+        background: #fff;
+        border-radius: 12px;
+        padding: 25px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      }
+      .table-section h3 {
+        font-size: 16px;
+        margin-bottom: 18px;
+        border-left: 4px solid #f59e0b;
+        padding-left: 10px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+      }
+      th {
+        background: #1f2937;
+        color: #f59e0b;
+        padding: 12px 14px;
+        text-align: left;
+        font-size: 13px;
+      }
+      td {
+        padding: 11px 14px;
+        border-bottom: 1px solid #e5e7eb;
+        color: #374151;
+      }
+      tr:hover td {
+        background: #fff7ed;
+      }
+
+      @media (max-width: 600px) {
+        .sidebar {
+          width: 100%;
+          height: auto;
+          position: relative;
+        }
+        .main {
+          margin-left: 0;
+          padding: 20px;
+        }
+        .form-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="logo-box">N</div>
+      <h2>NYONDO</h2>
+      <p class="tagline">Hardware Management System</p>
+      <div class="menu">
+        <a onclick="window.location.href = '/'">🏠 Home</a>
+        <a onclick="window.location.href = '/dashboard/admin/'">📊 Dashboard</a>
+        <a onclick="window.location.href = '/stock/'">📦 Stock</a>
+        <a onclick="window.location.href = '/sales/'" class="active"
+          >💰 Sales</a
+        >
+        <a onclick="window.location.href = '/customer/registration/'"
+          >👥 Register Customer</a
+        >
+        <a onclick="window.location.href = '/customer/deposit/'"
+          >💳 Customer Deposit</a
+        >
+        <a onclick="window.location.href = '/supplier/credit/'"
+          >🚚 Supplier Credit</a
+        >
+        <a onclick="window.location.href = '/login/'">🚪 Logout</a>
+      </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main">
+      <div class="page-title">💰 Record a Sale</div>
+
+      <!-- SALE ENTRY FORM -->
+      <div class="form-card">
+        <h3>+ New Sale Entry</h3>
+        <div class="form-grid">
+          <div>
+            <label>Customer Name</label>
+            <input type="text" placeholder="e.g. John Mukasa" />
+          </div>
+
+          <div>
+            <label>Customer Phone</label>
+            <input type="text" placeholder="e.g. 0701234567" />
+          </div>
+
+          <div>
+            <label>Product</label>
+            <select>
+              <option value="">-- Select Product --</option>
+              <option>Cement CEM II N (50kg)</option>
+              <option>Cement CEM III N (50kg)</option>
+              <option>Iron Bar 10mm</option>
+              <option>Iron Bar 12mm</option>
+              <option>Iron Bar 16mm</option>
+              <option>Nails 1 inch (5kg)</option>
+              <option>Nails 3 inch (5kg)</option>
+              <option>Nails 4 inch (5kg)</option>
+              <option>Nails 5 inch (5kg)</option>
+              <option>Roofing Nails (5kg)</option>
+              <option>Wheelbarrow</option>
+              <option>Wire Mesh</option>
+              <option>Barbed Wire (High Tensile)</option>
+              <option>Barbed Wire (Low Tensile)</option>
+              <option>Iron Sheets (26G)</option>
+              <option>Iron Sheets (28G)</option>
+            </select>
+          </div>
+
+          <div>
+            <label>Quantity</label>
+            <input
+              type="number"
+              id="qty"
+              placeholder="e.g. 10"
+              oninput="calcTotal()"
+            />
+          </div>
+
+          <div>
+            <label>Unit Price (UGX)</label>
+            <input
+              type="number"
+              id="unit_price"
+              placeholder="Auto-filled from stock"
+              oninput="calcTotal()"
+            />
+          </div>
+
+          <div>
+            <label>Sale Date</label>
+            <input type="date" />
+          </div>
+
+          <div>
+            <label>Delivery Distance (km)</label>
+            <input
+              type="number"
+              id="distance"
+              placeholder="0 if customer picks up"
+              oninput="calcTotal()"
+            />
+          </div>
+
+          <div>
+            <label>Customer Type</label>
+            <select>
+              <option>Individual Buyer</option>
+              <option>Retailer</option>
+              <option>Wholesaler</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Transport Charge Rule Note -->
+        <div class="transport-note">
+          🚚 <strong>Transport Rule:</strong> Free delivery within 10km for
+          orders ≥ UGX 500,000. Otherwise, an extra
+          <strong>UGX 30,000</strong> is charged.
+        </div>
+
+        <!-- Auto-calculated order total -->
+        <div class="total-box" id="total-box">
+          Order Total: <span id="total-display">UGX 0</span> &nbsp;|&nbsp;
+          Transport: <span id="transport-display">UGX 0</span> &nbsp;|&nbsp;
+          <strong>Grand Total: <span id="grand-display">UGX 0</span></strong>
+        </div>
+
+        <button class="btn-submit">Save Sale & Print Receipt</button>
+      </div>
+
+      <!-- SALES HISTORY TABLE -->
+      <div class="table-section">
+        <h3>Today's Sales</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Customer</th>
+              <th>Product</th>
+              <th>Qty</th>
+              <th>Amount (UGX)</th>
+              <th>Transport</th>
+              <th>Total (UGX)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>001</td>
+              <td>John Mukasa</td>
+              <td>Cement CEM II</td>
+              <td>20 bags</td>
+              <td>560,000</td>
+              <td>Free</td>
+              <td>560,000</td>
+            </tr>
+            <tr>
+              <td>002</td>
+              <td>Sarah Namutebi</td>
+              <td>Iron Bar 12mm</td>
+              <td>5 bundles</td>
+              <td>375,000</td>
+              <td>30,000</td>
+              <td>405,000</td>
+            </tr>
+            <tr>
+              <td>003</td>
+              <td>Moses Kato</td>
+              <td>Iron Sheets 26G</td>
+              <td>30 sheets</td>
+              <td>900,000</td>
+              <td>Free</td>
+              <td>900,000</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TRANSPORT CALCULATION SCRIPT -->
+    <script>
+      /* Calculates order total and transport charge automatically */
+      function calcTotal() {
+        var qty = parseFloat(document.getElementById("qty").value) || 0;
+        var price =
+          parseFloat(document.getElementById("unit_price").value) || 0;
+        var dist = parseFloat(document.getElementById("distance").value) || 0;
+
+        var subtotal = qty * price;
+
+        /* Transport rule: free if ≥500,000 AND within 10km, else +30,000 */
+        var transport = 0;
+        if (dist > 0) {
+          transport = subtotal >= 500000 && dist <= 10 ? 0 : 30000;
+        }
+
+        var grand = subtotal + transport;
+
+        /* Format numbers with commas */
+        document.getElementById("total-display").textContent =
+          "UGX " + subtotal.toLocaleString();
+        document.getElementById("transport-display").textContent =
+          "UGX " + transport.toLocaleString();
+        document.getElementById("grand-display").textContent =
+          "UGX " + grand.toLocaleString();
+      }
+    </script>
+  </body>
 </html>

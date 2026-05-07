@@ -1,198 +1,224 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Login — NYONDO Hardware</title>
-  <style>
-    /*  COLOR PALETTE 
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login — NYONDO Hardware</title>
+    <style>
+      /*  COLOR PALETTE 
        #1f2937  → Dark Navy
        #f59e0b  → Amber/Gold
        #ffffff  → White
    */
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: Georgia, serif;
-    }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: Georgia, serif;
+      }
 
-    body {
-      background: #1f2937;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+      body {
+        background: #1f2937;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
 
-    /* LOGIN CARD */
-    .login-card {
-      background: #ffffff;
-      color: #1f2937;
-      width: 100%;
-      max-width: 420px;
-      border-radius: 14px;
-      padding: 45px 40px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.4);
-    }
+      /* LOGIN CARD */
+      .login-card {
+        background: #ffffff;
+        color: #1f2937;
+        width: 100%;
+        max-width: 420px;
+        border-radius: 14px;
+        padding: 45px 40px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+      }
 
-    /* Logo at top of card */
-    .card-logo {
-      width: 60px;
-      height: 60px;
-      background: #f59e0b;
-      color: #1f2937;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 30px;
-      font-weight: bold;
-      margin: 0 auto 15px;
-    }
+      /* Logo at top of card */
+      .card-logo {
+        width: 60px;
+        height: 60px;
+        background: #f59e0b;
+        color: #1f2937;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 30px;
+        font-weight: bold;
+        margin: 0 auto 15px;
+      }
 
-    .login-card h2 {
-      text-align: center;
-      font-size: 22px;
-      margin-bottom: 5px;
-    }
+      .login-card h2 {
+        text-align: center;
+        font-size: 22px;
+        margin-bottom: 5px;
+      }
 
-    .login-card p.sub {
-      text-align: center;
-      font-size: 13px;
-      color: #6b7280;
-      margin-bottom: 30px;
-    }
+      .login-card p.sub {
+        text-align: center;
+        font-size: 13px;
+        color: #6b7280;
+        margin-bottom: 30px;
+      }
 
-    /* FORM ELEMENTS */
-    label {
-      display: block;
-      font-size: 14px;
-      font-weight: bold;
-      margin-bottom: 6px;
-      color: #1f2937;
-    }
+      /* FORM ELEMENTS */
+      label {
+        display: block;
+        font-size: 14px;
+        font-weight: bold;
+        margin-bottom: 6px;
+        color: #1f2937;
+      }
 
-    input[type="text"],
-    input[type="password"] {
-      width: 100%;
-      padding: 12px 14px;
-      border: 1.5px solid #d1d5db;
-      border-radius: 8px;
-      font-size: 15px;
-      margin-bottom: 20px;
-      outline: none;
-    }
+      input[type="text"],
+      input[type="password"] {
+        width: 100%;
+        padding: 12px 14px;
+        border: 1.5px solid #d1d5db;
+        border-radius: 8px;
+        font-size: 15px;
+        margin-bottom: 20px;
+        outline: none;
+      }
 
-    /* Highlight input on focus */
-    input:focus {
-      border-color: #f59e0b;
-    }
+      /* Highlight input on focus */
+      input:focus {
+        border-color: #f59e0b;
+      }
 
-    /* Role selector buttons */
-    .role-select {
-      display: flex; gap: 10px; margin-bottom: 20px;
-    }
-    .role-btn {
-      flex: 1; padding: 10px 6px;
-      border: 2px solid #d1d5db; border-radius: 8px;
-      background: #fff; color: #6b7280;
-      font-size: 12px; font-weight: bold; cursor: pointer;
-      text-align: center;
-    }
-    .role-btn.selected {
-      border-color: #f59e0b; background: #fff7ed; color: #1f2937;
-    }
+      /* Role selector buttons */
+      .role-select {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+      .role-btn {
+        flex: 1;
+        padding: 10px 6px;
+        border: 2px solid #d1d5db;
+        border-radius: 8px;
+        background: #fff;
+        color: #6b7280;
+        font-size: 12px;
+        font-weight: bold;
+        cursor: pointer;
+        text-align: center;
+      }
+      .role-btn.selected {
+        border-color: #f59e0b;
+        background: #fff7ed;
+        color: #1f2937;
+      }
 
-    /* Login submit button */
-    .btn-login {
-      width: 100%;
-      padding: 14px;
-      background: #f59e0b;
-      color: #1f2937;
-      font-size: 16px;
-      font-weight: bold;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-    }
+      /* Login submit button */
+      .btn-login {
+        width: 100%;
+        padding: 14px;
+        background: #f59e0b;
+        color: #1f2937;
+        font-size: 16px;
+        font-weight: bold;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+      }
 
-    .btn-login:hover { opacity: 0.9; }
+      .btn-login:hover {
+        opacity: 0.9;
+      }
 
-    /* Back to home link */
-    .back-link {
-      text-align: center;
-      margin-top: 20px;
-      font-size: 13px;
-    }
+      /* Back to home link */
+      .back-link {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 13px;
+      }
 
-    .back-link a {
-      color: #f59e0b;
-      text-decoration: none;
-      font-weight: bold;
-      cursor: pointer;
-    }
+      .back-link a {
+        color: #f59e0b;
+        text-decoration: none;
+        font-weight: bold;
+        cursor: pointer;
+      }
 
-    /* RESPONSIVE */
-    @media (max-width: 480px) {
-      .login-card { padding: 30px 20px; }
-    }
-  </style>
-</head>
-<body>
+      /* RESPONSIVE */
+      @media (max-width: 480px) {
+        .login-card {
+          padding: 30px 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- LOGIN FORM CARD -->
+    <div class="login-card">
+      <!-- Logo -->
+      <div class="card-logo">N</div>
+      <h2>NYONDO HARDWARE</h2>
+      <p class="sub">Sign in to manage stock & sales</p>
 
-  <!-- LOGIN FORM CARD -->
-  <div class="login-card">
+      <!-- Select Your Role before logging in -->
+      <label>Select Your Role</label>
+      <div class="role-select">
+        <!-- Fixed URLs to match urls.py routes -->
+        <div
+          class="role-btn selected"
+          onclick="selectRole(this, '/dashboard/admin/')"
+        >
+          🔑 Admin
+        </div>
+        <div
+          class="role-btn"
+          onclick="selectRole(this, '/dashboard/salesperson/')"
+        >
+          💰 Sales
+        </div>
+        <div
+          class="role-btn"
+          onclick="selectRole(this, '/dashboard/stockmanager/')"
+        >
+          📦 Stock
+        </div>
+      </div>
 
-    <!-- Logo -->
-    <div class="card-logo">N</div>
-    <h2>NYONDO HARDWARE</h2>
-    <p class="sub">Sign in to manage stock & sales</p>
+      <!-- Staff Login Form -->
+      <label for="username">Username</label>
+      <input type="text" id="username" placeholder="Enter your username" />
 
-    <!-- Select Your Role before logging in -->
-    <label>Select Your Role</label>
-    <div class="role-select">
-      <!-- Fixed URLs to match urls.py routes -->
-      <div class="role-btn selected" onclick="selectRole(this,'/dashboard/admin/')">🔑 Admin</div>
-      <div class="role-btn" onclick="selectRole(this,'/dashboard/salesperson/')">💰 Sales</div>
-      <div class="role-btn" onclick="selectRole(this,'/dashboard/stockmanager/')">📦 Stock</div>
+      <label for="password">Password</label>
+      <input type="password" id="password" placeholder="Enter your password" />
+
+      <!-- Login button — routes to selected role dashboard -->
+      <button class="btn-login" onclick="doLogin()">LOGIN</button>
+
+      <!-- Back link -->
+      <div class="back-link">
+        <!-- Fixed URL to go back to home -->
+        <a onclick="window.location.href = '/'">← Back to Home</a>
+      </div>
     </div>
 
-    <!-- Staff Login Form -->
-    <label for="username">Username</label>
-    <input type="text" id="username" placeholder="Enter your username"/>
+    <script>
+      /* Track which dashboard to go to based on role selected */
+      var targetDashboard = "/dashboard/admin/";
 
-    <label for="password">Password</label>
-    <input type="password" id="password" placeholder="Enter your password"/>
+      /* Highlight the clicked role button and store its target */
+      function selectRole(el, page) {
+        document.querySelectorAll(".role-btn").forEach(function (b) {
+          b.classList.remove("selected");
+        });
+        el.classList.add("selected");
+        targetDashboard = page;
+      }
 
-    <!-- Login button — routes to selected role dashboard -->
-    <button class="btn-login" onclick="doLogin()">LOGIN</button>
-
-    <!-- Back link -->
-    <div class="back-link">
-      <!-- Fixed URL to go back to home -->
-      <a onclick="window.location.href='/'">← Back to Home</a>
-    </div>
-
-  </div>
-
-<script>
-  /* Track which dashboard to go to based on role selected */
-  var targetDashboard = '/dashboard/admin/';
-
-  /* Highlight the clicked role button and store its target */
-  function selectRole(el, page) {
-    document.querySelectorAll('.role-btn').forEach(function(b){ b.classList.remove('selected'); });
-    el.classList.add('selected');
-    targetDashboard = page;
-  }
-
-  /* On login click, go to the selected role dashboard */
-  function doLogin() {
-    location.href = targetDashboard;
-  }
-</script>
-
-</body>
+      /* On login click, go to the selected role dashboard */
+      function doLogin() {
+        location.href = targetDashboard;
+      }
+    </script>
+  </body>
 </html>

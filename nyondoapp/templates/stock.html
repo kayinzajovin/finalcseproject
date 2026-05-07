@@ -249,11 +249,19 @@
       <div class="menu">
         <a onclick="window.location.href = '/'">🏠 Home</a>
         <a onclick="window.location.href = '/dashboard/admin/'">📊 Dashboard</a>
-        <a onclick="window.location.href = '/stock/'" class="active">📦 Stock</a>
+        <a onclick="window.location.href = '/stock/'" class="active"
+          >📦 Stock</a
+        >
         <a onclick="window.location.href = '/sales/'">💰 Sales</a>
-        <a onclick="window.location.href = '/customer_registration/'">👥 Register Customer</a>
-        <a onclick="window.location.href = '/customer_deposit/'">💳 Customer Deposit</a>
-        <a onclick="window.location.href = '/supplier_credit/'">🚚 Supplier Credit</a>
+        <a onclick="window.location.href = '/customer_registration/'"
+          >👥 Register Customer</a
+        >
+        <a onclick="window.location.href = '/customer_deposit/'"
+          >💳 Customer Deposit</a
+        >
+        <a onclick="window.location.href = '/supplier_credit/'"
+          >🚚 Supplier Credit</a
+        >
         <a onclick="window.location.href = '/login/'">🚪 Logout</a>
       </div>
     </div>
@@ -263,15 +271,12 @@
       <div class="page-title">📦 Stock Management</div>
 
       <!-- show success or error messages after form submission -->
-      {% if messages %}
-        {% for message in messages %}
-          {% if message.tags == 'error' %}
-            <div class="alert-error">❌ {{ message }}</div>
-          {% else %}
-            <div class="alert-success">✅ {{ message }}</div>
-          {% endif %}
-        {% endfor %}
-      {% endif %}
+      {% if messages %} {% for message in messages %} {% if message.tags ==
+      'error' %}
+      <div class="alert-error">❌ {{ message }}</div>
+      {% else %}
+      <div class="alert-success">✅ {{ message }}</div>
+      {% endif %} {% endfor %} {% endif %}
 
       <!-- ADD STOCK FORM -->
       <div class="form-card">
@@ -281,7 +286,6 @@
         <form method="POST" action="/stock/">
           {% csrf_token %}
           <div class="form-grid">
-
             <div>
               <label>Product Name</label>
               <select name="product_name">
@@ -308,12 +312,21 @@
 
             <div>
               <label>Supplier Name</label>
-              <input type="text" name="supplier_name" placeholder="e.g. Hima Cement Depot" />
+              <input
+                type="text"
+                name="supplier_name"
+                placeholder="e.g. Hima Cement Depot"
+              />
             </div>
 
             <div>
               <label>Quantity Received</label>
-              <input type="number" name="quantity" placeholder="e.g. 200" min="1" />
+              <input
+                type="number"
+                name="quantity"
+                placeholder="e.g. 200"
+                min="1"
+              />
             </div>
 
             <div>
@@ -330,12 +343,22 @@
 
             <div>
               <label>Unit Cost (UGX) — price paid per unit</label>
-              <input type="number" name="unit_cost" placeholder="e.g. 25000" min="0" />
+              <input
+                type="number"
+                name="unit_cost"
+                placeholder="e.g. 25000"
+                min="0"
+              />
             </div>
 
             <div>
               <label>Unit Selling Price (UGX) — price to sell per unit</label>
-              <input type="number" name="unit_price" placeholder="e.g. 28000" min="0" />
+              <input
+                type="number"
+                name="unit_price"
+                placeholder="e.g. 28000"
+                min="0"
+              />
             </div>
 
             <div>
@@ -350,7 +373,6 @@
                 <option>Supplier Credit</option>
               </select>
             </div>
-
           </div>
           <!-- save stock button -->
           <button class="btn-submit" type="submit">Save Stock</button>
@@ -381,15 +403,13 @@
               <td>{{ product.unit_price|floatformat:0 }}</td>
               <td>
                 {% if product.quantity < 10 %}
-                  <span class="low">⚠ Low</span>
-                {% else %}
-                  OK
-                {% endif %}
+                <span class="low">⚠ Low</span>
+                {% else %} OK {% endif %}
               </td>
             </tr>
             {% empty %}
             <tr>
-              <td colspan="6" style="text-align:center; color:#9ca3af;">
+              <td colspan="6" style="text-align: center; color: #9ca3af">
                 No stock added yet
               </td>
             </tr>
