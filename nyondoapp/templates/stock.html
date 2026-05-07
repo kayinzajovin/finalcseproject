@@ -271,12 +271,22 @@
       <div class="page-title">📦 Stock Management</div>
 
       <!-- show success or error messages after form submission -->
-      {% if messages %} {% for message in messages %} {% if message.tags ==
+      {% comment %} {% if messages %} {% for message in messages %} {% if message.tags ==
       'error' %}
       <div class="alert-error">❌ {{ message }}</div>
       {% else %}
       <div class="alert-success">✅ {{ message }}</div>
-      {% endif %} {% endfor %} {% endif %}
+      {% endif %} {% endfor %} {% endif %} {% endcomment %}
+
+      {% if messages %}
+  {% for message in messages %}
+    {% if message.tags == 'error' %}
+      <div class="alert-error">❌ {{ message }}</div>
+    {% else %}
+      <div class="alert-success">✅ {{ message }}</div>
+    {% endif %}
+  {% endfor %}
+{% endif %}
 
       <!-- ADD STOCK FORM -->
       <div class="form-card">
