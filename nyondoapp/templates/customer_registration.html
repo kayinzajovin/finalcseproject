@@ -67,6 +67,7 @@
         border-radius: 8px;
         font-size: 15px;
         margin-bottom: 4px;
+        cursor: pointer;
       }
       .menu a:hover {
         background: #374151;
@@ -92,7 +93,7 @@
         margin-bottom: 10px;
       }
 
-      /* Info notice about the scheme */
+      /* scheme info note */
       .scheme-note {
         background: #fff7ed;
         border-left: 4px solid #f59e0b;
@@ -101,6 +102,28 @@
         font-size: 14px;
         color: #374151;
         margin-bottom: 25px;
+      }
+
+      /* success message */
+      .alert-success {
+        background: #dcfce7;
+        color: #166534;
+        padding: 12px 16px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        font-weight: bold;
+        font-size: 14px;
+      }
+
+      /* error message */
+      .alert-error {
+        background: #fee2e2;
+        color: #991b1b;
+        padding: 12px 16px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        font-weight: bold;
+        font-size: 14px;
       }
 
       /*  REGISTRATION FORM  */
@@ -145,7 +168,7 @@
         border-color: #f59e0b;
       }
 
-      /* Full-width field */
+      /* full width field */
       .full {
         grid-column: 1 / -1;
       }
@@ -200,6 +223,31 @@
         background: #fff7ed;
       }
 
+      /* edit and delete buttons */
+      .btn-edit {
+        background: #1f2937;
+        color: #f59e0b;
+        padding: 5px 12px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: bold;
+        text-decoration: none;
+        margin-right: 5px;
+        display: inline-block;
+      }
+      .btn-delete {
+        background: #fee2e2;
+        color: #991b1b;
+        padding: 5px 12px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: bold;
+        text-decoration: none;
+        display: inline-block;
+      }
+      .btn-edit:hover { background: #f59e0b; color: #1f2937; }
+      .btn-delete:hover { background: #dc2626; color: #fff; }
+
       @media (max-width: 600px) {
         .sidebar {
           width: 100%;
@@ -224,20 +272,12 @@
       <p class="tagline">Hardware Management System</p>
       <div class="menu">
         <a onclick="window.location.href = '/'">🏠 Home</a>
-        <a onclick="window.location.href = '/dashboard/admin'">📊 Dashboard</a>
+        <a onclick="window.location.href = '/dashboard/admin/'">📊 Dashboard</a>
         <a onclick="window.location.href = '/stock/'">📦 Stock</a>
         <a onclick="window.location.href = '/sales/'">💰 Sales</a>
-        <a
-          onclick="window.location.href = '/customer_registration/'"
-          class="active"
-          >👥 Register Customer</a
-        >
-        <a onclick="window.location.href = '/customer_deposit/'"
-          >💳 Customer Deposit</a
-        >
-        <a onclick="window.location.href = '/supplier_credit/'"
-          >🚚 Supplier Credit</a
-        >
+        <a onclick="window.location.href = '/customer_registration/'" class="active">👥 Register Customer</a>
+        <a onclick="window.location.href = '/customer_deposit/'">💳 Customer Deposit</a>
+        <a onclick="window.location.href = '/supplier_credit/'">🚚 Supplier Credit</a>
         <a onclick="window.location.href = '/login/'">🚪 Logout</a>
       </div>
     </div>
@@ -246,7 +286,18 @@
     <div class="main">
       <div class="page-title">👥 Customer Registration</div>
 
-      <!-- Scheme Info Note -->
+      <!-- show success or error messages -->
+      {% if messages %}
+        {% for message in messages %}
+          {% if message.tags == 'error' %}
+            <div class="alert-error">❌ {{ message }}</div>
+          {% else %}
+            <div class="alert-success">✅ {{ message }}</div>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+
+      <!-- scheme info note -->
       <div class="scheme-note">
         ℹ️ <strong>Deposit Scheme:</strong> This form registers salary earners
         into the deposit scheme. Only
@@ -258,61 +309,62 @@
       <!-- REGISTRATION FORM -->
       <div class="form-card">
         <h3>+ New Customer Registration</h3>
-        <div class="form-grid">
-          <div>
-            <label>Full Name (as on National ID)</label>
-            <input type="text" placeholder="e.g. NAMUTEBI SARAH" />
-          </div>
+        <form method="POST" action="/customer_registration/">
+          {% csrf_token %}
+          <div class="form-grid">
 
-          <div>
-            <label>NIN (National Identification Number)</label>
-            <input
-              type="text"
-              placeholder="e.g. CF12345678ABCD"
-              maxlength="14"
-            />
-          </div>
+            <div>
+              <label>Full Name (as on National ID)</label>
+              <input type="text" name="full_name" placeholder="e.g. NAMUTEBI SARAH" />
+            </div>
 
-          <div>
-            <label>Phone Number</label>
-            <input type="tel" placeholder="e.g. 0701234567" />
-          </div>
+            <div>
+              <label>NIN (National Identification Number)</label>
+              <input type="text" name="NIN" placeholder="e.g. CF12345678ABCD" maxlength="20" />
+            </div>
 
-          <div>
-            <label>Employer / Workplace</label>
-            <input type="text" placeholder="e.g. Kampala City Council" />
-          </div>
+            <div>
+              <label>Phone Number</label>
+              <input type="tel" name="phone" placeholder="e.g. 0701234567" />
+            </div>
 
-          <div>
-            <label>Preferred Product</label>
-            <select>
-              <option value="">-- Select Product --</option>
-              <option>Cement CEM II N</option>
-              <option>Cement CEM III N</option>
-              <option>Iron Bar 10mm</option>
-              <option>Iron Bar 12mm</option>
-              <option>Iron Bar 16mm</option>
-              <option>Iron Sheets (26G)</option>
-              <option>Iron Sheets (28G)</option>
-              <option>Iron Sheets (30G)</option>
-            </select>
-          </div>
+            <div>
+              <label>Employer / Workplace</label>
+              <input type="text" name="employer" placeholder="e.g. Kampala City Council" />
+            </div>
 
-          <div>
-            <label>Registration Date</label>
-            <input type="date" />
-          </div>
+            <div>
+              <label>Preferred Product</label>
+              <select name="preferred_product">
+                <option value="">-- Select Product --</option>
+                <option value="cement_cem2">Cement CEM II N</option>
+                <option value="cement_cem3">Cement CEM III N</option>
+                <option value="iron_bar_10">Iron Bar 10mm</option>
+                <option value="iron_bar_12">Iron Bar 12mm</option>
+                <option value="iron_bar_16">Iron Bar 16mm</option>
+                <option value="iron_sheet_26">Iron Sheets 26G</option>
+                <option value="iron_sheet_28">Iron Sheets 28G</option>
+                <option value="iron_sheet_30">Iron Sheets 30G</option>
+              </select>
+            </div>
 
-          <!-- Full-width address field -->
-          <div class="full">
-            <label>Physical Address / Area</label>
-            <input type="text" placeholder="e.g. Nansana, Wakiso District" />
+            <div>
+              <label>Registration Date</label>
+              <input type="date" name="registration_date" />
+            </div>
+
+            <!-- full width address field -->
+            <div class="full">
+              <label>Physical Address / Area</label>
+              <input type="text" name="address" placeholder="e.g. Nansana, Wakiso District" />
+            </div>
+
           </div>
-        </div>
-        <button class="btn-submit">Register Customer</button>
+          <button class="btn-submit" type="submit">Register Customer</button>
+        </form>
       </div>
 
-      <!-- REGISTERED CUSTOMERS LIST -->
+      <!-- REGISTERED CUSTOMERS LIST — real data from database -->
       <div class="table-section">
         <h3>Registered Scheme Members</h3>
         <table>
@@ -322,36 +374,35 @@
               <th>Full Name</th>
               <th>NIN</th>
               <th>Phone</th>
+              <th>Employer</th>
               <th>Product</th>
               <th>Registered On</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            <!-- Sample rows — replace with backend data -->
+            {% for customer in customers %}
             <tr>
-              <td>001</td>
-              <td>NAMUTEBI SARAH</td>
-              <td>CF12345678ABCD</td>
-              <td>0701234567</td>
-              <td>Cement CEM II N</td>
-              <td>2025-01-15</td>
+              <td>{{ forloop.counter }}</td>
+              <td>{{ customer.full_name }}</td>
+              <td>{{ customer.NIN }}</td>
+              <td>{{ customer.phone }}</td>
+              <td>{{ customer.employer }}</td>
+              <td>{{ customer.get_preferred_product_display }}</td>
+              <td>{{ customer.registration_date }}</td>
+              <!-- edit and delete buttons -->
+              <td>
+                <a href="/customer_registration/edit/{{ customer.id }}/" class="btn-edit">✏ Edit</a>
+                <a href="/customer_registration/delete/{{ customer.id }}/" class="btn-delete" onclick="return confirm('Delete {{ customer.full_name }}?')">🗑 Delete</a>
+              </td>
             </tr>
+            {% empty %}
             <tr>
-              <td>002</td>
-              <td>KATO MOSES</td>
-              <td>CM98765432EFGH</td>
-              <td>0772345678</td>
-              <td>Iron Sheets 26G</td>
-              <td>2025-02-03</td>
+              <td colspan="8" style="text-align:center; color:#9ca3af;">
+                No customers registered yet
+              </td>
             </tr>
-            <tr>
-              <td>003</td>
-              <td>NAKATO JANE</td>
-              <td>CF55544433IJKL</td>
-              <td>0753456789</td>
-              <td>Iron Bar 12mm</td>
-              <td>2025-03-20</td>
-            </tr>
+            {% endfor %}
           </tbody>
         </table>
       </div>

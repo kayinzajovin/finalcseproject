@@ -45,15 +45,19 @@ class Sale(models.Model):
     date = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
+        # convert to float to avoid string comparison errors from form inputs
+        total = float(self.total_price)
+        distance = float(self.distance_km) if self.distance_km else 0
+
         # free delivery if order is 500k+ and within 10km, otherwise 30k charge
-        if self.total_price >= 500000 and self.distance_km <= 10:
+        if total >= 500000 and distance <= 10:
             self.transport_fee = 0
         else:
             self.transport_fee = 30000
         super().save(*args, **kwargs)
 
     def grand_total(self):
-        # final amount customer pays
+        # final amount customer pays including transport
         return self.total_price + self.transport_fee
 
     def __str__(self):
@@ -109,9 +113,13 @@ class CustomerDeposit(models.Model):
     date = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
+        # convert to float to avoid string comparison errors from form inputs
+        amount = float(self.amount_deposited) if self.amount_deposited else 0
+        price = float(self.unit_price) if self.unit_price else 0
+
         # auto-calculate how many units the deposit amount can buy
-        if self.unit_price > 0:
-            self.units_equivalent = int(self.amount_deposited / self.unit_price)
+        if price > 0:
+            self.units_equivalent = int(amount / price)
         super().save(*args, **kwargs)
 
     def __str__(self):

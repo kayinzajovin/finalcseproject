@@ -22,7 +22,7 @@
         color: #1f2937;
       }
 
-      /* ── SIDEBAR (same across all pages) ── */
+      /* SIDEBAR */
       .sidebar {
         position: fixed;
         left: 0;
@@ -67,6 +67,7 @@
         border-radius: 8px;
         font-size: 15px;
         margin-bottom: 4px;
+        cursor: pointer;
       }
       .menu a:hover {
         background: #374151;
@@ -78,7 +79,7 @@
         font-weight: bold;
       }
 
-      /* ── MAIN ── */
+      /* MAIN */
       .main {
         margin-left: 240px;
         padding: 35px 40px;
@@ -92,7 +93,29 @@
         margin-bottom: 25px;
       }
 
-      /* ── FORM CARD ── */
+      /* success message */
+      .alert-success {
+        background: #dcfce7;
+        color: #166534;
+        padding: 12px 16px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        font-weight: bold;
+        font-size: 14px;
+      }
+
+      /* error message */
+      .alert-error {
+        background: #fee2e2;
+        color: #991b1b;
+        padding: 12px 16px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        font-weight: bold;
+        font-size: 14px;
+      }
+
+      /* FORM CARD */
       .form-card {
         background: #fff;
         border-radius: 12px;
@@ -133,7 +156,7 @@
         border-color: #f59e0b;
       }
 
-      /* Transport note box — shows automatically based on amount */
+      /* transport note box */
       .transport-note {
         margin-top: 18px;
         background: #fff7ed;
@@ -144,7 +167,7 @@
         color: #1f2937;
       }
 
-      /* Order total summary box */
+      /* order total summary box */
       .total-box {
         margin-top: 18px;
         background: #1f2937;
@@ -175,7 +198,7 @@
         color: #f59e0b;
       }
 
-      /* ── SALES HISTORY TABLE ── */
+      /* SALES HISTORY TABLE */
       .table-section {
         background: #fff;
         border-radius: 12px;
@@ -209,6 +232,22 @@
         background: #fff7ed;
       }
 
+      /* delete button */
+      .btn-delete {
+        background: #fee2e2;
+        color: #991b1b;
+        padding: 5px 12px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: bold;
+        text-decoration: none;
+        display: inline-block;
+      }
+      .btn-delete:hover {
+        background: #dc2626;
+        color: #fff;
+      }
+
       @media (max-width: 600px) {
         .sidebar {
           width: 100%;
@@ -235,18 +274,10 @@
         <a onclick="window.location.href = '/'">🏠 Home</a>
         <a onclick="window.location.href = '/dashboard/admin/'">📊 Dashboard</a>
         <a onclick="window.location.href = '/stock/'">📦 Stock</a>
-        <a onclick="window.location.href = '/sales/'" class="active"
-          >💰 Sales</a
-        >
-        <a onclick="window.location.href = '/customer_registration/'"
-          >👥 Register Customer</a
-        >
-        <a onclick="window.location.href = '/customer_deposit/'"
-          >💳 Customer Deposit</a
-        >
-        <a onclick="window.location.href = '/supplier_credit/'"
-          >🚚 Supplier Credit</a
-        >
+        <a onclick="window.location.href = '/sales/'" class="active">💰 Sales</a>
+        <a onclick="window.location.href = '/customer_registration/'">👥 Register Customer</a>
+        <a onclick="window.location.href = '/customer_deposit/'">💳 Customer Deposit</a>
+        <a onclick="window.location.href = '/supplier_credit/'">🚚 Supplier Credit</a>
         <a onclick="window.location.href = '/login/'">🚪 Logout</a>
       </div>
     </div>
@@ -255,165 +286,163 @@
     <div class="main">
       <div class="page-title">💰 Record a Sale</div>
 
+      <!-- show success or error messages -->
+      {% if messages %}
+        {% for message in messages %}
+          {% if message.tags == 'error' %}
+            <div class="alert-error">❌ {{ message }}</div>
+          {% else %}
+            <div class="alert-success">✅ {{ message }}</div>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+
       <!-- SALE ENTRY FORM -->
       <div class="form-card">
         <h3>+ New Sale Entry</h3>
-        <div class="form-grid">
-          <div>
-            <label>Customer Name</label>
-            <input type="text" placeholder="e.g. John Mukasa" />
+        <form method="POST" action="/sales/">
+          {% csrf_token %}
+          <div class="form-grid">
+
+            <div>
+              <label>Product</label>
+              <select name="product_id" id="product_select" onchange="fillPrice()">
+                <option value="">-- Select Product --</option>
+                {% for product in products %}
+                <option value="{{ product.id }}" data-price="{{ product.unit_price }}"
+                  data-stock="{{ product.quantity }}">
+                  {{ product.name }} ({{ product.quantity }} in stock)
+                </option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div>
+              <label>Quantity</label>
+              <input type="number" name="quantity" id="qty"
+                placeholder="e.g. 10" oninput="calcTotal()" min="1" />
+            </div>
+
+            <div>
+              <label>Unit Price (UGX)</label>
+              <input type="number" name="unit_price_display" id="unit_price"
+                placeholder="Auto-filled from stock" oninput="calcTotal()" readonly />
+            </div>
+
+            <div>
+              <label>Sale Date</label>
+              <input type="date" name="sale_date" />
+            </div>
+
+            <div>
+              <label>Delivery Distance (km)</label>
+              <input type="number" name="distance_km" id="distance"
+                placeholder="0 if customer picks up" oninput="calcTotal()" min="0" />
+            </div>
+
+            <div>
+              <label>Customer Type</label>
+              <select name="customer_type">
+                <option>Individual Buyer</option>
+                <option>Retailer</option>
+                <option>Wholesaler</option>
+              </select>
+            </div>
+
           </div>
 
-          <div>
-            <label>Customer Phone</label>
-            <input type="text" placeholder="e.g. 0701234567" />
+          <!-- transport charge rule note -->
+          <div class="transport-note">
+            🚚 <strong>Transport Rule:</strong> Free delivery within 10km for
+            orders ≥ UGX 500,000. Otherwise, an extra
+            <strong>UGX 30,000</strong> is charged.
           </div>
 
-          <div>
-            <label>Product</label>
-            <select>
-              <option value="">-- Select Product --</option>
-              <option>Cement CEM II N (50kg)</option>
-              <option>Cement CEM III N (50kg)</option>
-              <option>Iron Bar 10mm</option>
-              <option>Iron Bar 12mm</option>
-              <option>Iron Bar 16mm</option>
-              <option>Nails 1 inch (5kg)</option>
-              <option>Nails 3 inch (5kg)</option>
-              <option>Nails 4 inch (5kg)</option>
-              <option>Nails 5 inch (5kg)</option>
-              <option>Roofing Nails (5kg)</option>
-              <option>Wheelbarrow</option>
-              <option>Wire Mesh</option>
-              <option>Barbed Wire (High Tensile)</option>
-              <option>Barbed Wire (Low Tensile)</option>
-              <option>Iron Sheets (26G)</option>
-              <option>Iron Sheets (28G)</option>
-            </select>
+          <!-- auto-calculated order total -->
+          <div class="total-box">
+            Order Total: <span id="total-display">UGX 0</span> &nbsp;|&nbsp;
+            Transport: <span id="transport-display">UGX 0</span> &nbsp;|&nbsp;
+            <strong>Grand Total: <span id="grand-display">UGX 0</span></strong>
           </div>
 
-          <div>
-            <label>Quantity</label>
-            <input
-              type="number"
-              id="qty"
-              placeholder="e.g. 10"
-              oninput="calcTotal()"
-            />
-          </div>
-
-          <div>
-            <label>Unit Price (UGX)</label>
-            <input
-              type="number"
-              id="unit_price"
-              placeholder="Auto-filled from stock"
-              oninput="calcTotal()"
-            />
-          </div>
-
-          <div>
-            <label>Sale Date</label>
-            <input type="date" />
-          </div>
-
-          <div>
-            <label>Delivery Distance (km)</label>
-            <input
-              type="number"
-              id="distance"
-              placeholder="0 if customer picks up"
-              oninput="calcTotal()"
-            />
-          </div>
-
-          <div>
-            <label>Customer Type</label>
-            <select>
-              <option>Individual Buyer</option>
-              <option>Retailer</option>
-              <option>Wholesaler</option>
-            </select>
-          </div>
-        </div>
-
-        <!-- Transport Charge Rule Note -->
-        <div class="transport-note">
-          🚚 <strong>Transport Rule:</strong> Free delivery within 10km for
-          orders ≥ UGX 500,000. Otherwise, an extra
-          <strong>UGX 30,000</strong> is charged.
-        </div>
-
-        <!-- Auto-calculated order total -->
-        <div class="total-box" id="total-box">
-          Order Total: <span id="total-display">UGX 0</span> &nbsp;|&nbsp;
-          Transport: <span id="transport-display">UGX 0</span> &nbsp;|&nbsp;
-          <strong>Grand Total: <span id="grand-display">UGX 0</span></strong>
-        </div>
-
-        <button class="btn-submit">Save Sale & Print Receipt</button>
+          <button class="btn-submit" type="submit">Save Sale</button>
+        </form>
       </div>
 
-      <!-- SALES HISTORY TABLE -->
+      <!-- SALES HISTORY TABLE — real data from database -->
       <div class="table-section">
-        <h3>Today's Sales</h3>
+        <h3>Sales History</h3>
         <table>
           <thead>
             <tr>
               <th>#</th>
-              <th>Customer</th>
               <th>Product</th>
               <th>Qty</th>
-              <th>Amount (UGX)</th>
-              <th>Transport</th>
+              <th>Unit Price (UGX)</th>
               <th>Total (UGX)</th>
+              <th>Transport (UGX)</th>
+              <th>Grand Total (UGX)</th>
+              <th>Date</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
+            {% for sale in sales %}
             <tr>
-              <td>001</td>
-              <td>John Mukasa</td>
-              <td>Cement CEM II</td>
-              <td>20 bags</td>
-              <td>560,000</td>
-              <td>Free</td>
-              <td>560,000</td>
+              <td>{{ forloop.counter }}</td>
+              <td>{{ sale.product.name }}</td>
+              <td>{{ sale.quantity }}</td>
+              <td>{{ sale.unit_price|floatformat:0 }}</td>
+              <td>{{ sale.total_price|floatformat:0 }}</td>
+              <td>
+                {% if sale.transport_fee == 0 %}
+                  Free
+                {% else %}
+                  {{ sale.transport_fee|floatformat:0 }}
+                {% endif %}
+              </td>
+              <td>{{ sale.grand_total|floatformat:0 }}</td>
+              <td>{{ sale.date|date:"d M Y" }}</td>
+              <!-- delete button only — sales should not be edited -->
+              <td>
+                <a href="/sales/delete/{{ sale.id }}/" class="btn-delete"
+                  onclick="return confirm('Delete this sale? Stock will be restored.')">
+                  🗑 Delete
+                </a>
+              </td>
             </tr>
+            {% empty %}
             <tr>
-              <td>002</td>
-              <td>Sarah Namutebi</td>
-              <td>Iron Bar 12mm</td>
-              <td>5 bundles</td>
-              <td>375,000</td>
-              <td>30,000</td>
-              <td>405,000</td>
+              <td colspan="9" style="text-align:center; color:#9ca3af;">
+                No sales recorded yet
+              </td>
             </tr>
-            <tr>
-              <td>003</td>
-              <td>Moses Kato</td>
-              <td>Iron Sheets 26G</td>
-              <td>30 sheets</td>
-              <td>900,000</td>
-              <td>Free</td>
-              <td>900,000</td>
-            </tr>
+            {% endfor %}
           </tbody>
         </table>
       </div>
     </div>
 
-    <!-- TRANSPORT CALCULATION SCRIPT -->
+    <!-- transport calculation script -->
     <script>
-      /* Calculates order total and transport charge automatically */
+      /* auto fill unit price when product is selected */
+      function fillPrice() {
+        var select = document.getElementById("product_select");
+        var option = select.options[select.selectedIndex];
+        var price = option.getAttribute("data-price") || 0;
+        document.getElementById("unit_price").value = price;
+        calcTotal();
+      }
+
+      /* calculates order total and transport charge automatically */
       function calcTotal() {
         var qty = parseFloat(document.getElementById("qty").value) || 0;
-        var price =
-          parseFloat(document.getElementById("unit_price").value) || 0;
+        var price = parseFloat(document.getElementById("unit_price").value) || 0;
         var dist = parseFloat(document.getElementById("distance").value) || 0;
 
         var subtotal = qty * price;
 
-        /* Transport rule: free if ≥500,000 AND within 10km, else +30,000 */
+        /* transport rule: free if >=500,000 AND within 10km, else +30,000 */
         var transport = 0;
         if (dist > 0) {
           transport = subtotal >= 500000 && dist <= 10 ? 0 : 30000;
@@ -421,13 +450,9 @@
 
         var grand = subtotal + transport;
 
-        /* Format numbers with commas */
-        document.getElementById("total-display").textContent =
-          "UGX " + subtotal.toLocaleString();
-        document.getElementById("transport-display").textContent =
-          "UGX " + transport.toLocaleString();
-        document.getElementById("grand-display").textContent =
-          "UGX " + grand.toLocaleString();
+        document.getElementById("total-display").textContent = "UGX " + subtotal.toLocaleString();
+        document.getElementById("transport-display").textContent = "UGX " + transport.toLocaleString();
+        document.getElementById("grand-display").textContent = "UGX " + grand.toLocaleString();
       }
     </script>
   </body>

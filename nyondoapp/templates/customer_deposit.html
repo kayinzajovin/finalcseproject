@@ -67,6 +67,7 @@
         border-radius: 8px;
         font-size: 15px;
         margin-bottom: 4px;
+        cursor: pointer;
       }
       .menu a:hover {
         background: #374151;
@@ -92,7 +93,7 @@
         margin-bottom: 10px;
       }
 
-      /* Info note about deposit scheme rules */
+      /* scheme note */
       .scheme-note {
         background: #fff7ed;
         border-left: 4px solid #f59e0b;
@@ -101,6 +102,28 @@
         font-size: 14px;
         color: #374151;
         margin-bottom: 25px;
+      }
+
+      /* success message */
+      .alert-success {
+        background: #dcfce7;
+        color: #166534;
+        padding: 12px 16px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        font-weight: bold;
+        font-size: 14px;
+      }
+
+      /* error message */
+      .alert-error {
+        background: #fee2e2;
+        color: #991b1b;
+        padding: 12px 16px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        font-weight: bold;
+        font-size: 14px;
       }
 
       /*DEPOSIT FORM*/
@@ -143,11 +166,8 @@
       select:focus {
         border-color: #f59e0b;
       }
-      .full {
-        grid-column: 1 / -1;
-      }
 
-      /* Balance summary box shown after customer lookup */
+      /* balance summary box */
       .balance-box {
         margin-top: 18px;
         background: #1f2937;
@@ -182,7 +202,7 @@
         color: #f59e0b;
       }
 
-      /* Print receipt button style */
+      /* print receipt button */
       .btn-receipt {
         margin-top: 20px;
         margin-left: 12px;
@@ -234,7 +254,7 @@
         background: #fff7ed;
       }
 
-      /* Status badge styles */
+      /* status badges */
       .badge-active {
         background: #dcfce7;
         color: #166534;
@@ -259,6 +279,31 @@
         font-size: 12px;
         font-weight: bold;
       }
+
+      /* edit and delete buttons */
+      .btn-edit {
+        background: #1f2937;
+        color: #f59e0b;
+        padding: 5px 12px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: bold;
+        text-decoration: none;
+        margin-right: 5px;
+        display: inline-block;
+      }
+      .btn-delete {
+        background: #fee2e2;
+        color: #991b1b;
+        padding: 5px 12px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: bold;
+        text-decoration: none;
+        display: inline-block;
+      }
+      .btn-edit:hover { background: #f59e0b; color: #1f2937; }
+      .btn-delete:hover { background: #dc2626; color: #fff; }
 
       @media (max-width: 600px) {
         .sidebar {
@@ -287,15 +332,9 @@
         <a onclick="window.location.href = '/dashboard/admin/'">📊 Dashboard</a>
         <a onclick="window.location.href = '/stock/'">📦 Stock</a>
         <a onclick="window.location.href = '/sales/'">💰 Sales</a>
-        <a onclick="window.location.href = '/customer_registration/'"
-          >👥 Register Customer</a
-        >
-        <a onclick="window.location.href = '/customer_deposit/'" class="active"
-          >💳 Customer Deposit</a
-        >
-        <a onclick="window.location.href = '/supplier_credit/'"
-          >🚚 Supplier Credit</a
-        >
+        <a onclick="window.location.href = '/customer_registration/'">👥 Register Customer</a>
+        <a onclick="window.location.href = '/customer_deposit/'" class="active">💳 Customer Deposit</a>
+        <a onclick="window.location.href = '/supplier_credit/'">🚚 Supplier Credit</a>
         <a onclick="window.location.href = '/login/'">🚪 Logout</a>
       </div>
     </div>
@@ -304,7 +343,18 @@
     <div class="main">
       <div class="page-title">💳 Customer Deposit</div>
 
-      <!-- Scheme Rules Note -->
+      <!-- show success or error messages -->
+      {% if messages %}
+        {% for message in messages %}
+          {% if message.tags == 'error' %}
+            <div class="alert-error">❌ {{ message }}</div>
+          {% else %}
+            <div class="alert-success">✅ {{ message }}</div>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+
+      <!-- scheme rules note -->
       <div class="scheme-note">
         ℹ️ <strong>Deposit Scheme Rule:</strong> When a customer comes to pick
         up goods, the quantity issued is determined by the
@@ -315,82 +365,71 @@
       <!-- RECORD DEPOSIT FORM -->
       <div class="form-card">
         <h3>+ Record Deposit Payment</h3>
-        <div class="form-grid">
-          <div>
-            <label>Customer NIN or Name</label>
-            <input type="text" placeholder="Search by NIN or full name" />
+        <form method="POST" action="/customer_deposit/">
+          {% csrf_token %}
+          <div class="form-grid">
+
+            <div>
+              <label>Customer NIN</label>
+              <input type="text" name="nin" placeholder="Enter customer NIN" />
+            </div>
+
+            <div>
+              <label>Product (scheme items only)</label>
+              <select name="product_id">
+                <option value="">-- Select --</option>
+                {% for product in products %}
+                <option value="{{ product.id }}">{{ product.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div>
+              <label>Amount Deposited (UGX)</label>
+              <input type="number" name="amount_deposited" id="deposit_amt"
+                placeholder="e.g. 150000" oninput="calcUnits()" />
+            </div>
+
+            <div>
+              <label>Unit Price (UGX) — from stock</label>
+              <input type="number" id="unit_p" placeholder="e.g. 28000"
+                oninput="calcUnits()" readonly />
+            </div>
+
+            <div>
+              <label>Payment Date</label>
+              <input type="date" name="payment_date" />
+            </div>
+
+            <div>
+              <label>Payment Method</label>
+              <select name="payment_method">
+                <option value="cash">Cash</option>
+                <option value="mobile_money">Mobile Money</option>
+                <option value="bank_transfer">Bank Transfer</option>
+              </select>
+            </div>
+
           </div>
 
-          <div>
-            <label>Product (scheme items only)</label>
-            <select>
-              <option value="">-- Select --</option>
-              <option>Cement CEM II N</option>
-              <option>Cement CEM III N</option>
-              <option>Iron Bar 10mm</option>
-              <option>Iron Bar 12mm</option>
-              <option>Iron Bar 16mm</option>
-              <option>Iron Sheets (26G)</option>
-              <option>Iron Sheets (28G)</option>
-              <option>Iron Sheets (30G)</option>
-            </select>
+          <!-- running balance summary -->
+          <div class="balance-box">
+            <div class="item">
+              Amount Deposited Today<span id="total-dep">UGX 0</span>
+            </div>
+            <div class="item">
+              Units Equivalent Today<span id="units-eq">0 units</span>
+            </div>
           </div>
 
-          <div>
-            <label>Amount Deposited (UGX)</label>
-            <input
-              type="number"
-              id="deposit_amt"
-              placeholder="e.g. 150000"
-              oninput="calcUnits()"
-            />
-          </div>
-
-          <div>
-            <label>Unit Price (UGX) — from stock</label>
-            <input
-              type="number"
-              id="unit_p"
-              placeholder="e.g. 28000"
-              oninput="calcUnits()"
-            />
-          </div>
-
-          <div>
-            <label>Payment Date</label>
-            <input type="date" />
-          </div>
-
-          <div>
-            <label>Payment Method</label>
-            <select>
-              <option>Cash</option>
-              <option>Mobile Money</option>
-              <option>Bank Transfer</option>
-            </select>
-          </div>
-        </div>
-
-        <!-- Running balance summary for the customer -->
-        <div class="balance-box">
-          <div class="item">
-            Total Deposited<span id="total-dep">UGX 0</span>
-          </div>
-          <div class="item">
-            Units Equivalent Today<span id="units-eq">0 units</span>
-          </div>
-          <div class="item">Previous Balance<span>UGX 450,000</span></div>
-        </div>
-
-        <button class="btn-submit" onclick="alert('Deposit saved!')">
-          Save Deposit
-        </button>
-        <button class="btn-receipt" onclick="window.print()">
-          🖨 Print Temp. Receipt
-        </button>
+          <button class="btn-submit" type="submit">Save Deposit</button>
+          <button type="button" class="btn-receipt" onclick="window.print()">
+            🖨 Print Temp. Receipt
+          </button>
+        </form>
       </div>
 
-      <!-- DEPOSIT HISTORY TABLE -->
+      <!-- DEPOSIT HISTORY TABLE — real data from database -->
       <div class="table-section">
         <h3>Deposit History</h3>
         <table>
@@ -400,49 +439,57 @@
               <th>Customer</th>
               <th>Product</th>
               <th>Amount (UGX)</th>
+              <th>Units</th>
+              <th>Payment</th>
               <th>Date</th>
               <th>Status</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            <!-- Sample rows — replace with backend data -->
+            {% for deposit in deposits %}
             <tr>
-              <td>001</td>
-              <td>NAMUTEBI SARAH</td>
-              <td>Cement CEM II N</td>
-              <td>150,000</td>
-              <td>2025-05-10</td>
-              <td><span class="badge-active">Active</span></td>
+              <td>{{ forloop.counter }}</td>
+              <td>{{ deposit.customer.full_name }}</td>
+              <td>{{ deposit.product.name }}</td>
+              <td>{{ deposit.amount_deposited|floatformat:0 }}</td>
+              <td>{{ deposit.units_equivalent }}</td>
+              <td>{{ deposit.get_payment_method_display }}</td>
+              <td>{{ deposit.date|date:"d M Y" }}</td>
+              <td>
+                {% if deposit.status == 'active' %}
+                  <span class="badge-active">Active</span>
+                {% elif deposit.status == 'ready_pickup' %}
+                  <span class="badge-pickup">Ready Pickup</span>
+                {% else %}
+                  <span class="badge-done">Collected</span>
+                {% endif %}
+              </td>
+              <!-- edit and delete buttons -->
+              <td>
+                <a href="/customer_deposit/edit/{{ deposit.id }}/" class="btn-edit">✏ Edit</a>
+                <a href="/customer_deposit/delete/{{ deposit.id }}/" class="btn-delete" onclick="return confirm('Delete this deposit?')">🗑 Delete</a>
+              </td>
             </tr>
+            {% empty %}
             <tr>
-              <td>002</td>
-              <td>KATO MOSES</td>
-              <td>Iron Sheets 26G</td>
-              <td>200,000</td>
-              <td>2025-05-15</td>
-              <td><span class="badge-pickup">Ready Pickup</span></td>
+              <td colspan="9" style="text-align:center; color:#9ca3af;">
+                No deposits recorded yet
+              </td>
             </tr>
-            <tr>
-              <td>003</td>
-              <td>NAKATO JANE</td>
-              <td>Iron Bar 12mm</td>
-              <td>300,000</td>
-              <td>2025-04-28</td>
-              <td><span class="badge-done">Collected</span></td>
-            </tr>
+            {% endfor %}
           </tbody>
         </table>
       </div>
     </div>
 
     <script>
-      /* Calculate how many units today's deposit can buy */
+      /* calculate how many units today's deposit can buy */
       function calcUnits() {
         var amt = parseFloat(document.getElementById("deposit_amt").value) || 0;
         var price = parseFloat(document.getElementById("unit_p").value) || 1;
         var units = Math.floor(amt / price);
-        document.getElementById("total-dep").textContent =
-          "UGX " + amt.toLocaleString();
+        document.getElementById("total-dep").textContent = "UGX " + amt.toLocaleString();
         document.getElementById("units-eq").textContent = units + " unit(s)";
       }
     </script>
