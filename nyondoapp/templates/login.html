@@ -5,12 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login — NYONDO Hardware</title>
     <style>
-      /*  COLOR PALETTE 
-       #1f2937  → Dark Navy
-       #f59e0b  → Amber/Gold
-       #ffffff  → White
-   */
-
       * {
         box-sizing: border-box;
         margin: 0;
@@ -26,7 +20,6 @@
         justify-content: center;
       }
 
-      /* LOGIN CARD */
       .login-card {
         background: #ffffff;
         color: #1f2937;
@@ -37,7 +30,6 @@
         box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
       }
 
-      /* Logo at top of card */
       .card-logo {
         width: 60px;
         height: 60px;
@@ -65,7 +57,6 @@
         margin-bottom: 30px;
       }
 
-      /* FORM ELEMENTS */
       label {
         display: block;
         font-size: 14px;
@@ -85,12 +76,10 @@
         outline: none;
       }
 
-      /* Highlight input on focus */
       input:focus {
         border-color: #f59e0b;
       }
 
-      /* Role selector buttons */
       .role-select {
         display: flex;
         gap: 10px;
@@ -114,7 +103,17 @@
         color: #1f2937;
       }
 
-      /* Login submit button */
+      /* error message box */
+      .alert-error {
+        background: #fee2e2;
+        color: #991b1b;
+        padding: 10px 14px;
+        border-radius: 8px;
+        margin-bottom: 18px;
+        font-size: 13px;
+        font-weight: bold;
+      }
+
       .btn-login {
         width: 100%;
         padding: 14px;
@@ -131,7 +130,6 @@
         opacity: 0.9;
       }
 
-      /* Back to home link */
       .back-link {
         text-align: center;
         margin-top: 20px;
@@ -145,7 +143,6 @@
         cursor: pointer;
       }
 
-      /* RESPONSIVE */
       @media (max-width: 480px) {
         .login-card {
           padding: 30px 20px;
@@ -154,70 +151,54 @@
     </style>
   </head>
   <body>
-    <!-- LOGIN FORM CARD -->
     <div class="login-card">
-      <!-- Logo -->
       <div class="card-logo">N</div>
       <h2>NYONDO HARDWARE</h2>
       <p class="sub">Sign in to manage stock & sales</p>
 
-      <!-- Select Your Role before logging in -->
-      <label>Select Your Role</label>
-      <div class="role-select">
-        <!-- Fixed URLs to match urls.py routes -->
-        <div
-          class="role-btn selected"
-          onclick="selectRole(this, '/dashboard/admin/')"
-        >
-          🔑 Admin
+      <!-- real POST form with csrf token -->
+      <form id="login-form" method="POST" action="/login/">
+        {% csrf_token %}
+
+        <!-- hidden input stores the selected role -->
+        <input type="hidden" name="role" id="role-input" value="admin" />
+
+        <label>Select Your Role</label>
+        <div class="role-select">
+          <div class="role-btn selected" onclick="selectRole(this, 'admin')">🔑 Admin</div>
+          <div class="role-btn" onclick="selectRole(this, 'salesperson')">💰 Sales</div>
+          <div class="role-btn" onclick="selectRole(this, 'stockmanager')">📦 Stock</div>
         </div>
-        <div
-          class="role-btn"
-          onclick="selectRole(this, '/dashboard/salesperson/')"
-        >
-          💰 Sales
-        </div>
-        <div
-          class="role-btn"
-          onclick="selectRole(this, '/dashboard/stockmanager/')"
-        >
-          📦 Stock
-        </div>
-      </div>
 
-      <!-- Staff Login Form -->
-      <label for="username">Username</label>
-      <input type="text" id="username" placeholder="Enter your username" />
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" placeholder="Enter your username" />
 
-      <label for="password">Password</label>
-      <input type="password" id="password" placeholder="Enter your password" />
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" placeholder="Enter your password" />
 
-      <!-- Login button — routes to selected role dashboard -->
-      <button class="btn-login" onclick="doLogin()">LOGIN</button>
+        <!-- show error message if login fails -->
+        {% if messages %}
+          {% for message in messages %}
+            <div class="alert-error">❌ {{ message }}</div>
+          {% endfor %}
+        {% endif %}
 
-      <!-- Back link -->
+        <button class="btn-login" type="submit">LOGIN</button>
+      </form>
+
       <div class="back-link">
-        <!-- Fixed URL to go back to home -->
         <a onclick="window.location.href = '/'">← Back to Home</a>
       </div>
     </div>
 
     <script>
-      /* Track which dashboard to go to based on role selected */
-      var targetDashboard = "/dashboard/admin/";
-
-      /* Highlight the clicked role button and store its target */
-      function selectRole(el, page) {
+      /* update hidden role input when a role button is clicked */
+      function selectRole(el, role) {
         document.querySelectorAll(".role-btn").forEach(function (b) {
           b.classList.remove("selected");
         });
         el.classList.add("selected");
-        targetDashboard = page;
-      }
-
-      /* On login click, go to the selected role dashboard */
-      function doLogin() {
-        location.href = targetDashboard;
+        document.getElementById("role-input").value = role;
       }
     </script>
   </body>

@@ -2,7 +2,8 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.utils import timezone
 from .models import Product, Supplier, Sale, CustomerDeposit, StockArrival, Customer
-
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 
 def index(request):
     return render(request, 'index.html')
@@ -12,8 +13,42 @@ def login_view(request):
     return render(request, 'login.html')
 
 
+def login_view(request):
+    # handle login form submission
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        role = request.POST.get('role')
+
+        # check username and password against database
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+
+            # redirect to dashboard based on selected role
+            if role == 'admin':
+                return redirect('/dashboard/admin/')
+            elif role == 'salesperson':
+                return redirect('/dashboard/salesperson/')
+            elif role == 'stockmanager':
+                return redirect('/dashboard/stockmanager/')
+            else:
+                return redirect('/dashboard/admin/')
+        else:
+            # wrong username or password
+            messages.error(request, 'Invalid username or password.')
+            return render(request, 'login.html')
+
+    return render(request, 'login.html')
 
 
+def logout_view(request):
+    # log the user out and redirect to login page
+    logout(request)
+    return redirect('/login/')
+
+@login_required(login_url='/login/')
 def dashboard_admin(request):
     today = timezone.now().date()
     this_month = timezone.now().month
@@ -83,6 +118,7 @@ def dashboard_stockmanager(request):
     return render(request, 'dashboard_stockmanager.html')
 
 
+@login_required(login_url='/login/')
 def stock(request):
     # handle form submission when new stock arrives
     if request.method == 'POST':
@@ -221,7 +257,7 @@ def sales_delete(request, pk):
     messages.success(request, 'Sale deleted and stock restored!')
     return redirect('sales')
 
-
+@login_required(login_url='/login/')
 def supplier_credit(request):
     # handle new supplier credit form submission
     if request.method == 'POST':
@@ -289,7 +325,7 @@ def supplier_delete(request, pk):
     messages.success(request, f'{name} deleted successfully!')
     return redirect('supplier_credit')
 
-
+@login_required(login_url='/login/')
 def customer_registration(request):
     # handle new customer registration form submission
     if request.method == 'POST':
@@ -356,7 +392,7 @@ def customer_delete(request, pk):
     messages.success(request, f'{name} deleted successfully!')
     return redirect('customer_registration')
 
-
+@login_required(login_url='/login/')
 def customer_deposit(request):
     # handle new deposit payment form submission
     if request.method == 'POST':

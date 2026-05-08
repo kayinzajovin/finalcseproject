@@ -5,11 +5,13 @@ urlpatterns = [
     # main pages
     path('', views.index, name='index'),
     path('login/', views.login_view, name='login'),
+    path('logout/', views.logout_view, name='logout'),
 
     # dashboards
     path('dashboard/admin/', views.dashboard_admin, name='dashboard_admin'),
     path('dashboard/salesperson/', views.dashboard_salesperson, name='dashboard_salesperson'),
     path('dashboard/stockmanager/', views.dashboard_stockmanager, name='dashboard_stockmanager'),
+  
 
     # stock — list, edit, delete
     path('stock/', views.stock, name='stock'),
