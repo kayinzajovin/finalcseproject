@@ -12,6 +12,8 @@ def login_view(request):
     return render(request, 'login.html')
 
 
+
+
 def dashboard_admin(request):
     today = timezone.now().date()
     this_month = timezone.now().month
