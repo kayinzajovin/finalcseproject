@@ -126,7 +126,7 @@ def stock(request):
         )
 
         messages.success(request, f'{product_name} stock saved successfully!')
-        return redirect('/stock/')
+        return redirect('stock')
 
     # load all products to show in the stock table
     products = Product.objects.all()
@@ -145,7 +145,7 @@ def stock_edit(request, pk):
         product.quantity = request.POST.get('quantity')
         product.save()
         messages.success(request, f'{product.name} updated successfully!')
-        return redirect('/stock/')
+        return redirect('stock')
 
     return render(request, 'stock_edit.html', {'product': product})
 
@@ -156,7 +156,7 @@ def stock_delete(request, pk):
     name = product.name
     product.delete()
     messages.success(request, f'{name} deleted successfully!')
-    return redirect('/stock/')
+    return redirect('stock')
 
 
 def sales(request):
@@ -201,7 +201,7 @@ def sales(request):
         product.save()
 
         messages.success(request, f'Sale recorded for {product.name}!')
-        return redirect('/sales/')
+        return redirect('sales')
 
     # load all sales and products for the sales page
     sales = Sale.objects.all().order_by('-date')
@@ -217,7 +217,7 @@ def sales_delete(request, pk):
     product.save()
     sale.delete()
     messages.success(request, 'Sale deleted and stock restored!')
-    return redirect('/sales/')
+    return redirect('sales')
 
 
 def supplier_credit(request):
@@ -247,7 +247,7 @@ def supplier_credit(request):
             supplier.save()
 
         messages.success(request, f'Supplier {name} credit saved!')
-        return redirect('/supplier_credit/')
+        return redirect('supplier_credit')
 
     # load all suppliers and calculate summary totals
     suppliers = Supplier.objects.all()
@@ -274,7 +274,7 @@ def supplier_edit(request, pk):
         supplier.credit_amount = request.POST.get('credit_amount')
         supplier.save()
         messages.success(request, f'{supplier.name} updated successfully!')
-        return redirect('/supplier_credit/')
+        return redirect('supplier_credit')
 
     return render(request, 'supplier_edit.html', {'supplier': supplier})
 
@@ -285,7 +285,7 @@ def supplier_delete(request, pk):
     name = supplier.name
     supplier.delete()
     messages.success(request, f'{name} deleted successfully!')
-    return redirect('/supplier_credit/')
+    return redirect('supplier_credit')
 
 
 def customer_registration(request):
@@ -321,7 +321,7 @@ def customer_registration(request):
         )
 
         messages.success(request, f'{full_name} registered successfully!')
-        return redirect('/customer_registration/')
+        return redirect('customer_registration')
 
     # load all registered customers to show in the table
     customers = Customer.objects.all()
@@ -341,7 +341,7 @@ def customer_edit(request, pk):
         customer.preferred_product = request.POST.get('preferred_product')
         customer.save()
         messages.success(request, f'{customer.full_name} updated successfully!')
-        return redirect('/customer_registration/')
+        return redirect('customer_registration')
 
     return render(request, 'customer_edit.html', {'customer': customer})
 
@@ -352,7 +352,7 @@ def customer_delete(request, pk):
     name = customer.full_name
     customer.delete()
     messages.success(request, f'{name} deleted successfully!')
-    return redirect('/customer_registration/')
+    return redirect('customer_registration')
 
 
 def customer_deposit(request):
@@ -401,7 +401,7 @@ def customer_deposit(request):
         )
 
         messages.success(request, f'Deposit recorded for {customer.full_name}!')
-        return redirect('/customer_deposit/')
+        return redirect('customer_deposit')
 
     # load all deposits, customers and products for the deposit page
     deposits = CustomerDeposit.objects.all().order_by('-date')
@@ -422,7 +422,7 @@ def deposit_edit(request, pk):
         deposit.status = request.POST.get('status')
         deposit.save()
         messages.success(request, 'Deposit status updated successfully!')
-        return redirect('/customer_deposit/')
+        return redirect('customer_deposit')
 
     return render(request, 'deposit_edit.html', {'deposit': deposit})
 
@@ -432,4 +432,4 @@ def deposit_delete(request, pk):
     deposit = CustomerDeposit.objects.get(id=pk)
     deposit.delete()
     messages.success(request, 'Deposit deleted successfully!')
-    return redirect('/customer_deposit/')
+    return redirect('customer_deposit')
