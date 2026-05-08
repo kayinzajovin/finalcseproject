@@ -133,6 +133,32 @@ def stock(request):
     return render(request, 'stock.html', {'products': products})
 
 
+def stock_edit(request, pk):
+    # get the product to edit
+    product = Product.objects.get(id=pk)
+
+    if request.method == 'POST':
+        # update product with new values from form
+        product.name = request.POST.get('name')
+        product.unit_cost = request.POST.get('unit_cost')
+        product.unit_price = request.POST.get('unit_price')
+        product.quantity = request.POST.get('quantity')
+        product.save()
+        messages.success(request, f'{product.name} updated successfully!')
+        return redirect('/stock/')
+
+    return render(request, 'stock_edit.html', {'product': product})
+
+
+def stock_delete(request, pk):
+    # get the product and delete it
+    product = Product.objects.get(id=pk)
+    name = product.name
+    product.delete()
+    messages.success(request, f'{name} deleted successfully!')
+    return redirect('/stock/')
+
+
 def sales(request):
     # handle new sale form submission
     if request.method == 'POST':
@@ -183,6 +209,17 @@ def sales(request):
     return render(request, 'sales.html', {'sales': sales, 'products': products})
 
 
+def sales_delete(request, pk):
+    # get the sale, restore stock quantity then delete
+    sale = Sale.objects.get(id=pk)
+    product = sale.product
+    product.quantity += sale.quantity  # restore stock when sale is deleted
+    product.save()
+    sale.delete()
+    messages.success(request, 'Sale deleted and stock restored!')
+    return redirect('/sales/')
+
+
 def supplier_credit(request):
     # handle new supplier credit form submission
     if request.method == 'POST':
@@ -212,9 +249,43 @@ def supplier_credit(request):
         messages.success(request, f'Supplier {name} credit saved!')
         return redirect('/supplier_credit/')
 
-    # load all suppliers to show in the table
+    # load all suppliers and calculate summary totals
     suppliers = Supplier.objects.all()
-    return render(request, 'supplier_credit.html', {'suppliers': suppliers})
+    total_credit = sum(s.credit_amount for s in suppliers)
+    supplier_count = suppliers.count()
+    suppliers_with_debt = suppliers.filter(credit_amount__gt=0).count()
+
+    return render(request, 'supplier_credit.html', {
+        'suppliers': suppliers,
+        'total_credit': total_credit,
+        'supplier_count': supplier_count,
+        'suppliers_with_debt': suppliers_with_debt,
+    })
+
+
+def supplier_edit(request, pk):
+    # get the supplier to edit
+    supplier = Supplier.objects.get(id=pk)
+
+    if request.method == 'POST':
+        supplier.name = request.POST.get('name')
+        supplier.phone = request.POST.get('phone')
+        supplier.address = request.POST.get('address')
+        supplier.credit_amount = request.POST.get('credit_amount')
+        supplier.save()
+        messages.success(request, f'{supplier.name} updated successfully!')
+        return redirect('/supplier_credit/')
+
+    return render(request, 'supplier_edit.html', {'supplier': supplier})
+
+
+def supplier_delete(request, pk):
+    # get the supplier and delete them
+    supplier = Supplier.objects.get(id=pk)
+    name = supplier.name
+    supplier.delete()
+    messages.success(request, f'{name} deleted successfully!')
+    return redirect('/supplier_credit/')
 
 
 def customer_registration(request):
@@ -255,6 +326,33 @@ def customer_registration(request):
     # load all registered customers to show in the table
     customers = Customer.objects.all()
     return render(request, 'customer_registration.html', {'customers': customers})
+
+
+def customer_edit(request, pk):
+    # get the customer to edit
+    customer = Customer.objects.get(id=pk)
+
+    if request.method == 'POST':
+        customer.full_name = request.POST.get('full_name')
+        customer.NIN = request.POST.get('NIN')
+        customer.phone = request.POST.get('phone')
+        customer.employer = request.POST.get('employer')
+        customer.address = request.POST.get('address')
+        customer.preferred_product = request.POST.get('preferred_product')
+        customer.save()
+        messages.success(request, f'{customer.full_name} updated successfully!')
+        return redirect('/customer_registration/')
+
+    return render(request, 'customer_edit.html', {'customer': customer})
+
+
+def customer_delete(request, pk):
+    # get the customer and delete them
+    customer = Customer.objects.get(id=pk)
+    name = customer.full_name
+    customer.delete()
+    messages.success(request, f'{name} deleted successfully!')
+    return redirect('/customer_registration/')
 
 
 def customer_deposit(request):
@@ -314,3 +412,24 @@ def customer_deposit(request):
         'customers': customers,
         'products': products,
     })
+
+
+def deposit_edit(request, pk):
+    # get the deposit to edit — mainly to update its status
+    deposit = CustomerDeposit.objects.get(id=pk)
+
+    if request.method == 'POST':
+        deposit.status = request.POST.get('status')
+        deposit.save()
+        messages.success(request, 'Deposit status updated successfully!')
+        return redirect('/customer_deposit/')
+
+    return render(request, 'deposit_edit.html', {'deposit': deposit})
+
+
+def deposit_delete(request, pk):
+    # get the deposit and delete it
+    deposit = CustomerDeposit.objects.get(id=pk)
+    deposit.delete()
+    messages.success(request, 'Deposit deleted successfully!')
+    return redirect('/customer_deposit/')
