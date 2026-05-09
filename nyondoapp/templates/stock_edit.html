@@ -26,9 +26,18 @@
         text-align: center; font-size: 12px; color: #94a3b8;
         font-style: italic; margin-bottom: 30px;
       }
+      .role-badge {
+        display: block; text-align: center;
+        background: #f59e0b; color: #1f2937;
+        font-size: 11px; font-weight: bold;
+        padding: 3px 10px; border-radius: 20px;
+        margin: 0 auto 25px; width: fit-content;
+        letter-spacing: 1px; text-transform: uppercase;
+      }
       .menu a {
         display: block; color: #cbd5e1; text-decoration: none;
-        padding: 11px 12px; border-radius: 8px; font-size: 15px; margin-bottom: 4px;
+        padding: 11px 12px; border-radius: 8px;
+        font-size: 15px; margin-bottom: 4px; cursor: pointer;
       }
       .menu a:hover { background: #374151; color: #fff; }
       .menu a.active { background: #f59e0b; color: #1f2937; font-weight: bold; }
@@ -96,20 +105,17 @@
     </style>
   </head>
   <body>
-    <!-- SIDEBAR -->
+    <!-- SIDEBAR — stock manager only sees stock related pages -->
     <div class="sidebar">
       <div class="logo-box">N</div>
       <h2>NYONDO</h2>
+      <span class="role-badge">📦 Stock Manager</span>
       <p class="tagline">Hardware Management System</p>
       <div class="menu">
-        <a onclick="window.location.href = '/'">🏠 Home</a>
-        <a onclick="window.location.href = '/dashboard/admin/'">📊 Dashboard</a>
+        <a onclick="window.location.href = '/dashboard/stockmanager/'">📊 Dashboard</a>
         <a onclick="window.location.href = '/stock/'" class="active">📦 Stock</a>
-        <a onclick="window.location.href = '/sales/'">💰 Sales</a>
-        <a onclick="window.location.href = '/customer_registration/'">👥 Register Customer</a>
-        <a onclick="window.location.href = '/customer_deposit/'">💳 Customer Deposit</a>
         <a onclick="window.location.href = '/supplier_credit/'">🚚 Supplier Credit</a>
-        <a onclick="window.location.href = '/login/'">🚪 Logout</a>
+        <a onclick="window.location.href = '/logout/'">🚪 Logout</a>
       </div>
     </div>
 

@@ -5,12 +5,9 @@ from .models import Product, Supplier, Sale, CustomerDeposit, StockArrival, Cust
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 
+
 def index(request):
     return render(request, 'index.html')
-
-
-def login_view(request):
-    return render(request, 'login.html')
 
 
 def login_view(request):
@@ -47,6 +44,7 @@ def logout_view(request):
     # log the user out and redirect to login page
     logout(request)
     return redirect('/login/')
+
 
 @login_required(login_url='/login/')
 def dashboard_admin(request):
@@ -110,12 +108,62 @@ def dashboard_admin(request):
     return render(request, 'dashboard_admin.html', context)
 
 
+@login_required(login_url='/login/')
 def dashboard_salesperson(request):
     return render(request, 'dashboard_salesperson.html')
 
 
+@login_required(login_url='/login/')
 def dashboard_stockmanager(request):
-    return render(request, 'dashboard_stockmanager.html')
+    # total stock units across all products
+    total_stock = sum(p.quantity for p in Product.objects.all())
+
+    # critical stock — quantity less than 5
+    critical_stock = Product.objects.filter(quantity__lt=5)
+    critical_count = critical_stock.count()
+
+    # low stock — quantity between 5 and 10
+    low_stock_count = Product.objects.filter(quantity__gte=5, quantity__lt=10).count()
+
+    # well stocked — quantity 10 and above
+    well_stocked = Product.objects.filter(quantity__gte=10).count()
+
+    # all products for stock level monitor
+    products = Product.objects.all()
+
+    # supplier credit totals
+    suppliers = Supplier.objects.all()
+    supplier_credit_total = sum(s.credit_amount for s in suppliers)
+    supplier_count = suppliers.count()
+
+    # stock value — cost and selling
+    stock_cost_value = sum(p.unit_cost * p.quantity for p in products)
+    stock_sell_value = sum(p.unit_price * p.quantity for p in products)
+
+    # recent stock arrivals
+    recent_arrivals = StockArrival.objects.order_by('-date')[:5]
+
+    # arrivals this week
+    week_ago = timezone.now() - timezone.timedelta(days=7)
+    arrivals_this_week = StockArrival.objects.filter(date__gte=week_ago).count()
+
+    context = {
+        'total_stock': total_stock,
+        'critical_count': critical_count,
+        'low_stock_count': low_stock_count,
+        'well_stocked': well_stocked,
+        'products': products,
+        'suppliers': suppliers,
+        'supplier_credit_total': supplier_credit_total,
+        'supplier_count': supplier_count,
+        'stock_cost_value': stock_cost_value,
+        'stock_sell_value': stock_sell_value,
+        'recent_arrivals': recent_arrivals,
+        'arrivals_this_week': arrivals_this_week,
+        'critical_stock': critical_stock,
+    }
+
+    return render(request, 'dashboard_stockmanager.html', context)
 
 
 @login_required(login_url='/login/')
@@ -171,6 +219,7 @@ def stock(request):
     return render(request, 'stock.html', {'products': products})
 
 
+@login_required(login_url='/login/')
 def stock_edit(request, pk):
     # get the product to edit
     product = Product.objects.get(id=pk)
@@ -188,6 +237,7 @@ def stock_edit(request, pk):
     return render(request, 'stock_edit.html', {'product': product})
 
 
+@login_required(login_url='/login/')
 def stock_delete(request, pk):
     # get the product and delete it
     product = Product.objects.get(id=pk)
@@ -197,6 +247,7 @@ def stock_delete(request, pk):
     return redirect('stock')
 
 
+@login_required(login_url='/login/')
 def sales(request):
     # handle new sale form submission
     if request.method == 'POST':
@@ -247,6 +298,7 @@ def sales(request):
     return render(request, 'sales.html', {'sales': sales, 'products': products})
 
 
+@login_required(login_url='/login/')
 def sales_delete(request, pk):
     # get the sale, restore stock quantity then delete
     sale = Sale.objects.get(id=pk)
@@ -256,6 +308,7 @@ def sales_delete(request, pk):
     sale.delete()
     messages.success(request, 'Sale deleted and stock restored!')
     return redirect('sales')
+
 
 @login_required(login_url='/login/')
 def supplier_credit(request):
@@ -301,6 +354,7 @@ def supplier_credit(request):
     })
 
 
+@login_required(login_url='/login/')
 def supplier_edit(request, pk):
     # get the supplier to edit
     supplier = Supplier.objects.get(id=pk)
@@ -317,6 +371,7 @@ def supplier_edit(request, pk):
     return render(request, 'supplier_edit.html', {'supplier': supplier})
 
 
+@login_required(login_url='/login/')
 def supplier_delete(request, pk):
     # get the supplier and delete them
     supplier = Supplier.objects.get(id=pk)
@@ -324,6 +379,7 @@ def supplier_delete(request, pk):
     supplier.delete()
     messages.success(request, f'{name} deleted successfully!')
     return redirect('supplier_credit')
+
 
 @login_required(login_url='/login/')
 def customer_registration(request):
@@ -366,6 +422,7 @@ def customer_registration(request):
     return render(request, 'customer_registration.html', {'customers': customers})
 
 
+@login_required(login_url='/login/')
 def customer_edit(request, pk):
     # get the customer to edit
     customer = Customer.objects.get(id=pk)
@@ -384,6 +441,7 @@ def customer_edit(request, pk):
     return render(request, 'customer_edit.html', {'customer': customer})
 
 
+@login_required(login_url='/login/')
 def customer_delete(request, pk):
     # get the customer and delete them
     customer = Customer.objects.get(id=pk)
@@ -391,6 +449,7 @@ def customer_delete(request, pk):
     customer.delete()
     messages.success(request, f'{name} deleted successfully!')
     return redirect('customer_registration')
+
 
 @login_required(login_url='/login/')
 def customer_deposit(request):
@@ -452,6 +511,7 @@ def customer_deposit(request):
     })
 
 
+@login_required(login_url='/login/')
 def deposit_edit(request, pk):
     # get the deposit to edit — mainly to update its status
     deposit = CustomerDeposit.objects.get(id=pk)
@@ -465,6 +525,7 @@ def deposit_edit(request, pk):
     return render(request, 'deposit_edit.html', {'deposit': deposit})
 
 
+@login_required(login_url='/login/')
 def deposit_delete(request, pk):
     # get the deposit and delete it
     deposit = CustomerDeposit.objects.get(id=pk)
