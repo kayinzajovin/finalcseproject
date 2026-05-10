@@ -21,17 +21,23 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
 
         if user is not None:
-            login(request, user)
+            # get the groups this user belongs to
+            user_groups = user.groups.values_list('name', flat=True)
 
-            # redirect to dashboard based on selected role
-            if role == 'admin':
+            # check user belongs to the selected role group
+            if role == 'admin' and 'admin' in user_groups:
+                login(request, user)
                 return redirect('/dashboard/admin/')
-            elif role == 'salesperson':
+            elif role == 'salesperson' and 'salesperson' in user_groups:
+                login(request, user)
                 return redirect('/dashboard/salesperson/')
-            elif role == 'stockmanager':
+            elif role == 'stockmanager' and 'stockmanager' in user_groups:
+                login(request, user)
                 return redirect('/dashboard/stockmanager/')
             else:
-                return redirect('/dashboard/admin/')
+                # user exists but wrong role selected
+                messages.error(request, 'You are not authorized for that role.')
+                return render(request, 'login.html')
         else:
             # wrong username or password
             messages.error(request, 'Invalid username or password.')
