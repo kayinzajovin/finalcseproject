@@ -60,6 +60,20 @@
         font-style: italic;
         margin-bottom: 30px;
       }
+      .role-badge {
+        display: block;
+        text-align: center;
+        background: #f59e0b;
+        color: #1f2937;
+        font-size: 11px;
+        font-weight: bold;
+        padding: 3px 10px;
+        border-radius: 20px;
+        margin: 0 auto 20px;
+        width: fit-content;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+      }
       .menu a {
         display: block;
         color: #cbd5e1;
@@ -202,7 +216,7 @@
         font-weight: bold;
       }
 
-      /* success message — green */
+      /* success message */
       .alert-success {
         background: #dcfce7;
         color: #166534;
@@ -213,7 +227,7 @@
         font-size: 14px;
       }
 
-      /* error message — red */
+      /* error message */
       .alert-error {
         background: #fee2e2;
         color: #991b1b;
@@ -246,14 +260,8 @@
         text-decoration: none;
         display: inline-block;
       }
-      .btn-edit:hover {
-        background: #f59e0b;
-        color: #1f2937;
-      }
-      .btn-delete:hover {
-        background: #dc2626;
-        color: #fff;
-      }
+      .btn-edit:hover { background: #f59e0b; color: #1f2937; }
+      .btn-delete:hover { background: #dc2626; color: #fff; }
 
       @media (max-width: 600px) {
         .sidebar {
@@ -272,20 +280,39 @@
     </style>
   </head>
   <body>
-    <!-- SIDEBAR -->
+    <!-- SIDEBAR — dynamic based on user role -->
     <div class="sidebar">
       <div class="logo-box">N</div>
       <h2>NYONDO</h2>
+
+      {% if request.user.groups.all.0.name == 'admin' %}
+        <span class="role-badge">🔑 Admin</span>
+      {% elif request.user.groups.all.0.name == 'stockmanager' %}
+        <span class="role-badge">📦 Stock Manager</span>
+      {% endif %}
+
       <p class="tagline">Hardware Management System</p>
       <div class="menu">
-        <a onclick="window.location.href = '/'">🏠 Home</a>
-        <a onclick="window.location.href = '/dashboard/admin/'">📊 Dashboard</a>
-        <a onclick="window.location.href = '/stock/'" class="active">📦 Stock</a>
-        <a onclick="window.location.href = '/sales/'">💰 Sales</a>
-        <a onclick="window.location.href = '/customer_registration/'">👥 Register Customer</a>
-        <a onclick="window.location.href = '/customer_deposit/'">💳 Customer Deposit</a>
-        <a onclick="window.location.href = '/supplier_credit/'">🚚 Supplier Credit</a>
-        <a onclick="window.location.href = '/login/'">🚪 Logout</a>
+
+        {% if request.user.groups.all.0.name == 'admin' %}
+          <!-- admin sees all pages -->
+          <a onclick="window.location.href = '/'">🏠 Home</a>
+          <a onclick="window.location.href = '/dashboard/admin/'">📊 Dashboard</a>
+          <a onclick="window.location.href = '/stock/'" class="active">📦 Stock</a>
+          <a onclick="window.location.href = '/sales/'">💰 Sales</a>
+          <a onclick="window.location.href = '/customer_registration/'">👥 Register Customer</a>
+          <a onclick="window.location.href = '/customer_deposit/'">💳 Customer Deposit</a>
+          <a onclick="window.location.href = '/supplier_credit/'">🚚 Supplier Credit</a>
+
+        {% elif request.user.groups.all.0.name == 'stockmanager' %}
+          <!-- stock manager only sees stock related pages -->
+          <a onclick="window.location.href = '/dashboard/stockmanager/'">📊 Dashboard</a>
+          <a onclick="window.location.href = '/stock/'" class="active">📦 Stock</a>
+          <a onclick="window.location.href = '/supplier_credit/'">🚚 Supplier Credit</a>
+          <a onclick="window.location.href = '/sales/'">💰 View Sales</a>
+        {% endif %}
+
+        <a onclick="window.location.href = '/logout/'">🚪 Logout</a>
       </div>
     </div>
 
@@ -307,8 +334,6 @@
       <!-- ADD STOCK FORM -->
       <div class="form-card">
         <h3>+ Add New Stock Arrival</h3>
-
-        <!-- form posts to /stock/ with csrf protection -->
         <form method="POST" action="/stock/">
           {% csrf_token %}
           <div class="form-grid">
@@ -381,7 +406,6 @@
               </select>
             </div>
           </div>
-          <!-- save stock button -->
           <button class="btn-submit" type="submit">Save Stock</button>
         </form>
       </div>
@@ -416,10 +440,12 @@
                   OK
                 {% endif %}
               </td>
-              <!-- edit and delete buttons for each product row -->
               <td>
                 <a href="/stock/edit/{{ product.id }}/" class="btn-edit">✏ Edit</a>
-                <a href="/stock/delete/{{ product.id }}/" class="btn-delete" onclick="return confirm('Are you sure you want to delete {{ product.name }}?')">🗑 Delete</a>
+                <a href="/stock/delete/{{ product.id }}/" class="btn-delete"
+                  onclick="return confirm('Are you sure you want to delete {{ product.name }}?')">
+                  🗑 Delete
+                </a>
               </td>
             </tr>
             {% empty %}
