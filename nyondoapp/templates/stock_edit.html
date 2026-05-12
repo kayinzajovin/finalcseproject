@@ -31,7 +31,7 @@
         background: #f59e0b; color: #1f2937;
         font-size: 11px; font-weight: bold;
         padding: 3px 10px; border-radius: 20px;
-        margin: 0 auto 25px; width: fit-content;
+        margin: 0 auto 20px; width: fit-content;
         letter-spacing: 1px; text-transform: uppercase;
       }
       .menu a {
@@ -105,16 +105,38 @@
     </style>
   </head>
   <body>
-    <!-- SIDEBAR — stock manager only sees stock related pages -->
+    <!-- SIDEBAR — dynamic based on user role -->
     <div class="sidebar">
       <div class="logo-box">N</div>
       <h2>NYONDO</h2>
-      <span class="role-badge">📦 Stock Manager</span>
+
+      {% if request.user.groups.all.0.name == 'admin' %}
+        <span class="role-badge">🔑 Admin</span>
+      {% elif request.user.groups.all.0.name == 'stockmanager' %}
+        <span class="role-badge">📦 Stock Manager</span>
+      {% endif %}
+
       <p class="tagline">Hardware Management System</p>
       <div class="menu">
-        <a onclick="window.location.href = '/dashboard/stockmanager/'">📊 Dashboard</a>
-        <a onclick="window.location.href = '/stock/'" class="active">📦 Stock</a>
-        <a onclick="window.location.href = '/supplier_credit/'">🚚 Supplier Credit</a>
+
+        {% if request.user.groups.all.0.name == 'admin' %}
+          <!-- admin sees all pages -->
+          <a onclick="window.location.href = '/'">🏠 Home</a>
+          <a onclick="window.location.href = '/dashboard/admin/'">📊 Dashboard</a>
+          <a onclick="window.location.href = '/stock/'" class="active">📦 Stock</a>
+          <a onclick="window.location.href = '/sales/'">💰 Sales</a>
+          <a onclick="window.location.href = '/customer_registration/'">👥 Register Customer</a>
+          <a onclick="window.location.href = '/customer_deposit/'">💳 Customer Deposit</a>
+          <a onclick="window.location.href = '/supplier_credit/'">🚚 Supplier Credit</a>
+
+        {% elif request.user.groups.all.0.name == 'stockmanager' %}
+          <!-- stock manager only sees stock related pages -->
+          <a onclick="window.location.href = '/dashboard/stockmanager/'">📊 Dashboard</a>
+          <a onclick="window.location.href = '/stock/'" class="active">📦 Stock</a>
+          <a onclick="window.location.href = '/supplier_credit/'">🚚 Supplier Credit</a>
+          <a onclick="window.location.href = '/sales/'">💰 View Sales</a>
+        {% endif %}
+
         <a onclick="window.location.href = '/logout/'">🚪 Logout</a>
       </div>
     </div>
