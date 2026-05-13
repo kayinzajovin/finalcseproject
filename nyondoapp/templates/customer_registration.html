@@ -245,8 +245,14 @@
         text-decoration: none;
         display: inline-block;
       }
-      .btn-edit:hover { background: #f59e0b; color: #1f2937; }
-      .btn-delete:hover { background: #dc2626; color: #fff; }
+      .btn-edit:hover {
+        background: #f59e0b;
+        color: #1f2937;
+      }
+      .btn-delete:hover {
+        background: #dc2626;
+        color: #fff;
+      }
 
       @media (max-width: 600px) {
         .sidebar {
@@ -275,9 +281,17 @@
         <a onclick="window.location.href = '/dashboard/admin/'">📊 Dashboard</a>
         <a onclick="window.location.href = '/stock/'">📦 Stock</a>
         <a onclick="window.location.href = '/sales/'">💰 Sales</a>
-        <a onclick="window.location.href = '/customer_registration/'" class="active">👥 Register Customer</a>
-        <a onclick="window.location.href = '/customer_deposit/'">💳 Customer Deposit</a>
-        <a onclick="window.location.href = '/supplier_credit/'">🚚 Supplier Credit</a>
+        <a
+          onclick="window.location.href = '/customer_registration/'"
+          class="active"
+          >👥 Register Customer</a
+        >
+        <a onclick="window.location.href = '/customer_deposit/'"
+          >💳 Customer Deposit</a
+        >
+        <a onclick="window.location.href = '/supplier_credit/'"
+          >🚚 Supplier Credit</a
+        >
         <a onclick="window.location.href = '/login/'">🚪 Logout</a>
       </div>
     </div>
@@ -287,15 +301,22 @@
       <div class="page-title">👥 Customer Registration</div>
 
       <!-- show success or error messages -->
+      {% comment %} {% if messages %} {% for message in messages %} {% if message.tags ==
+      'error' %}
+      <div class="alert-error">❌ {{ message }}</div>
+      {% else %}
+      <div class="alert-success">✅ {{ message }}</div>
+      {% endif %} {% endfor %} {% endif %} {% endcomment %}
+
       {% if messages %}
-        {% for message in messages %}
-          {% if message.tags == 'error' %}
-            <div class="alert-error">❌ {{ message }}</div>
-          {% else %}
-            <div class="alert-success">✅ {{ message }}</div>
-          {% endif %}
-        {% endfor %}
-      {% endif %}
+  {% for message in messages %}
+    {% if message.tags == 'error' %}
+      <div class="alert-error">❌ {{ message }}</div>
+    {% else %}
+      <div class="alert-success">✅ {{ message }}</div>
+    {% endif %}
+  {% endfor %}
+{% endif %}
 
       <!-- scheme info note -->
       <div class="scheme-note">
@@ -312,15 +333,23 @@
         <form method="POST" action="/customer_registration/">
           {% csrf_token %}
           <div class="form-grid">
-
             <div>
               <label>Full Name (as on National ID)</label>
-              <input type="text" name="full_name" placeholder="e.g. NAMUTEBI SARAH" />
+              <input
+                type="text"
+                name="full_name"
+                placeholder="e.g. NAMUTEBI SARAH"
+              />
             </div>
 
             <div>
               <label>NIN (National Identification Number)</label>
-              <input type="text" name="NIN" placeholder="e.g. CF12345678ABCD" maxlength="20" />
+              <input
+                type="text"
+                name="NIN"
+                placeholder="e.g. CF12345678ABCD"
+                maxlength="20"
+              />
             </div>
 
             <div>
@@ -330,7 +359,11 @@
 
             <div>
               <label>Employer / Workplace</label>
-              <input type="text" name="employer" placeholder="e.g. Kampala City Council" />
+              <input
+                type="text"
+                name="employer"
+                placeholder="e.g. Kampala City Council"
+              />
             </div>
 
             <div>
@@ -356,9 +389,12 @@
             <!-- full width address field -->
             <div class="full">
               <label>Physical Address / Area</label>
-              <input type="text" name="address" placeholder="e.g. Nansana, Wakiso District" />
+              <input
+                type="text"
+                name="address"
+                placeholder="e.g. Nansana, Wakiso District"
+              />
             </div>
-
           </div>
           <button class="btn-submit" type="submit">Register Customer</button>
         </form>
@@ -392,13 +428,22 @@
               <td>{{ customer.registration_date }}</td>
               <!-- edit and delete buttons -->
               <td>
-                <a href="/customer_registration/edit/{{ customer.id }}/" class="btn-edit">✏ Edit</a>
-                <a href="/customer_registration/delete/{{ customer.id }}/" class="btn-delete" onclick="return confirm('Delete {{ customer.full_name }}?')">🗑 Delete</a>
+                <a
+                  href="/customer_registration/edit/{{ customer.id }}/"
+                  class="btn-edit"
+                  >✏ Edit</a
+                >
+                <a
+                  href="/customer_registration/delete/{{ customer.id }}/"
+                  class="btn-delete"
+                  onclick="return confirm('Delete {{ customer.full_name }}?')"
+                  >🗑 Delete</a
+                >
               </td>
             </tr>
             {% empty %}
             <tr>
-              <td colspan="8" style="text-align:center; color:#9ca3af;">
+              <td colspan="8" style="text-align: center; color: #9ca3af">
                 No customers registered yet
               </td>
             </tr>

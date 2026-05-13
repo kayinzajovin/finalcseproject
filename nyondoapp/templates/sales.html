@@ -279,39 +279,60 @@
       <h2>NYONDO</h2>
 
       {% if request.user.groups.all.0.name == 'admin' %}
-        <span class="role-badge">🔑 Admin</span>
+      <span class="role-badge">🔑 Admin</span>
       {% elif request.user.groups.all.0.name == 'salesperson' %}
-        <span class="role-badge">💰 Salesperson</span>
+      <span class="role-badge">💰 Salesperson</span>
       {% elif request.user.groups.all.0.name == 'stockmanager' %}
-        <span class="role-badge">📦 Stock Manager</span>
+      <span class="role-badge">📦 Stock Manager</span>
       {% endif %}
 
       <p class="tagline">Hardware Management System</p>
       <div class="menu">
-
         {% if request.user.groups.all.0.name == 'admin' %}
-          <!-- admin sees all pages -->
-          <a onclick="window.location.href = '/'">🏠 Home</a>
-          <a onclick="window.location.href = '/dashboard/admin/'">📊 Dashboard</a>
-          <a onclick="window.location.href = '/stock/'">📦 Stock</a>
-          <a onclick="window.location.href = '/sales/'" class="active">💰 Sales</a>
-          <a onclick="window.location.href = '/customer_registration/'">👥 Register Customer</a>
-          <a onclick="window.location.href = '/customer_deposit/'">💳 Customer Deposit</a>
-          <a onclick="window.location.href = '/supplier_credit/'">🚚 Supplier Credit</a>
+        <!-- admin sees all pages -->
+        <a onclick="window.location.href = '/'">🏠 Home</a>
+        <a onclick="window.location.href = '/dashboard/admin/'">📊 Dashboard</a>
+        <a onclick="window.location.href = '/stock/'">📦 Stock</a>
+        <a onclick="window.location.href = '/sales/'" class="active"
+          >💰 Sales</a
+        >
+        <a onclick="window.location.href = '/customer_registration/'"
+          >👥 Register Customer</a
+        >
+        <a onclick="window.location.href = '/customer_deposit/'"
+          >💳 Customer Deposit</a
+        >
+        <a onclick="window.location.href = '/supplier_credit/'"
+          >🚚 Supplier Credit</a
+        >
 
         {% elif request.user.groups.all.0.name == 'salesperson' %}
-          <!-- salesperson sees sales related pages only -->
-          <a onclick="window.location.href = '/dashboard/salesperson/'">📊 Dashboard</a>
-          <a onclick="window.location.href = '/sales/'" class="active">💰 Sales</a>
-          <a onclick="window.location.href = '/customer_registration/'">👥 Register Customer</a>
-          <a onclick="window.location.href = '/customer_deposit/'">💳 Customer Deposit</a>
+        <!-- salesperson sees sales related pages only -->
+        <a onclick="window.location.href = '/dashboard/salesperson/'"
+          >📊 Dashboard</a
+        >
+        <a onclick="window.location.href = '/sales/'" class="active"
+          >💰 Sales</a
+        >
+        <a onclick="window.location.href = '/customer_registration/'"
+          >👥 Register Customer</a
+        >
+        <a onclick="window.location.href = '/customer_deposit/'"
+          >💳 Customer Deposit</a
+        >
 
         {% elif request.user.groups.all.0.name == 'stockmanager' %}
-          <!-- stock manager can only view sales not record -->
-          <a onclick="window.location.href = '/dashboard/stockmanager/'">📊 Dashboard</a>
-          <a onclick="window.location.href = '/stock/'">📦 Stock</a>
-          <a onclick="window.location.href = '/supplier_credit/'">🚚 Supplier Credit</a>
-          <a onclick="window.location.href = '/sales/'" class="active">💰 View Sales</a>
+        <!-- stock manager can only view sales not record -->
+        <a onclick="window.location.href = '/dashboard/stockmanager/'"
+          >📊 Dashboard</a
+        >
+        <a onclick="window.location.href = '/stock/'">📦 Stock</a>
+        <a onclick="window.location.href = '/supplier_credit/'"
+          >🚚 Supplier Credit</a
+        >
+        <a onclick="window.location.href = '/sales/'" class="active"
+          >💰 View Sales</a
+        >
         {% endif %}
 
         <a onclick="window.location.href = '/logout/'">🚪 Logout</a>
@@ -323,15 +344,22 @@
       <div class="page-title">💰 Record a Sale</div>
 
       <!-- show success or error messages -->
+      {% comment %} {% if messages %} {% for message in messages %} {% if message.tags ==
+      'error' %}
+      <div class="alert-error">❌ {{ message }}</div>
+      {% else %}
+      <div class="alert-success">✅ {{ message }}</div>
+      {% endif %} {% endfor %} {% endif %} {% endcomment %}
+
       {% if messages %}
-        {% for message in messages %}
-          {% if message.tags == 'error' %}
-            <div class="alert-error">❌ {{ message }}</div>
-          {% else %}
-            <div class="alert-success">✅ {{ message }}</div>
-          {% endif %}
-        {% endfor %}
-      {% endif %}
+  {% for message in messages %}
+    {% if message.tags == 'error' %}
+      <div class="alert-error">❌ {{ message }}</div>
+    {% else %}
+      <div class="alert-success">✅ {{ message }}</div>
+    {% endif %}
+  {% endfor %}
+{% endif %}
 
       <!-- hide sale form for stock manager — view only -->
       {% if request.user.groups.all.0.name != 'stockmanager' %}
@@ -340,14 +368,20 @@
         <form method="POST" action="/sales/">
           {% csrf_token %}
           <div class="form-grid">
-
             <div>
               <label>Product</label>
-              <select name="product_id" id="product_select" onchange="fillPrice()">
+              <select
+                name="product_id"
+                id="product_select"
+                onchange="fillPrice()"
+              >
                 <option value="">-- Select Product --</option>
                 {% for product in products %}
-                <option value="{{ product.id }}" data-price="{{ product.unit_price }}"
-                  data-stock="{{ product.quantity }}">
+                <option
+                  value="{{ product.id }}"
+                  data-price="{{ product.unit_price }}"
+                  data-stock="{{ product.quantity }}"
+                >
                   {{ product.name }} ({{ product.quantity }} in stock)
                 </option>
                 {% endfor %}
@@ -356,14 +390,26 @@
 
             <div>
               <label>Quantity</label>
-              <input type="number" name="quantity" id="qty"
-                placeholder="e.g. 10" oninput="calcTotal()" min="1" />
+              <input
+                type="number"
+                name="quantity"
+                id="qty"
+                placeholder="e.g. 10"
+                oninput="calcTotal()"
+                min="1"
+              />
             </div>
 
             <div>
               <label>Unit Price (UGX)</label>
-              <input type="number" name="unit_price_display" id="unit_price"
-                placeholder="Auto-filled from stock" oninput="calcTotal()" readonly />
+              <input
+                type="number"
+                name="unit_price_display"
+                id="unit_price"
+                placeholder="Auto-filled from stock"
+                oninput="calcTotal()"
+                readonly
+              />
             </div>
 
             <div>
@@ -373,8 +419,14 @@
 
             <div>
               <label>Delivery Distance (km)</label>
-              <input type="number" name="distance_km" id="distance"
-                placeholder="0 if customer picks up" oninput="calcTotal()" min="0" />
+              <input
+                type="number"
+                name="distance_km"
+                id="distance"
+                placeholder="0 if customer picks up"
+                oninput="calcTotal()"
+                min="0"
+              />
             </div>
 
             <div>
@@ -385,7 +437,6 @@
                 <option>Wholesaler</option>
               </select>
             </div>
-
           </div>
 
           <!-- transport charge rule note -->
@@ -407,9 +458,19 @@
       </div>
       {% else %}
       <!-- stock manager sees a view only notice -->
-      <div style="background:#fff7ed; border-left:4px solid #f59e0b; padding:14px 18px;
-        border-radius:8px; margin-bottom:25px; font-size:14px; color:#374151;">
-        👁 <strong>View Only:</strong> You can view sales records but cannot record new sales.
+      <div
+        style="
+          background: #fff7ed;
+          border-left: 4px solid #f59e0b;
+          padding: 14px 18px;
+          border-radius: 8px;
+          margin-bottom: 25px;
+          font-size: 14px;
+          color: #374151;
+        "
+      >
+        👁 <strong>View Only:</strong> You can view sales records but cannot
+        record new sales.
       </div>
       {% endif %}
 
@@ -441,19 +502,21 @@
               <td>{{ sale.unit_price|floatformat:0 }}</td>
               <td>{{ sale.total_price|floatformat:0 }}</td>
               <td>
-                {% if sale.transport_fee == 0 %}
-                  Free
-                {% else %}
-                  {{ sale.transport_fee|floatformat:0 }}
-                {% endif %}
+                {% if sale.transport_fee == 0 %} Free {% else %} {{
+                sale.transport_fee|floatformat:0 }} {% endif %}
               </td>
               <td>{{ sale.grand_total|floatformat:0 }}</td>
               <td>{{ sale.date|date:"d M Y" }}</td>
               <!-- hide delete button for stock manager -->
               {% if request.user.groups.all.0.name != 'stockmanager' %}
               <td>
-                <a href="/sales/delete/{{ sale.id }}/" class="btn-delete"
-                  onclick="return confirm('Delete this sale? Stock will be restored.')">
+                <a
+                  href="/sales/delete/{{ sale.id }}/"
+                  class="btn-delete"
+                  onclick="
+                    return confirm('Delete this sale? Stock will be restored.');
+                  "
+                >
                   🗑 Delete
                 </a>
               </td>
@@ -461,7 +524,7 @@
             </tr>
             {% empty %}
             <tr>
-              <td colspan="9" style="text-align:center; color:#9ca3af;">
+              <td colspan="9" style="text-align: center; color: #9ca3af">
                 No sales recorded yet
               </td>
             </tr>
@@ -485,7 +548,8 @@
       /* calculates order total and transport charge automatically */
       function calcTotal() {
         var qty = parseFloat(document.getElementById("qty").value) || 0;
-        var price = parseFloat(document.getElementById("unit_price").value) || 0;
+        var price =
+          parseFloat(document.getElementById("unit_price").value) || 0;
         var dist = parseFloat(document.getElementById("distance").value) || 0;
 
         var subtotal = qty * price;
@@ -498,9 +562,12 @@
 
         var grand = subtotal + transport;
 
-        document.getElementById("total-display").textContent = "UGX " + subtotal.toLocaleString();
-        document.getElementById("transport-display").textContent = "UGX " + transport.toLocaleString();
-        document.getElementById("grand-display").textContent = "UGX " + grand.toLocaleString();
+        document.getElementById("total-display").textContent =
+          "UGX " + subtotal.toLocaleString();
+        document.getElementById("transport-display").textContent =
+          "UGX " + transport.toLocaleString();
+        document.getElementById("grand-display").textContent =
+          "UGX " + grand.toLocaleString();
       }
     </script>
   </body>

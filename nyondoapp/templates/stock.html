@@ -260,8 +260,14 @@
         text-decoration: none;
         display: inline-block;
       }
-      .btn-edit:hover { background: #f59e0b; color: #1f2937; }
-      .btn-delete:hover { background: #dc2626; color: #fff; }
+      .btn-edit:hover {
+        background: #f59e0b;
+        color: #1f2937;
+      }
+      .btn-delete:hover {
+        background: #dc2626;
+        color: #fff;
+      }
 
       @media (max-width: 600px) {
         .sidebar {
@@ -286,30 +292,43 @@
       <h2>NYONDO</h2>
 
       {% if request.user.groups.all.0.name == 'admin' %}
-        <span class="role-badge">🔑 Admin</span>
+      <span class="role-badge">🔑 Admin</span>
       {% elif request.user.groups.all.0.name == 'stockmanager' %}
-        <span class="role-badge">📦 Stock Manager</span>
+      <span class="role-badge">📦 Stock Manager</span>
       {% endif %}
 
       <p class="tagline">Hardware Management System</p>
       <div class="menu">
-
         {% if request.user.groups.all.0.name == 'admin' %}
-          <!-- admin sees all pages -->
-          <a onclick="window.location.href = '/'">🏠 Home</a>
-          <a onclick="window.location.href = '/dashboard/admin/'">📊 Dashboard</a>
-          <a onclick="window.location.href = '/stock/'" class="active">📦 Stock</a>
-          <a onclick="window.location.href = '/sales/'">💰 Sales</a>
-          <a onclick="window.location.href = '/customer_registration/'">👥 Register Customer</a>
-          <a onclick="window.location.href = '/customer_deposit/'">💳 Customer Deposit</a>
-          <a onclick="window.location.href = '/supplier_credit/'">🚚 Supplier Credit</a>
+        <!-- admin sees all pages -->
+        <a onclick="window.location.href = '/'">🏠 Home</a>
+        <a onclick="window.location.href = '/dashboard/admin/'">📊 Dashboard</a>
+        <a onclick="window.location.href = '/stock/'" class="active"
+          >📦 Stock</a
+        >
+        <a onclick="window.location.href = '/sales/'">💰 Sales</a>
+        <a onclick="window.location.href = '/customer_registration/'"
+          >👥 Register Customer</a
+        >
+        <a onclick="window.location.href = '/customer_deposit/'"
+          >💳 Customer Deposit</a
+        >
+        <a onclick="window.location.href = '/supplier_credit/'"
+          >🚚 Supplier Credit</a
+        >
 
         {% elif request.user.groups.all.0.name == 'stockmanager' %}
-          <!-- stock manager only sees stock related pages -->
-          <a onclick="window.location.href = '/dashboard/stockmanager/'">📊 Dashboard</a>
-          <a onclick="window.location.href = '/stock/'" class="active">📦 Stock</a>
-          <a onclick="window.location.href = '/supplier_credit/'">🚚 Supplier Credit</a>
-          <a onclick="window.location.href = '/sales/'">💰 View Sales</a>
+        <!-- stock manager only sees stock related pages -->
+        <a onclick="window.location.href = '/dashboard/stockmanager/'"
+          >📊 Dashboard</a
+        >
+        <a onclick="window.location.href = '/stock/'" class="active"
+          >📦 Stock</a
+        >
+        <a onclick="window.location.href = '/supplier_credit/'"
+          >🚚 Supplier Credit</a
+        >
+        <a onclick="window.location.href = '/sales/'">💰 View Sales</a>
         {% endif %}
 
         <a onclick="window.location.href = '/logout/'">🚪 Logout</a>
@@ -321,15 +340,22 @@
       <div class="page-title">📦 Stock Management</div>
 
       <!-- show success or error messages after form submission -->
+      {% comment %} {% if messages %} {% for message in messages %} {% if message.tags ==
+      'error' %}
+      <div class="alert-error">❌ {{ message }}</div>
+      {% else %}
+      <div class="alert-success">✅ {{ message }}</div>
+      {% endif %} {% endfor %} {% endif %} {% endcomment %}
+
       {% if messages %}
-        {% for message in messages %}
-          {% if message.tags == 'error' %}
-            <div class="alert-error">❌ {{ message }}</div>
-          {% else %}
-            <div class="alert-success">✅ {{ message }}</div>
-          {% endif %}
-        {% endfor %}
-      {% endif %}
+  {% for message in messages %}
+    {% if message.tags == 'error' %}
+      <div class="alert-error">❌ {{ message }}</div>
+    {% else %}
+      <div class="alert-success">✅ {{ message }}</div>
+    {% endif %}
+  {% endfor %}
+{% endif %}
 
       <!-- ADD STOCK FORM -->
       <div class="form-card">
@@ -363,12 +389,21 @@
 
             <div>
               <label>Supplier Name</label>
-              <input type="text" name="supplier_name" placeholder="e.g. Hima Cement Depot" />
+              <input
+                type="text"
+                name="supplier_name"
+                placeholder="e.g. Hima Cement Depot"
+              />
             </div>
 
             <div>
               <label>Quantity Received</label>
-              <input type="number" name="quantity" placeholder="e.g. 200" min="1" />
+              <input
+                type="number"
+                name="quantity"
+                placeholder="e.g. 200"
+                min="1"
+              />
             </div>
 
             <div>
@@ -385,12 +420,22 @@
 
             <div>
               <label>Unit Cost (UGX) — price paid per unit</label>
-              <input type="number" name="unit_cost" placeholder="e.g. 25000" min="0" />
+              <input
+                type="number"
+                name="unit_cost"
+                placeholder="e.g. 25000"
+                min="0"
+              />
             </div>
 
             <div>
               <label>Unit Selling Price (UGX) — price to sell per unit</label>
-              <input type="number" name="unit_price" placeholder="e.g. 28000" min="0" />
+              <input
+                type="number"
+                name="unit_price"
+                placeholder="e.g. 28000"
+                min="0"
+              />
             </div>
 
             <div>
@@ -435,15 +480,18 @@
               <td>{{ product.unit_price|floatformat:0 }}</td>
               <td>
                 {% if product.quantity < 10 %}
-                  <span class="low">⚠ Low</span>
-                {% else %}
-                  OK
-                {% endif %}
+                <span class="low">⚠ Low</span>
+                {% else %} OK {% endif %}
               </td>
               <td>
-                <a href="/stock/edit/{{ product.id }}/" class="btn-edit">✏ Edit</a>
-                <a href="/stock/delete/{{ product.id }}/" class="btn-delete"
-                  onclick="return confirm('Are you sure you want to delete {{ product.name }}?')">
+                <a href="/stock/edit/{{ product.id }}/" class="btn-edit"
+                  >✏ Edit</a
+                >
+                <a
+                  href="/stock/delete/{{ product.id }}/"
+                  class="btn-delete"
+                  onclick="return confirm('Are you sure you want to delete {{ product.name }}?')"
+                >
                   🗑 Delete
                 </a>
               </td>

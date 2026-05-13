@@ -165,23 +165,37 @@
 
         <label>Select Your Role</label>
         <div class="role-select">
-          <div class="role-btn selected" onclick="selectRole(this, 'admin')">🔑 Admin</div>
-          <div class="role-btn" onclick="selectRole(this, 'salesperson')">💰 Sales</div>
-          <div class="role-btn" onclick="selectRole(this, 'stockmanager')">📦 Stock</div>
+          <div class="role-btn selected" onclick="selectRole(this, 'admin')">
+            🔑 Admin
+          </div>
+          <div class="role-btn" onclick="selectRole(this, 'salesperson')">
+            💰 Sales
+          </div>
+          <div class="role-btn" onclick="selectRole(this, 'stockmanager')">
+            📦 Stock
+          </div>
         </div>
 
         <label for="username">Username</label>
-        <input type="text" id="username" name="username" placeholder="Enter your username" />
+        <input
+          type="text"
+          id="username"
+          name="username"
+          placeholder="Enter your username"
+        />
 
         <label for="password">Password</label>
-        <input type="password" id="password" name="password" placeholder="Enter your password" />
+        <input
+          type="password"
+          id="password"
+          name="password"
+          placeholder="Enter your password"
+        />
 
         <!-- show error message if login fails -->
-        {% if messages %}
-          {% for message in messages %}
-            <div class="alert-error">❌ {{ message }}</div>
-          {% endfor %}
-        {% endif %}
+        {% if messages %} {% for message in messages %}
+        <div class="alert-error">❌ {{ message }}</div>
+        {% endfor %} {% endif %}
 
         <button class="btn-login" type="submit">LOGIN</button>
       </form>

@@ -302,8 +302,14 @@
         text-decoration: none;
         display: inline-block;
       }
-      .btn-edit:hover { background: #f59e0b; color: #1f2937; }
-      .btn-delete:hover { background: #dc2626; color: #fff; }
+      .btn-edit:hover {
+        background: #f59e0b;
+        color: #1f2937;
+      }
+      .btn-delete:hover {
+        background: #dc2626;
+        color: #fff;
+      }
 
       @media (max-width: 600px) {
         .sidebar {
@@ -332,9 +338,15 @@
         <a onclick="window.location.href = '/dashboard/admin/'">📊 Dashboard</a>
         <a onclick="window.location.href = '/stock/'">📦 Stock</a>
         <a onclick="window.location.href = '/sales/'">💰 Sales</a>
-        <a onclick="window.location.href = '/customer_registration/'">👥 Register Customer</a>
-        <a onclick="window.location.href = '/customer_deposit/'" class="active">💳 Customer Deposit</a>
-        <a onclick="window.location.href = '/supplier_credit/'">🚚 Supplier Credit</a>
+        <a onclick="window.location.href = '/customer_registration/'"
+          >👥 Register Customer</a
+        >
+        <a onclick="window.location.href = '/customer_deposit/'" class="active"
+          >💳 Customer Deposit</a
+        >
+        <a onclick="window.location.href = '/supplier_credit/'"
+          >🚚 Supplier Credit</a
+        >
         <a onclick="window.location.href = '/login/'">🚪 Logout</a>
       </div>
     </div>
@@ -343,16 +355,23 @@
     <div class="main">
       <div class="page-title">💳 Customer Deposit</div>
 
-      <!-- show success or error messages -->
+      {% comment %} <!-- show success or error messages --> {% endcomment %}
+      {% comment %} {% if messages %} {% for message in messages %} {% if message.tags ==
+      'error' %}
+      <div class="alert-error">❌ {{ message }}</div>
+      {% else %}
+      <div class="alert-success">✅ {{ message }}</div>
+      {% endif %} {% endfor %} {% endif %} {% endcomment %}
+
       {% if messages %}
-        {% for message in messages %}
-          {% if message.tags == 'error' %}
-            <div class="alert-error">❌ {{ message }}</div>
-          {% else %}
-            <div class="alert-success">✅ {{ message }}</div>
-          {% endif %}
-        {% endfor %}
-      {% endif %}
+  {% for message in messages %}
+    {% if message.tags == 'error' %}
+      <div class="alert-error">❌ {{ message }}</div>
+    {% else %}
+      <div class="alert-success">✅ {{ message }}</div>
+    {% endif %}
+  {% endfor %}
+{% endif %}
 
       <!-- scheme rules note -->
       <div class="scheme-note">
@@ -368,7 +387,6 @@
         <form method="POST" action="/customer_deposit/">
           {% csrf_token %}
           <div class="form-grid">
-
             <div>
               <label>Customer NIN</label>
               <input type="text" name="nin" placeholder="Enter customer NIN" />
@@ -386,14 +404,24 @@
 
             <div>
               <label>Amount Deposited (UGX)</label>
-              <input type="number" name="amount_deposited" id="deposit_amt"
-                placeholder="e.g. 150000" oninput="calcUnits()" />
+              <input
+                type="number"
+                name="amount_deposited"
+                id="deposit_amt"
+                placeholder="e.g. 150000"
+                oninput="calcUnits()"
+              />
             </div>
 
             <div>
               <label>Unit Price (UGX) — from stock</label>
-              <input type="number" id="unit_p" placeholder="e.g. 28000"
-                oninput="calcUnits()" readonly />
+              <input
+                type="number"
+                id="unit_p"
+                placeholder="e.g. 28000"
+                oninput="calcUnits()"
+                readonly
+              />
             </div>
 
             <div>
@@ -409,7 +437,6 @@
                 <option value="bank_transfer">Bank Transfer</option>
               </select>
             </div>
-
           </div>
 
           <!-- running balance summary -->
@@ -458,22 +485,31 @@
               <td>{{ deposit.date|date:"d M Y" }}</td>
               <td>
                 {% if deposit.status == 'active' %}
-                  <span class="badge-active">Active</span>
+                <span class="badge-active">Active</span>
                 {% elif deposit.status == 'ready_pickup' %}
-                  <span class="badge-pickup">Ready Pickup</span>
+                <span class="badge-pickup">Ready Pickup</span>
                 {% else %}
-                  <span class="badge-done">Collected</span>
+                <span class="badge-done">Collected</span>
                 {% endif %}
               </td>
               <!-- edit and delete buttons -->
               <td>
-                <a href="/customer_deposit/edit/{{ deposit.id }}/" class="btn-edit">✏ Edit</a>
-                <a href="/customer_deposit/delete/{{ deposit.id }}/" class="btn-delete" onclick="return confirm('Delete this deposit?')">🗑 Delete</a>
+                <a
+                  href="/customer_deposit/edit/{{ deposit.id }}/"
+                  class="btn-edit"
+                  >✏ Edit</a
+                >
+                <a
+                  href="/customer_deposit/delete/{{ deposit.id }}/"
+                  class="btn-delete"
+                  onclick="return confirm('Delete this deposit?');"
+                  >🗑 Delete</a
+                >
               </td>
             </tr>
             {% empty %}
             <tr>
-              <td colspan="9" style="text-align:center; color:#9ca3af;">
+              <td colspan="9" style="text-align: center; color: #9ca3af">
                 No deposits recorded yet
               </td>
             </tr>
@@ -489,7 +525,8 @@
         var amt = parseFloat(document.getElementById("deposit_amt").value) || 0;
         var price = parseFloat(document.getElementById("unit_p").value) || 1;
         var units = Math.floor(amt / price);
-        document.getElementById("total-dep").textContent = "UGX " + amt.toLocaleString();
+        document.getElementById("total-dep").textContent =
+          "UGX " + amt.toLocaleString();
         document.getElementById("units-eq").textContent = units + " unit(s)";
       }
     </script>

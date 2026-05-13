@@ -5,88 +5,173 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Edit Supplier — NYONDO Hardware</title>
     <style>
-      * { box-sizing: border-box; margin: 0; padding: 0; font-family: Georgia, serif; }
-      body { background: #f4f6f8; color: #1f2937; }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: Georgia, serif;
+      }
+      body {
+        background: #f4f6f8;
+        color: #1f2937;
+      }
 
       /* SIDEBAR */
       .sidebar {
-        position: fixed; left: 0; top: 0;
-        width: 240px; height: 100vh;
-        background: #1f2937; color: #fff;
-        padding: 25px 20px; overflow-y: auto;
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 240px;
+        height: 100vh;
+        background: #1f2937;
+        color: #fff;
+        padding: 25px 20px;
+        overflow-y: auto;
       }
       .logo-box {
-        width: 55px; height: 55px; background: #f59e0b;
-        color: #1f2937; border-radius: 10px;
-        display: flex; align-items: center; justify-content: center;
-        font-size: 28px; font-weight: bold; margin: 0 auto 10px;
+        width: 55px;
+        height: 55px;
+        background: #f59e0b;
+        color: #1f2937;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        font-weight: bold;
+        margin: 0 auto 10px;
       }
-      .sidebar h2 { text-align: center; font-size: 17px; margin-bottom: 4px; }
+      .sidebar h2 {
+        text-align: center;
+        font-size: 17px;
+        margin-bottom: 4px;
+      }
       .sidebar p.tagline {
-        text-align: center; font-size: 12px; color: #94a3b8;
-        font-style: italic; margin-bottom: 30px;
+        text-align: center;
+        font-size: 12px;
+        color: #94a3b8;
+        font-style: italic;
+        margin-bottom: 30px;
       }
       .menu a {
-        display: block; color: #cbd5e1; text-decoration: none;
-        padding: 11px 12px; border-radius: 8px; font-size: 15px; margin-bottom: 4px;
+        display: block;
+        color: #cbd5e1;
+        text-decoration: none;
+        padding: 11px 12px;
+        border-radius: 8px;
+        font-size: 15px;
+        margin-bottom: 4px;
       }
-      .menu a:hover { background: #374151; color: #fff; }
-      .menu a.active { background: #f59e0b; color: #1f2937; font-weight: bold; }
+      .menu a:hover {
+        background: #374151;
+        color: #fff;
+      }
+      .menu a.active {
+        background: #f59e0b;
+        color: #1f2937;
+        font-weight: bold;
+      }
 
       /* MAIN */
-      .main { margin-left: 240px; padding: 35px 40px; }
+      .main {
+        margin-left: 240px;
+        padding: 35px 40px;
+      }
       .page-title {
-        font-size: 22px; font-weight: bold;
+        font-size: 22px;
+        font-weight: bold;
         border-left: 5px solid #f59e0b;
-        padding-left: 12px; margin-bottom: 25px;
+        padding-left: 12px;
+        margin-bottom: 25px;
       }
 
       /* FORM CARD */
       .form-card {
-        background: #fff; border-radius: 12px;
-        padding: 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        background: #fff;
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         max-width: 700px;
       }
       .form-card h3 {
-        font-size: 16px; color: #f59e0b;
+        font-size: 16px;
+        color: #f59e0b;
         border-bottom: 1px solid #e5e7eb;
-        padding-bottom: 10px; margin-bottom: 20px;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
       }
       .form-grid {
-        display: grid; grid-template-columns: 1fr 1fr; gap: 18px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
       }
       label {
-        display: block; font-size: 13px; font-weight: bold;
-        margin-bottom: 6px; color: #374151;
+        display: block;
+        font-size: 13px;
+        font-weight: bold;
+        margin-bottom: 6px;
+        color: #374151;
       }
       input {
-        width: 100%; padding: 11px 13px;
+        width: 100%;
+        padding: 11px 13px;
         border: 1.5px solid #d1d5db;
-        border-radius: 8px; font-size: 14px; outline: none;
+        border-radius: 8px;
+        font-size: 14px;
+        outline: none;
       }
-      input:focus { border-color: #f59e0b; }
+      input:focus {
+        border-color: #f59e0b;
+      }
 
-      .btn-row { margin-top: 24px; display: flex; gap: 12px; }
+      .btn-row {
+        margin-top: 24px;
+        display: flex;
+        gap: 12px;
+      }
       .btn-save {
-        background: #f59e0b; color: #1f2937;
-        padding: 13px 30px; border: none;
-        border-radius: 8px; font-size: 15px;
-        font-weight: bold; cursor: pointer;
+        background: #f59e0b;
+        color: #1f2937;
+        padding: 13px 30px;
+        border: none;
+        border-radius: 8px;
+        font-size: 15px;
+        font-weight: bold;
+        cursor: pointer;
       }
-      .btn-save:hover { background: #1f2937; color: #f59e0b; }
+      .btn-save:hover {
+        background: #1f2937;
+        color: #f59e0b;
+      }
       .btn-cancel {
-        background: #e5e7eb; color: #374151;
-        padding: 13px 30px; border: none;
-        border-radius: 8px; font-size: 15px;
-        font-weight: bold; cursor: pointer;
-        text-decoration: none; display: inline-block;
+        background: #e5e7eb;
+        color: #374151;
+        padding: 13px 30px;
+        border: none;
+        border-radius: 8px;
+        font-size: 15px;
+        font-weight: bold;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
       }
-      .btn-cancel:hover { background: #d1d5db; }
+      .btn-cancel:hover {
+        background: #d1d5db;
+      }
 
       @media (max-width: 600px) {
-        .sidebar { width: 100%; height: auto; position: relative; }
-        .main { margin-left: 0; padding: 20px; }
-        .form-grid { grid-template-columns: 1fr; }
+        .sidebar {
+          width: 100%;
+          height: auto;
+          position: relative;
+        }
+        .main {
+          margin-left: 0;
+          padding: 20px;
+        }
+        .form-grid {
+          grid-template-columns: 1fr;
+        }
       }
     </style>
   </head>
@@ -101,9 +186,15 @@
         <a onclick="window.location.href = '/dashboard/admin/'">📊 Dashboard</a>
         <a onclick="window.location.href = '/stock/'">📦 Stock</a>
         <a onclick="window.location.href = '/sales/'">💰 Sales</a>
-        <a onclick="window.location.href = '/customer_registration/'">👥 Register Customer</a>
-        <a onclick="window.location.href = '/customer_deposit/'">💳 Customer Deposit</a>
-        <a onclick="window.location.href = '/supplier_credit/'" class="active">🚚 Supplier Credit</a>
+        <a onclick="window.location.href = '/customer_registration/'"
+          >👥 Register Customer</a
+        >
+        <a onclick="window.location.href = '/customer_deposit/'"
+          >💳 Customer Deposit</a
+        >
+        <a onclick="window.location.href = '/supplier_credit/'" class="active"
+          >🚚 Supplier Credit</a
+        >
         <a onclick="window.location.href = '/login/'">🚪 Logout</a>
       </div>
     </div>
@@ -127,11 +218,19 @@
             </div>
             <div>
               <label>Address</label>
-              <input type="text" name="address" value="{{ supplier.address }}" />
+              <input
+                type="text"
+                name="address"
+                value="{{ supplier.address }}"
+              />
             </div>
             <div>
               <label>Credit Amount (UGX)</label>
-              <input type="number" name="credit_amount" value="{{ supplier.credit_amount }}" />
+              <input
+                type="number"
+                name="credit_amount"
+                value="{{ supplier.credit_amount }}"
+              />
             </div>
           </div>
           <div class="btn-row">

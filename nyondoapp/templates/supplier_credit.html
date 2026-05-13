@@ -272,8 +272,14 @@
         text-decoration: none;
         display: inline-block;
       }
-      .btn-edit:hover { background: #f59e0b; color: #1f2937; }
-      .btn-delete:hover { background: #dc2626; color: #fff; }
+      .btn-edit:hover {
+        background: #f59e0b;
+        color: #1f2937;
+      }
+      .btn-delete:hover {
+        background: #dc2626;
+        color: #fff;
+      }
 
       @media (max-width: 600px) {
         .sidebar {
@@ -305,9 +311,15 @@
         <a onclick="window.location.href = '/dashboard/admin/'">📊 Dashboard</a>
         <a onclick="window.location.href = '/stock/'">📦 Stock</a>
         <a onclick="window.location.href = '/sales/'">💰 Sales</a>
-        <a onclick="window.location.href = '/customer_registration/'">👥 Register Customer</a>
-        <a onclick="window.location.href = '/customer_deposit/'">💳 Customer Deposit</a>
-        <a onclick="window.location.href = '/supplier_credit/'" class="active">🚚 Supplier Credit</a>
+        <a onclick="window.location.href = '/customer_registration/'"
+          >👥 Register Customer</a
+        >
+        <a onclick="window.location.href = '/customer_deposit/'"
+          >💳 Customer Deposit</a
+        >
+        <a onclick="window.location.href = '/supplier_credit/'" class="active"
+          >🚚 Supplier Credit</a
+        >
         <a onclick="window.location.href = '/login/'">🚪 Logout</a>
       </div>
     </div>
@@ -317,15 +329,22 @@
       <div class="page-title">🚚 Supplier Credit</div>
 
       <!-- show success or error messages -->
+      {% comment %} {% if messages %} {% for message in messages %} {% if message.tags ==
+      'error' %}
+      <div class="alert-error">❌ {{ message }}</div>
+      {% else %}
+      <div class="alert-success">✅ {{ message }}</div>
+      {% endif %} {% endfor %} {% endif %} {% endcomment %}
+
       {% if messages %}
-        {% for message in messages %}
-          {% if message.tags == 'error' %}
-            <div class="alert-error">❌ {{ message }}</div>
-          {% else %}
-            <div class="alert-success">✅ {{ message }}</div>
-          {% endif %}
-        {% endfor %}
-      {% endif %}
+  {% for message in messages %}
+    {% if message.tags == 'error' %}
+      <div class="alert-error">❌ {{ message }}</div>
+    {% else %}
+      <div class="alert-success">✅ {{ message }}</div>
+    {% endif %}
+  {% endfor %}
+{% endif %}
 
       <!-- summary cards — real data from database -->
       <div class="summary-cards">
@@ -351,7 +370,11 @@
           <div class="form-grid">
             <div>
               <label>Supplier Name</label>
-              <input type="text" name="name" placeholder="e.g. Hima Cement Factory" />
+              <input
+                type="text"
+                name="name"
+                placeholder="e.g. Hima Cement Factory"
+              />
             </div>
 
             <div>
@@ -361,12 +384,20 @@
 
             <div>
               <label>Address</label>
-              <input type="text" name="address" placeholder="e.g. Kampala Road" />
+              <input
+                type="text"
+                name="address"
+                placeholder="e.g. Kampala Road"
+              />
             </div>
 
             <div>
               <label>Credit Amount (UGX)</label>
-              <input type="number" name="credit_amount" placeholder="e.g. 7500000" />
+              <input
+                type="number"
+                name="credit_amount"
+                placeholder="e.g. 7500000"
+              />
             </div>
           </div>
           <button class="btn-submit" type="submit">Save Supplier Credit</button>
@@ -398,20 +429,29 @@
               <td>{{ supplier.credit_amount|floatformat:0 }}</td>
               <td>
                 {% if supplier.credit_amount > 0 %}
-                  <span class="badge-unpaid">Unpaid</span>
+                <span class="badge-unpaid">Unpaid</span>
                 {% else %}
-                  <span class="badge-paid">Cleared</span>
+                <span class="badge-paid">Cleared</span>
                 {% endif %}
               </td>
               <!-- edit and delete buttons -->
               <td>
-                <a href="/supplier_credit/edit/{{ supplier.id }}/" class="btn-edit">✏ Edit</a>
-                <a href="/supplier_credit/delete/{{ supplier.id }}/" class="btn-delete" onclick="return confirm('Delete {{ supplier.name }}?')">🗑 Delete</a>
+                <a
+                  href="/supplier_credit/edit/{{ supplier.id }}/"
+                  class="btn-edit"
+                  >✏ Edit</a
+                >
+                <a
+                  href="/supplier_credit/delete/{{ supplier.id }}/"
+                  class="btn-delete"
+                  onclick="return confirm('Delete {{ supplier.name }}?')"
+                  >🗑 Delete</a
+                >
               </td>
             </tr>
             {% empty %}
             <tr>
-              <td colspan="7" style="text-align:center; color:#9ca3af;">
+              <td colspan="7" style="text-align: center; color: #9ca3af">
                 No suppliers added yet
               </td>
             </tr>
