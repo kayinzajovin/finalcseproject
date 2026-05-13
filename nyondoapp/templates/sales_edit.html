@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sales — NYONDO Hardware</title>
+    <title>Edit Sale — NYONDO Hardware</title>
     <style>
       * {
         box-sizing: border-box;
@@ -101,35 +101,12 @@
         margin-bottom: 25px;
       }
 
-      /* success message */
-      .alert-success {
-        background: #dcfce7;
-        color: #166534;
-        padding: 12px 16px;
-        border-radius: 8px;
-        margin-bottom: 20px;
-        font-weight: bold;
-        font-size: 14px;
-      }
-
-      /* error message */
-      .alert-error {
-        background: #fee2e2;
-        color: #991b1b;
-        padding: 12px 16px;
-        border-radius: 8px;
-        margin-bottom: 20px;
-        font-weight: bold;
-        font-size: 14px;
-      }
-
-      /* FORM CARD */
       .form-card {
         background: #fff;
         border-radius: 12px;
         padding: 30px;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-        margin-bottom: 35px;
+        max-width: 700px;
       }
       .form-card h3 {
         font-size: 16px;
@@ -164,34 +141,26 @@
         border-color: #f59e0b;
       }
 
-      /* transport note box */
-      .transport-note {
-        margin-top: 18px;
-        background: #fff7ed;
-        border-left: 4px solid #f59e0b;
-        padding: 12px 16px;
-        border-radius: 8px;
-        font-size: 14px;
-        color: #1f2937;
-      }
-
-      /* order total summary box */
       .total-box {
         margin-top: 18px;
         background: #1f2937;
         color: #ffffff;
         padding: 16px 20px;
         border-radius: 10px;
-        font-size: 16px;
+        font-size: 15px;
       }
       .total-box span {
         color: #f59e0b;
-        font-size: 20px;
+        font-size: 18px;
         font-weight: bold;
       }
 
-      .btn-submit {
+      .btn-row {
         margin-top: 20px;
+        display: flex;
+        gap: 12px;
+      }
+      .btn-submit {
         background: #f59e0b;
         color: #1f2937;
         padding: 13px 30px;
@@ -205,92 +174,32 @@
         background: #1f2937;
         color: #f59e0b;
       }
-
-      /* SALES HISTORY TABLE */
-      .table-section {
-        background: #fff;
-        border-radius: 12px;
-        padding: 25px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-      }
-      .table-section h3 {
-        font-size: 16px;
-        margin-bottom: 18px;
-        border-left: 4px solid #f59e0b;
-        padding-left: 10px;
-      }
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 14px;
-      }
-      th {
-        background: #1f2937;
-        color: #f59e0b;
-        padding: 12px 14px;
-        text-align: left;
-        font-size: 13px;
-      }
-      td {
-        padding: 11px 14px;
-        border-bottom: 1px solid #e5e7eb;
-        color: #374151;
-      }
-      tr:hover td {
-        background: #fff7ed;
-      }
-
-      /* edit button */
-      .btn-edit {
-        background: #1f2937;
-        color: #f59e0b;
-        padding: 5px 12px;
-        border-radius: 6px;
-        font-size: 12px;
-        font-weight: bold;
-        text-decoration: none;
-        display: inline-block;
-        margin-right: 5px;
-      }
-      .btn-edit:hover {
-        background: #f59e0b;
+      .btn-cancel {
+        background: #e5e7eb;
         color: #1f2937;
-      }
-
-      /* delete button */
-      .btn-delete {
-        background: #fee2e2;
-        color: #991b1b;
-        padding: 5px 12px;
-        border-radius: 6px;
-        font-size: 12px;
+        padding: 13px 30px;
+        border: none;
+        border-radius: 8px;
+        font-size: 15px;
         font-weight: bold;
+        cursor: pointer;
         text-decoration: none;
         display: inline-block;
       }
-      .btn-delete:hover {
-        background: #dc2626;
+      .btn-cancel:hover {
+        background: #1f2937;
         color: #fff;
       }
 
       @media (max-width: 600px) {
-        .sidebar {
-          width: 100%;
-          height: auto;
-          position: relative;
-        }
-        .main {
-          margin-left: 0;
-          padding: 20px;
-        }
-        .form-grid {
-          grid-template-columns: 1fr;
-        }
+        .sidebar { width: 100%; height: auto; position: relative; }
+        .main { margin-left: 0; padding: 20px; }
+        .form-grid { grid-template-columns: 1fr; }
       }
     </style>
   </head>
   <body>
-    <!-- SIDEBAR — dynamic based on user role -->
+    <!-- SIDEBAR -->
     <div class="sidebar">
       <div class="logo-box">N</div>
       <h2>NYONDO</h2>
@@ -299,8 +208,6 @@
         <span class="role-badge">🔑 Admin</span>
       {% elif request.user.groups.all.0.name == 'salesperson' %}
         <span class="role-badge">💰 Salesperson</span>
-      {% elif request.user.groups.all.0.name == 'stockmanager' %}
-        <span class="role-badge">📦 Stock Manager</span>
       {% endif %}
 
       <p class="tagline">Hardware Management System</p>
@@ -313,52 +220,32 @@
           <a onclick="window.location.href = '/customer_registration/'">👥 Register Customer</a>
           <a onclick="window.location.href = '/customer_deposit/'">💳 Customer Deposit</a>
           <a onclick="window.location.href = '/supplier_credit/'">🚚 Supplier Credit</a>
-
         {% elif request.user.groups.all.0.name == 'salesperson' %}
           <a onclick="window.location.href = '/dashboard/salesperson/'">📊 Dashboard</a>
           <a onclick="window.location.href = '/sales/'" class="active">💰 Sales</a>
           <a onclick="window.location.href = '/customer_registration/'">👥 Register Customer</a>
           <a onclick="window.location.href = '/customer_deposit/'">💳 Customer Deposit</a>
-
-        {% elif request.user.groups.all.0.name == 'stockmanager' %}
-          <a onclick="window.location.href = '/dashboard/stockmanager/'">📊 Dashboard</a>
-          <a onclick="window.location.href = '/stock/'">📦 Stock</a>
-          <a onclick="window.location.href = '/supplier_credit/'">🚚 Supplier Credit</a>
-          <a onclick="window.location.href = '/sales/'" class="active">💰 View Sales</a>
         {% endif %}
-
         <a onclick="window.location.href = '/logout/'">🚪 Logout</a>
       </div>
     </div>
 
     <!-- MAIN CONTENT -->
     <div class="main">
-      <div class="page-title">💰 Record a Sale</div>
+      <div class="page-title">✏ Edit Sale</div>
 
-      <!-- show success or error messages -->
-      {% if messages %}
-        {% for message in messages %}
-          {% if message.tags == 'error' %}
-            <div class="alert-error">❌ {{ message }}</div>
-          {% else %}
-            <div class="alert-success">✅ {{ message }}</div>
-          {% endif %}
-        {% endfor %}
-      {% endif %}
-
-      <!-- hide sale form for stock manager — view only -->
-      {% if request.user.groups.all.0.name != 'stockmanager' %}
       <div class="form-card">
-        <h3>+ New Sale Entry</h3>
-        <form method="POST" action="/sales/">
+        <h3>Update Sale Record</h3>
+        <form method="POST" action="/sales/edit/{{ sale.id }}/">
           {% csrf_token %}
           <div class="form-grid">
+
             <div>
               <label>Product</label>
               <select name="product_id" id="product_select" onchange="fillPrice()">
-                <option value="">-- Select Product --</option>
                 {% for product in products %}
-                <option value="{{ product.id }}" data-price="{{ product.unit_price }}" data-stock="{{ product.quantity }}">
+                <option value="{{ product.id }}" data-price="{{ product.unit_price }}"
+                  {% if product.id == sale.product.id %}selected{% endif %}>
                   {{ product.name }} ({{ product.quantity }} in stock)
                 </option>
                 {% endfor %}
@@ -367,107 +254,36 @@
 
             <div>
               <label>Quantity</label>
-              <input type="number" name="quantity" id="qty" placeholder="e.g. 10" oninput="calcTotal()" min="1" />
+              <input type="number" name="quantity" id="qty" value="{{ sale.quantity }}" oninput="calcTotal()" min="1" />
             </div>
 
             <div>
               <label>Unit Price (UGX)</label>
-              <input type="number" name="unit_price_display" id="unit_price" placeholder="Auto-filled from stock" oninput="calcTotal()" readonly />
-            </div>
-
-            <div>
-              <label>Sale Date</label>
-              <input type="date" name="sale_date" />
+              <input type="number" id="unit_price" value="{{ sale.unit_price }}" readonly />
             </div>
 
             <div>
               <label>Delivery Distance (km)</label>
-              <input type="number" name="distance_km" id="distance" placeholder="0 if customer picks up" oninput="calcTotal()" min="0" />
+              <input type="number" name="distance_km" id="distance" value="{{ sale.distance_km }}" oninput="calcTotal()" min="0" />
             </div>
 
-            <div>
-              <label>Customer Type</label>
-              <select name="customer_type">
-                <option>Individual Buyer</option>
-                <option>Retailer</option>
-                <option>Wholesaler</option>
-              </select>
-            </div>
           </div>
 
-          <!-- transport charge rule note -->
-          <div class="transport-note">
-            🚚 <strong>Transport Rule:</strong> Free delivery within 10km for
-            orders ≥ UGX 500,000. Otherwise, an extra <strong>UGX 30,000</strong> is charged.
-          </div>
-
-          <!-- auto-calculated order total -->
+          <!-- live total preview -->
           <div class="total-box">
             Order Total: <span id="total-display">UGX 0</span> &nbsp;|&nbsp;
             Transport: <span id="transport-display">UGX 0</span> &nbsp;|&nbsp;
             <strong>Grand Total: <span id="grand-display">UGX 0</span></strong>
           </div>
 
-          <button class="btn-submit" type="submit">Save Sale</button>
+          <div class="btn-row">
+            <button class="btn-submit" type="submit">💾 Save Changes</button>
+            <a href="/sales/" class="btn-cancel">✖ Cancel</a>
+          </div>
         </form>
-      </div>
-      {% else %}
-      <!-- stock manager sees a view only notice -->
-      <div style="background: #fff7ed; border-left: 4px solid #f59e0b; padding: 14px 18px; border-radius: 8px; margin-bottom: 25px; font-size: 14px; color: #374151;">
-        👁 <strong>View Only:</strong> You can view sales records but cannot record new sales.
-      </div>
-      {% endif %}
-
-      <!-- SALES HISTORY TABLE — real data from database -->
-      <div class="table-section">
-        <h3>Sales History</h3>
-        <table>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Product</th>
-              <th>Qty</th>
-              <th>Unit Price (UGX)</th>
-              <th>Total (UGX)</th>
-              <th>Transport (UGX)</th>
-              <th>Grand Total (UGX)</th>
-              <th>Date</th>
-              {% if request.user.groups.all.0.name != 'stockmanager' %}
-              <th>Actions</th>
-              {% endif %}
-            </tr>
-          </thead>
-          <tbody>
-            {% for sale in sales %}
-            <tr>
-              <td>{{ forloop.counter }}</td>
-              <td>{{ sale.product.name }}</td>
-              <td>{{ sale.quantity }}</td>
-              <td>{{ sale.unit_price|floatformat:0 }}</td>
-              <td>{{ sale.total_price|floatformat:0 }}</td>
-              <td>{% if sale.transport_fee == 0 %}Free{% else %}{{ sale.transport_fee|floatformat:0 }}{% endif %}</td>
-              <td>{{ sale.grand_total|floatformat:0 }}</td>
-              <td>{{ sale.date|date:"d M Y" }}</td>
-              {% if request.user.groups.all.0.name != 'stockmanager' %}
-              <td>
-                <a href="/sales/edit/{{ sale.id }}/" class="btn-edit">✏ Edit</a>
-                <a href="/sales/delete/{{ sale.id }}/" class="btn-delete" onclick="return confirm('Delete this sale? Stock will be restored.');">🗑 Delete</a>
-              </td>
-              {% endif %}
-            </tr>
-            {% empty %}
-            <tr>
-              <td colspan="9" style="text-align: center; color: #9ca3af">
-                No sales recorded yet
-              </td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
       </div>
     </div>
 
-    <!-- transport calculation script -->
     <script>
       function fillPrice() {
         var select = document.getElementById("product_select");
@@ -481,20 +297,19 @@
         var qty = parseFloat(document.getElementById("qty").value) || 0;
         var price = parseFloat(document.getElementById("unit_price").value) || 0;
         var dist = parseFloat(document.getElementById("distance").value) || 0;
-
         var subtotal = qty * price;
-
         var transport = 0;
         if (dist > 0) {
           transport = subtotal >= 500000 && dist <= 10 ? 0 : 30000;
         }
-
         var grand = subtotal + transport;
-
         document.getElementById("total-display").textContent = "UGX " + subtotal.toLocaleString();
         document.getElementById("transport-display").textContent = "UGX " + transport.toLocaleString();
         document.getElementById("grand-display").textContent = "UGX " + grand.toLocaleString();
       }
+
+      // run on page load to show current totals
+      calcTotal();
     </script>
   </body>
 </html>

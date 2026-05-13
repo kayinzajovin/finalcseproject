@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views
 
+
 urlpatterns = [
     # main pages
     path('', views.index, name='index'),
@@ -17,6 +18,7 @@ urlpatterns = [
     path('stock/', views.stock, name='stock'),
     path('stock/edit/<int:pk>/', views.stock_edit, name='stock_edit'),
     path('stock/delete/<int:pk>/', views.stock_delete, name='stock_delete'),
+    path('sales/edit/<int:pk>/', views.sales_edit, name='sales_edit'),
 
     # sales — list, delete
     path('sales/', views.sales, name='sales'),

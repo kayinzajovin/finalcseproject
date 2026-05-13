@@ -5,12 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sales Dashboard — NYONDO Hardware</title>
     <style>
-      /*  COLOR PALETTE 
-       #1f2937  → Dark Navy
-       #f59e0b  → Amber/Gold
-       #ffffff  → White
- */
-
       * {
         box-sizing: border-box;
         margin: 0;
@@ -56,7 +50,6 @@
         margin-bottom: 2px;
       }
 
-      /* Role badge — different label from admin */
       .role-badge {
         display: block;
         text-align: center;
@@ -101,7 +94,6 @@
         font-weight: bold;
       }
 
-      /* Locked menu item — grayed out, not clickable */
       .menu .locked {
         display: flex;
         align-items: center;
@@ -120,7 +112,6 @@
         padding: 30px 35px;
       }
 
-      /* Top bar */
       .topbar {
         display: flex;
         justify-content: space-between;
@@ -355,34 +346,17 @@
       }
 
       @media (max-width: 900px) {
-        .cards {
-          grid-template-columns: 1fr 1fr;
-        }
-        .two-col {
-          grid-template-columns: 1fr;
-        }
+        .cards { grid-template-columns: 1fr 1fr; }
+        .two-col { grid-template-columns: 1fr; }
       }
       @media (max-width: 600px) {
-        .sidebar {
-          width: 100%;
-          height: auto;
-          position: relative;
-        }
-        .main {
-          margin-left: 0;
-          padding: 20px;
-        }
-        .cards {
-          grid-template-columns: 1fr;
-        }
+        .sidebar { width: 100%; height: auto; position: relative; }
+        .main { margin-left: 0; padding: 20px; }
+        .cards { grid-template-columns: 1fr; }
       }
     </style>
   </head>
   <body>
-    <!-- 
-     SIDEBAR — SALESPERSON
-     (limited to sales-related pages)
- -->
     <div class="sidebar">
       <div class="logo-box">N</div>
       <h2>NYONDO</h2>
@@ -390,130 +364,104 @@
 
       <div class="menu">
         <div class="menu-label">Overview</div>
-        <a
-          onclick="window.location.href = '/dashboard/salesperson/'"
-          class="active"
-          >📊 My Dashboard</a
-        >
+        <a onclick="window.location.href = '/dashboard/salesperson/'" class="active">📊 My Dashboard</a>
 
         <div class="menu-label">Sales</div>
         <a onclick="window.location.href = '/sales/'">💰 Record a Sale</a>
 
         <div class="menu-label">Customers</div>
-        <a onclick="window.location.href = '/customer_registration/'"
-          >👥 Register Customer</a
-        >
-        <a onclick="window.location.href = '/customer_deposit/'"
-          >💳 Customer Deposit</a
-        >
+        <a onclick="window.location.href = '/customer_registration/'">👥 Register Customer</a>
+        <a onclick="window.location.href = '/customer_deposit/'">💳 Customer Deposit</a>
 
         <div class="menu-label">Stock (View Only)</div>
         <a onclick="window.location.href = '/stock/'">📦 Check Stock Levels</a>
 
-        <!-- These are locked for salesperson -->
         <div class="menu-label">Restricted</div>
         <span class="locked">🔒 Supplier Credit</span>
         <span class="locked">🔒 Reports</span>
         <span class="locked">🔒 Staff Management</span>
 
         <div class="menu-label">Account</div>
-        <a onclick="window.location.href = '/login/'">🚪 Logout</a>
+        <a onclick="window.location.href = '/logout/'">🚪 Logout</a>
       </div>
     </div>
 
-    <!-- 
-     MAIN CONTENT
- -->
     <div class="main">
       <!-- TOP BAR -->
       <div class="topbar">
         <div>
           <h1>Sales Dashboard</h1>
-          <p>Good morning, Sales Staff — track your sales for today</p>
+          <p>Welcome, {{ request.user.get_full_name|default:request.user.username }} — track your sales for today</p>
         </div>
         <div class="date-box" id="sp-date">Loading...</div>
       </div>
 
-      <!-- MY SALES TODAY SUMMARY -->
+      <!-- MY SALES TODAY SUMMARY — real data -->
       <div class="my-summary">
         <div class="item">
           <h4>My Sales Today</h4>
-          <div class="v">UGX 1,250,000</div>
+          <div class="v">UGX {{ sales_today_total|floatformat:0 }}</div>
         </div>
         <div class="item">
           <h4>Transactions Today</h4>
-          <div class="v">8</div>
+          <div class="v">{{ sales_today_count }}</div>
         </div>
         <div class="item">
-          <h4>Customers Served</h4>
-          <div class="v">6</div>
+          <h4>Deposits Today</h4>
+          <div class="v">UGX {{ deposits_today_total|floatformat:0 }}</div>
         </div>
         <div class="item">
           <h4>Deposits Recorded</h4>
-          <div class="v">3</div>
+          <div class="v">{{ deposits_today_count }}</div>
         </div>
       </div>
 
-      <!-- STAT CARDS -->
+      <!-- STAT CARDS — real data -->
       <div class="cards">
         <div class="card">
           <div class="icon">💰</div>
           <h4>Sales Today</h4>
-          <div class="val">UGX 1,250,000</div>
-          <div class="sub">8 transactions</div>
+          <div class="val">UGX {{ sales_today_total|floatformat:0 }}</div>
+          <div class="sub">{{ sales_today_count }} transaction{{ sales_today_count|pluralize }}</div>
         </div>
         <div class="card">
           <div class="icon">💳</div>
           <h4>Deposits Today</h4>
-          <div class="val">UGX 450,000</div>
-          <div class="sub">3 deposit payments</div>
+          <div class="val">UGX {{ deposits_today_total|floatformat:0 }}</div>
+          <div class="sub">{{ deposits_today_count }} deposit payment{{ deposits_today_count|pluralize }}</div>
         </div>
         <div class="card">
           <div class="icon">📦</div>
           <h4>Items Available</h4>
-          <div class="val">238</div>
-          <div class="sub">In stock right now</div>
+          <div class="val">{{ total_stock }}</div>
+          <div class="sub">Products with stock</div>
         </div>
         <div class="card">
           <div class="icon">👥</div>
           <h4>New Customers</h4>
-          <div class="val">2</div>
+          <div class="val">{{ new_customers }}</div>
           <div class="sub">Registered today</div>
         </div>
         <div class="card">
           <div class="icon">🚚</div>
           <h4>Transport Charged</h4>
-          <div class="val">UGX 60,000</div>
-          <div class="sub">2 deliveries today</div>
+          <div class="val">UGX {{ transport_today|floatformat:0 }}</div>
+          <div class="sub">Today's deliveries</div>
         </div>
         <div class="card">
           <div class="icon">⏳</div>
           <h4>Pending Pickups</h4>
-          <div class="val">7</div>
+          <div class="val">{{ pending_count }}</div>
           <div class="sub">Awaiting collection</div>
         </div>
       </div>
 
       <!-- QUICK ACTIONS -->
       <div class="actions">
-        <button class="btn-action" onclick="window.location.href = '/sales/'">
-          + Record Sale
-        </button>
-        <button
-          class="btn-action"
-          onclick="window.location.href = '/customer_deposit/'"
-        >
-          + Record Deposit
-        </button>
-        <button
-          class="btn-action"
-          onclick="window.location.href = '/customer_registration/'"
-        >
-          + New Customer
-        </button>
-        <button class="btn-action" onclick="window.location.href = '/stock/'">
-          📦 Check Stock
-        </button>
+        <button class="btn-action" onclick="window.location.href = '/sales/'">+ Record Sale</button>
+        <button class="btn-action" onclick="window.location.href = '/customer_deposit/'">+ Record Deposit</button>
+        <button class="btn-action" onclick="window.location.href = '/customer_registration/'">+ New Customer</button>
+        <button class="btn-action" onclick="window.location.href = '/stock/'">📦 Check Stock</button>
       </div>
 
       <!-- TRANSPORT CHARGE CALCULATOR -->
@@ -522,21 +470,11 @@
         <div class="calc-row">
           <div class="field">
             <label>Order Amount (UGX)</label>
-            <input
-              type="number"
-              id="c-amt"
-              placeholder="e.g. 480000"
-              oninput="calcTransport()"
-            />
+            <input type="number" id="c-amt" placeholder="e.g. 480000" oninput="calcTransport()" />
           </div>
           <div class="field">
             <label>Distance (km)</label>
-            <input
-              type="number"
-              id="c-dist"
-              placeholder="e.g. 8"
-              oninput="calcTransport()"
-            />
+            <input type="number" id="c-dist" placeholder="e.g. 8" oninput="calcTransport()" />
           </div>
         </div>
         <div class="calc-result">
@@ -544,44 +482,45 @@
         </div>
       </div>
 
-      <!-- TWO COL: My Sales + Deposit Members -->
+      <!-- TWO COL: Recent Sales + Pending Pickups — real data -->
       <div class="two-col">
-        <!-- Today's Sales -->
+
+        <!-- Recent Sales -->
         <div class="box">
-          <div class="box-title">My Sales Today</div>
+          <div class="box-title">Recent Sales</div>
           <table>
             <thead>
               <tr>
-                <th>Customer</th>
                 <th>Product</th>
+                <th>Qty</th>
                 <th>Total</th>
                 <th>Transport</th>
               </tr>
             </thead>
             <tbody>
+              {% for sale in recent_sales %}
               <tr>
-                <td>John Mukasa</td>
-                <td>Cement CEM II</td>
-                <td>560,000</td>
-                <td><span class="b-green">Free</span></td>
+                <td>{{ sale.product.name }}</td>
+                <td>{{ sale.quantity }}</td>
+                <td>{{ sale.total_price|floatformat:0 }}</td>
+                <td>
+                  {% if sale.transport_fee == 0 %}
+                    <span class="b-green">Free</span>
+                  {% else %}
+                    <span class="b-amber">+{{ sale.transport_fee|floatformat:0 }}</span>
+                  {% endif %}
+                </td>
               </tr>
+              {% empty %}
               <tr>
-                <td>Sarah Namutebi</td>
-                <td>Iron Bar 12mm</td>
-                <td>405,000</td>
-                <td><span class="b-amber">+30k</span></td>
+                <td colspan="4" style="text-align:center; color:#9ca3af;">No sales today</td>
               </tr>
-              <tr>
-                <td>Moses Kato</td>
-                <td>Iron Sheets 26G</td>
-                <td>900,000</td>
-                <td><span class="b-green">Free</span></td>
-              </tr>
+              {% endfor %}
             </tbody>
           </table>
         </div>
 
-        <!-- Customers Ready to Pick Up -->
+        <!-- Pending Pickups -->
         <div class="box">
           <div class="box-title">⏳ Ready for Pickup</div>
           <table>
@@ -589,53 +528,43 @@
               <tr>
                 <th>Customer</th>
                 <th>Product</th>
-                <th>Balance</th>
+                <th>Amount</th>
                 <th>Status</th>
               </tr>
             </thead>
             <tbody>
+              {% for pickup in pending_pickups %}
               <tr>
-                <td>Kato Moses</td>
-                <td>Iron Sheets 26G</td>
-                <td>UGX 200,000</td>
+                <td>{{ pickup.customer.full_name }}</td>
+                <td>{{ pickup.product.name }}</td>
+                <td>{{ pickup.amount_deposited|floatformat:0 }}</td>
                 <td><span class="b-amber">Ready</span></td>
               </tr>
+              {% empty %}
               <tr>
-                <td>Tendo Grace</td>
-                <td>Cement CEM II</td>
-                <td>UGX 336,000</td>
-                <td><span class="b-amber">Ready</span></td>
+                <td colspan="4" style="text-align:center; color:#9ca3af;">No pending pickups</td>
               </tr>
-              <tr>
-                <td>Nakato Jane</td>
-                <td>Iron Bar 12mm</td>
-                <td>UGX 300,000</td>
-                <td><span class="b-green">Collected</span></td>
-              </tr>
+              {% endfor %}
             </tbody>
           </table>
         </div>
+
       </div>
     </div>
 
     <script>
-      /* Show date */
-      document.getElementById("sp-date").textContent =
-        new Date().toDateString();
+      document.getElementById("sp-date").textContent = new Date().toDateString();
 
-      /* Transport calculator */
       function calcTransport() {
         var amt = parseFloat(document.getElementById("c-amt").value) || 0;
         var dist = parseFloat(document.getElementById("c-dist").value) || 0;
-        var charge = 0;
         var msg = "";
 
         if (amt === 0 || dist === 0) {
           msg = "Enter values above";
         } else if (dist <= 10 && amt >= 500000) {
           msg = "<span>FREE</span> — order ≥ UGX 500,000 within 10km";
-        } else if (dist > 0) {
-          charge = 30000;
+        } else {
           msg = "<span>UGX 30,000</span> transport charge applies";
         }
         document.getElementById("c-result").innerHTML = msg;

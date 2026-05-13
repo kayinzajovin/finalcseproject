@@ -126,7 +126,6 @@
         padding-bottom: 10px;
       }
 
-      /* two-column form grid */
       .form-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -156,7 +155,6 @@
         border-color: #f59e0b;
       }
 
-      /* submit button */
       .btn-submit {
         margin-top: 20px;
         background: #f59e0b;
@@ -210,13 +208,11 @@
         background: #fff7ed;
       }
 
-      /* low stock warning */
       .low {
         color: #dc2626;
         font-weight: bold;
       }
 
-      /* success message */
       .alert-success {
         background: #dcfce7;
         color: #166534;
@@ -227,7 +223,6 @@
         font-size: 14px;
       }
 
-      /* error message */
       .alert-error {
         background: #fee2e2;
         color: #991b1b;
@@ -238,7 +233,6 @@
         font-size: 14px;
       }
 
-      /* edit and delete action buttons */
       .btn-edit {
         background: #1f2937;
         color: #f59e0b;
@@ -295,9 +289,12 @@
       <span class="role-badge">🔑 Admin</span>
       {% elif request.user.groups.all.0.name == 'stockmanager' %}
       <span class="role-badge">📦 Stock Manager</span>
+      {% elif request.user.groups.all.0.name == 'salesperson' %}
+      <span class="role-badge">💰 Salesperson</span>
       {% endif %}
 
       <p class="tagline">Hardware Management System</p>
+
       <div class="menu">
         {% if request.user.groups.all.0.name == 'admin' %}
         <!-- admin sees all pages -->
@@ -329,6 +326,16 @@
           >🚚 Supplier Credit</a
         >
         <a onclick="window.location.href = '/sales/'">💰 View Sales</a>
+
+        {% elif request.user.groups.all.0.name == 'salesperson' %}
+        <!-- salesperson only sees their dashboard and stock (view only) -->
+        <a onclick="window.location.href = '/dashboard/salesperson/'"
+          >📊 My Dashboard</a
+        >
+        <a onclick="window.location.href = '/stock/'" class="active"
+          >📦 Stock (View Only)</a
+        >
+
         {% endif %}
 
         <a onclick="window.location.href = '/logout/'">🚪 Logout</a>
@@ -339,25 +346,16 @@
     <div class="main">
       <div class="page-title">📦 Stock Management</div>
 
-      <!-- show success or error messages after form submission -->
-      {% comment %} {% if messages %} {% for message in messages %} {% if message.tags ==
+      <!-- show success or error messages -->
+      {% if messages %} {% for message in messages %} {% if message.tags ==
       'error' %}
       <div class="alert-error">❌ {{ message }}</div>
       {% else %}
       <div class="alert-success">✅ {{ message }}</div>
-      {% endif %} {% endfor %} {% endif %} {% endcomment %}
+      {% endif %} {% endfor %} {% endif %}
 
-      {% if messages %}
-  {% for message in messages %}
-    {% if message.tags == 'error' %}
-      <div class="alert-error">❌ {{ message }}</div>
-    {% else %}
-      <div class="alert-success">✅ {{ message }}</div>
-    {% endif %}
-  {% endfor %}
-{% endif %}
-
-      <!-- ADD STOCK FORM -->
+      <!-- ADD STOCK FORM — hidden from salesperson -->
+      {% if request.user.groups.all.0.name != 'salesperson' %}
       <div class="form-card">
         <h3>+ Add New Stock Arrival</h3>
         <form method="POST" action="/stock/">
@@ -454,6 +452,7 @@
           <button class="btn-submit" type="submit">Save Stock</button>
         </form>
       </div>
+      {% endif %}
 
       <!-- CURRENT STOCK TABLE — real data from database -->
       <div class="table-section">
@@ -467,7 +466,9 @@
               <th>Unit Cost (UGX)</th>
               <th>Selling Price (UGX)</th>
               <th>Status</th>
+              {% if request.user.groups.all.0.name != 'salesperson' %}
               <th>Actions</th>
+              {% endif %}
             </tr>
           </thead>
           <tbody>
@@ -483,6 +484,7 @@
                 <span class="low">⚠ Low</span>
                 {% else %} OK {% endif %}
               </td>
+              {% if request.user.groups.all.0.name != 'salesperson' %}
               <td>
                 <a href="/stock/edit/{{ product.id }}/" class="btn-edit"
                   >✏ Edit</a
@@ -495,10 +497,14 @@
                   🗑 Delete
                 </a>
               </td>
+              {% endif %}
             </tr>
             {% empty %}
             <tr>
-              <td colspan="7" style="text-align: center; color: #9ca3af">
+              <td
+                colspan="{% if request.user.groups.all.0.name != 'salesperson' %}7{% else %}6{% endif %}"
+                style="text-align: center; color: #9ca3af"
+              >
                 No stock added yet
               </td>
             </tr>
