@@ -1,12 +1,28 @@
-from django.shortcuts import render, redirect
+# nyondoapp/views.py
+# from django.shortcuts import render, redirect
+
+from django.shortcuts import render, redirect, get_object_or_404
+
+#shows the sucess or error messages on the frontend
 from django.contrib import messages
+
+#works with date and time
 from django.utils import timezone
+
+#import the models to interact with the database
 from .models import Product, Supplier, Sale, CustomerDeposit, StockArrival, Customer
+
+#handles user authentication and login required decorator
 from django.contrib.auth import authenticate, login, logout
+
+#decorator to require login for certain views
 from django.contrib.auth.decorators import login_required
+
+from decimal import Decimal
 
 
 # helper function to get the role of the logged in user
+#checks the groups the user belongs to and returns the role as a string
 def get_user_role(user):
     groups = user.groups.values_list('name', flat=True)
     if 'admin' in groups:
@@ -24,6 +40,7 @@ def index(request):
 
 def login_view(request):
     # handle login form submission
+    #gets what the user entered in the form and checks if it matches a user in the database
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -63,7 +80,7 @@ def logout_view(request):
     logout(request)
     return redirect('/login/')
 
-
+#user must be logged in to access any dashboard
 @login_required(login_url='/login/')
 def dashboard_admin(request):
     # only admin can access this dashboard
@@ -129,7 +146,7 @@ def dashboard_admin(request):
         'recent_sales': recent_sales,
         'suppliers': suppliers,
     }
-
+#
     return render(request, 'dashboard_admin.html', context)
 
 
@@ -692,3 +709,31 @@ def deposit_delete(request, pk):
     deposit.delete()
     messages.success(request, 'Deposit deleted successfully!')
     return redirect('customer_deposit')
+
+
+
+def supplier_pay(request, supplier_id):
+    
+    supplier = get_object_or_404(Supplier, id=supplier_id)
+
+    if request.method == 'POST':
+        try:
+            amount_paid = Decimal(request.POST.get('amount_paid', 0))
+        except:
+            messages.error(request, "Invalid amount entered.")
+            return redirect(f'/supplier_credit/pay/{supplier_id}/')
+
+        if amount_paid <= 0:
+            messages.error(request, "Amount must be greater than zero.")
+            return redirect(f'/supplier_credit/pay/{supplier_id}/')
+        elif amount_paid > supplier.credit_amount:
+            messages.error(request, f"Amount exceeds balance of UGX {supplier.credit_amount:,.0f}.")
+            return redirect(f'/supplier_credit/pay/{supplier_id}/')
+        else:
+            supplier.credit_amount -= amount_paid
+            supplier.save()
+            messages.success(request, f"UGX {amount_paid:,.0f} paid. Remaining balance: UGX {supplier.credit_amount:,.0f}.")
+            return redirect('/supplier_credit/')
+
+    # GET — show the payment form
+    return render(request, 'supplier_pay.html', {'supplier': supplier})

@@ -59,6 +59,20 @@
         font-style: italic;
         margin-bottom: 30px;
       }
+      .role-badge {
+        display: block;
+        text-align: center;
+        background: #f59e0b;
+        color: #1f2937;
+        font-size: 11px;
+        font-weight: bold;
+        padding: 3px 10px;
+        border-radius: 20px;
+        margin: 0 auto 20px;
+        width: fit-content;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+      }
       .menu a {
         display: block;
         color: #cbd5e1;
@@ -272,55 +286,63 @@
         text-decoration: none;
         display: inline-block;
       }
-      .btn-edit:hover {
-        background: #f59e0b;
-        color: #1f2937;
+      .btn-edit:hover { background: #f59e0b; color: #1f2937; }
+      .btn-delete:hover { background: #dc2626; color: #fff; }
+
+      /* pay button — green */
+      .btn-pay {
+        background: #dcfce7;
+        color: #166534;
+        padding: 5px 12px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: bold;
+        text-decoration: none;
+        display: inline-block;
+        margin-left: 5px;
       }
-      .btn-delete:hover {
-        background: #dc2626;
-        color: #fff;
-      }
+      .btn-pay:hover { background: #16a34a; color: #fff; }
 
       @media (max-width: 600px) {
-        .sidebar {
-          width: 100%;
-          height: auto;
-          position: relative;
-        }
-        .main {
-          margin-left: 0;
-          padding: 20px;
-        }
-        .form-grid {
-          grid-template-columns: 1fr;
-        }
-        .summary-cards {
-          grid-template-columns: 1fr;
-        }
+        .sidebar { width: 100%; height: auto; position: relative; }
+        .main { margin-left: 0; padding: 20px; }
+        .form-grid { grid-template-columns: 1fr; }
+        .summary-cards { grid-template-columns: 1fr; }
       }
     </style>
   </head>
   <body>
-    <!-- SIDEBAR -->
+    <!-- SIDEBAR — dynamic based on user role -->
     <div class="sidebar">
       <div class="logo-box">N</div>
       <h2>NYONDO</h2>
+
+      {% if request.user.groups.all.0.name == 'admin' %}
+        <span class="role-badge">🔑 Admin</span>
+      {% elif request.user.groups.all.0.name == 'stockmanager' %}
+        <span class="role-badge">📦 Stock Manager</span>
+      {% endif %}
+
       <p class="tagline">Hardware Management System</p>
       <div class="menu">
-        <a onclick="window.location.href = '/'">🏠 Home</a>
-        <a onclick="window.location.href = '/dashboard/admin/'">📊 Dashboard</a>
-        <a onclick="window.location.href = '/stock/'">📦 Stock</a>
-        <a onclick="window.location.href = '/sales/'">💰 Sales</a>
-        <a onclick="window.location.href = '/customer_registration/'"
-          >👥 Register Customer</a
-        >
-        <a onclick="window.location.href = '/customer_deposit/'"
-          >💳 Customer Deposit</a
-        >
-        <a onclick="window.location.href = '/supplier_credit/'" class="active"
-          >🚚 Supplier Credit</a
-        >
-        <a onclick="window.location.href = '/login/'">🚪 Logout</a>
+
+        {% if request.user.groups.all.0.name == 'admin' %}
+          <a onclick="window.location.href = '/'">🏠 Home</a>
+          <a onclick="window.location.href = '/dashboard/admin/'">📊 Dashboard</a>
+          <a onclick="window.location.href = '/stock/'">📦 Stock</a>
+          <a onclick="window.location.href = '/sales/'">💰 Sales</a>
+          <a onclick="window.location.href = '/customer_registration/'">👥 Register Customer</a>
+          <a onclick="window.location.href = '/customer_deposit/'">💳 Customer Deposit</a>
+          <a onclick="window.location.href = '/supplier_credit/'" class="active">🚚 Supplier Credit</a>
+
+        {% elif request.user.groups.all.0.name == 'stockmanager' %}
+          <a onclick="window.location.href = '/dashboard/stockmanager/'">📊 Dashboard</a>
+          <a onclick="window.location.href = '/stock/'">📦 Stock</a>
+          <a onclick="window.location.href = '/supplier_credit/'" class="active">🚚 Supplier Credit</a>
+          <a onclick="window.location.href = '/sales/'">💰 View Sales</a>
+        {% endif %}
+
+        <a onclick="window.location.href = '/logout/'">🚪 Logout</a>
       </div>
     </div>
 
@@ -329,22 +351,15 @@
       <div class="page-title">🚚 Supplier Credit</div>
 
       <!-- show success or error messages -->
-      {% comment %} {% if messages %} {% for message in messages %} {% if message.tags ==
-      'error' %}
-      <div class="alert-error">❌ {{ message }}</div>
-      {% else %}
-      <div class="alert-success">✅ {{ message }}</div>
-      {% endif %} {% endfor %} {% endif %} {% endcomment %}
-
       {% if messages %}
-  {% for message in messages %}
-    {% if message.tags == 'error' %}
-      <div class="alert-error">❌ {{ message }}</div>
-    {% else %}
-      <div class="alert-success">✅ {{ message }}</div>
-    {% endif %}
-  {% endfor %}
-{% endif %}
+        {% for message in messages %}
+          {% if message.tags == 'error' %}
+            <div class="alert-error">❌ {{ message }}</div>
+          {% else %}
+            <div class="alert-success">✅ {{ message }}</div>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
 
       <!-- summary cards — real data from database -->
       <div class="summary-cards">
@@ -370,34 +385,19 @@
           <div class="form-grid">
             <div>
               <label>Supplier Name</label>
-              <input
-                type="text"
-                name="name"
-                placeholder="e.g. Hima Cement Factory"
-              />
+              <input type="text" name="name" placeholder="e.g. Hima Cement Factory" />
             </div>
-
             <div>
               <label>Supplier Phone / Contact</label>
               <input type="text" name="phone" placeholder="e.g. 0414-123456" />
             </div>
-
             <div>
               <label>Address</label>
-              <input
-                type="text"
-                name="address"
-                placeholder="e.g. Kampala Road"
-              />
+              <input type="text" name="address" placeholder="e.g. Kampala Road" />
             </div>
-
             <div>
               <label>Credit Amount (UGX)</label>
-              <input
-                type="number"
-                name="credit_amount"
-                placeholder="e.g. 7500000"
-              />
+              <input type="number" name="credit_amount" placeholder="e.g. 7500000" />
             </div>
           </div>
           <button class="btn-submit" type="submit">Save Supplier Credit</button>
@@ -429,24 +429,20 @@
               <td>{{ supplier.credit_amount|floatformat:0 }}</td>
               <td>
                 {% if supplier.credit_amount > 0 %}
-                <span class="badge-unpaid">Unpaid</span>
+                  <span class="badge-unpaid">Unpaid</span>
                 {% else %}
-                <span class="badge-paid">Cleared</span>
+                  <span class="badge-paid">Cleared</span>
                 {% endif %}
               </td>
-              <!-- edit and delete buttons -->
+              <!-- edit, delete and pay buttons -->
               <td>
-                <a
-                  href="/supplier_credit/edit/{{ supplier.id }}/"
-                  class="btn-edit"
-                  >✏ Edit</a
-                >
-                <a
-                  href="/supplier_credit/delete/{{ supplier.id }}/"
-                  class="btn-delete"
-                  onclick="return confirm('Delete {{ supplier.name }}?')"
-                  >🗑 Delete</a
-                >
+                <a href="/supplier_credit/edit/{{ supplier.id }}/" class="btn-edit">✏ Edit</a>
+                <a href="/supplier_credit/delete/{{ supplier.id }}/" class="btn-delete"
+                  onclick="return confirm('Delete {{ supplier.name }}?')">🗑 Delete</a>
+                {% if supplier.credit_amount > 0 %}
+                <a href="/supplier_credit/pay/{{ supplier.id }}/" class="btn-pay"
+                  onclick="return confirm('Record full payment for {{ supplier.name }}?')">💵 Pay</a>
+                {% endif %}
               </td>
             </tr>
             {% empty %}

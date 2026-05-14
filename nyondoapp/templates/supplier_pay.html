@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Pay Supplier — NYONDO</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: Georgia, serif;
+      }
+      body {
+        background: #f4f6f8;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+      }
+      .card {
+        background: #fff;
+        padding: 40px;
+        border-radius: 12px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+        width: 420px;
+      }
+      h2 {
+        font-size: 20px;
+        border-left: 5px solid #f59e0b;
+        padding-left: 12px;
+        margin-bottom: 20px;
+      }
+      .balance {
+        background: #fff7ed;
+        border: 1px solid #f59e0b;
+        padding: 12px 16px;
+        border-radius: 8px;
+        margin-bottom: 24px;
+        font-size: 15px;
+      }
+      label {
+        display: block;
+        font-size: 13px;
+        font-weight: bold;
+        margin-bottom: 6px;
+        color: #374151;
+      }
+      input {
+        width: 100%;
+        padding: 11px 13px;
+        border: 1.5px solid #d1d5db;
+        border-radius: 8px;
+        font-size: 14px;
+        outline: none;
+        margin-bottom: 20px;
+      }
+      input:focus {
+        border-color: #f59e0b;
+      }
+      .btn-confirm {
+        width: 100%;
+        background: #f59e0b;
+        color: #1f2937;
+        padding: 13px;
+        border: none;
+        border-radius: 8px;
+        font-size: 15px;
+        font-weight: bold;
+        cursor: pointer;
+      }
+      .btn-confirm:hover {
+        background: #1f2937;
+        color: #f59e0b;
+      }
+      .btn-cancel {
+        display: block;
+        text-align: center;
+        margin-top: 12px;
+        color: #6b7280;
+        text-decoration: none;
+        font-size: 14px;
+      }
+      .alert-error {
+        background: #fee2e2;
+        color: #991b1b;
+        padding: 12px;
+        border-radius: 8px;
+        margin-bottom: 16px;
+        font-size: 14px;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <h2>💵 Pay Supplier</h2>
+
+      {% if messages %} {% for message in messages %}
+      <div class="alert-error">❌ {{ message }}</div>
+      {% endfor %} {% endif %}
+
+      <div class="balance">
+        <strong>{{ supplier.name }}</strong><br />
+        Outstanding Balance:
+        <strong>UGX {{ supplier.credit_amount|floatformat:0 }}</strong>
+      </div>
+
+      <form method="POST">
+        {% csrf_token %}
+        <label>Amount to Pay (UGX)</label>
+        <input
+          type="number"
+          name="amount_paid"
+          placeholder="e.g. 500000"
+          max="{{ supplier.credit_amount }}"
+          min="1"
+          required
+        />
+        <button class="btn-confirm" type="submit">✅ Confirm Payment</button>
+      </form>
+
+      <a href="/supplier_credit/" class="btn-cancel">← Cancel, go back</a>
+    </div>
+  </body>
+</html>

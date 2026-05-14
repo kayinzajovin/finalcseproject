@@ -37,5 +37,5 @@ urlpatterns = [
     # customer deposit — list, edit, delete
     path('customer_deposit/', views.customer_deposit, name='customer_deposit'),
     path('customer_deposit/edit/<int:pk>/', views.deposit_edit, name='deposit_edit'),
-    path('customer_deposit/delete/<int:pk>/', views.deposit_delete, name='deposit_delete'),
+    path('customer_deposit/delete/<int:pk>/', views.deposit_delete, name='deposit_delete'),path('supplier_credit/pay/<int:supplier_id>/', views.supplier_pay, name='supplier_pay')
 ]
