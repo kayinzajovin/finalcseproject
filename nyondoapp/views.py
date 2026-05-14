@@ -21,6 +21,14 @@ from django.contrib.auth.decorators import login_required
 from decimal import Decimal
 
 
+# Import the correct model (IMPORTANT: not "Deposit")
+from .models import CustomerDeposit
+
+# Import Django utilities for rendering and response
+from django.shortcuts import get_object_or_404
+from django.http import HttpResponse
+from django.template.loader import render_to_string
+ 
 # helper function to get the role of the logged in user
 #checks the groups the user belongs to and returns the role as a string
 def get_user_role(user):
@@ -737,3 +745,10 @@ def supplier_pay(request, supplier_id):
 
     # GET — show the payment form
     return render(request, 'supplier_pay.html', {'supplier': supplier})
+
+@login_required(login_url='/login/')
+def sale_receipt(request, pk):
+    # get the sale and display a printable receipt
+    sale = Sale.objects.get(id=pk)
+    return render(request, 'sale_receipt.html', {'sale': sale})
+

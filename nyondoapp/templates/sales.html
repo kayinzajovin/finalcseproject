@@ -244,13 +244,15 @@
       .btn-edit {
         background: #1f2937;
         color: #f59e0b;
-        padding: 5px 12px;
+        padding: 5px 10px;
         border-radius: 6px;
-        font-size: 12px;
+        font-size: 9px;
         font-weight: bold;
         text-decoration: none;
-        display: inline-block;
+        display: flex;
         margin-right: 5px;
+        align-items: center;
+        gap: 8px;
       }
       .btn-edit:hover {
         background: #f59e0b;
@@ -261,19 +263,21 @@
       .btn-delete {
         background: #fee2e2;
         color: #991b1b;
-        padding: 5px 12px;
+        padding: 5px 10px;
         border-radius: 6px;
-        font-size: 12px;
+        font-size: 9px;
         font-weight: bold;
         text-decoration: none;
-        display: inline-block;
+        display: flex;
+        align-items: center;
+        gap: 8px;
       }
       .btn-delete:hover {
         background: #dc2626;
         color: #fff;
       }
 
-      @media (max-width: 600px) {
+      {% comment %} @media (max-width: 600px) {
         .sidebar {
           width: 100%;
           height: auto;
@@ -286,7 +290,156 @@
         .form-grid {
           grid-template-columns: 1fr;
         }
+      } {% endcomment %}
+
+      /* 
+   TABLET + SMALL LAPTOP
+ */
+@media (max-width: 992px) {
+  .main {
+    padding: 25px;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  table {
+    font-size: 13px;
+  }
+
+  .btn-edit,
+  .btn-delete,
+  .btn-print {
+    font-size: 10px;
+    padding: 6px 8px;
+  }
+}
+
+/* 
+   MOBILE VIEW
+ */
+@media (max-width: 600px) {
+
+  /* SIDEBAR becomes top bar */
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+    padding: 15px;
+    text-align: center;
+  }
+
+  .menu {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .menu a {
+    margin-bottom: 0;
+    font-size: 13px;
+    padding: 8px 10px;
+  }
+
+  /* MAIN AREA */
+  .main {
+    margin-left: 0;
+    padding: 15px;
+  }
+
+  .page-title {
+    font-size: 18px;
+  }
+
+  /* FORM */
+  .form-card {
+    padding: 18px;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  /* TABLE becomes scrollable */
+  .table-section {
+    overflow-x: auto;
+  }
+
+  table {
+    min-width: 700px;
+  }
+
+  th, td {
+    font-size: 12px;
+    padding: 8px;
+  }
+
+  /* ACTION BUTTONS STACK NICELY */
+  td:last-child {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .btn-edit,
+  .btn-delete,
+  .btn-print {
+    width: 100%;
+    justify-content: center;
+    font-size: 11px;
+  }
+
+  /* TOTAL BOX */
+  .total-box {
+    font-size: 14px;
+  }
+}
+
+      .btn-print {
+        background: #1f2937;
+        color: #f59e0b;
+        padding: 5px 10px;
+        border-radius: 6px;
+        font-size: 9px;
+        font-weight: bold;
+        text-decoration: none;
+        display: flex;
+        margin-left: 2px;
+        align-items: center;
+        gap: 8px;
       }
+      .btn-print:hover {
+        background: #f59e0b;
+        color: #1f2937;
+      }
+
+      .alert-error {
+    background: #ffdddd;
+    color: #a70000;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+}
+
+.alert-success {
+    background: #ddffdd;
+    color: #0a6b0a;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+}
+
+.alert-info {
+    background: #dde9ff;
+    color: #0a3a8a;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+}
+
     </style>
   </head>
   <body>
@@ -296,35 +449,57 @@
       <h2>NYONDO</h2>
 
       {% if request.user.groups.all.0.name == 'admin' %}
-        <span class="role-badge">🔑 Admin</span>
+      <span class="role-badge">🔑 Admin</span>
       {% elif request.user.groups.all.0.name == 'salesperson' %}
-        <span class="role-badge">💰 Salesperson</span>
+      <span class="role-badge">💰 Salesperson</span>
       {% elif request.user.groups.all.0.name == 'stockmanager' %}
-        <span class="role-badge">📦 Stock Manager</span>
+      <span class="role-badge">📦 Stock Manager</span>
       {% endif %}
 
       <p class="tagline">Hardware Management System</p>
       <div class="menu">
         {% if request.user.groups.all.0.name == 'admin' %}
-          <a onclick="window.location.href = '/'">🏠 Home</a>
-          <a onclick="window.location.href = '/dashboard/admin/'">📊 Dashboard</a>
-          <a onclick="window.location.href = '/stock/'">📦 Stock</a>
-          <a onclick="window.location.href = '/sales/'" class="active">💰 Sales</a>
-          <a onclick="window.location.href = '/customer_registration/'">👥 Register Customer</a>
-          <a onclick="window.location.href = '/customer_deposit/'">💳 Customer Deposit</a>
-          <a onclick="window.location.href = '/supplier_credit/'">🚚 Supplier Credit</a>
+        <a onclick="window.location.href = '/'">🏠 Home</a>
+        <a onclick="window.location.href = '/dashboard/admin/'">📊 Dashboard</a>
+        <a onclick="window.location.href = '/stock/'">📦 Stock</a>
+        <a onclick="window.location.href = '/sales/'" class="active"
+          >💰 Sales</a
+        >
+        <a onclick="window.location.href = '/customer_registration/'"
+          >👥 Register Customer</a
+        >
+        <a onclick="window.location.href = '/customer_deposit/'"
+          >💳 Customer Deposit</a
+        >
+        <a onclick="window.location.href = '/supplier_credit/'"
+          >🚚 Supplier Credit</a
+        >
 
         {% elif request.user.groups.all.0.name == 'salesperson' %}
-          <a onclick="window.location.href = '/dashboard/salesperson/'">📊 Dashboard</a>
-          <a onclick="window.location.href = '/sales/'" class="active">💰 Sales</a>
-          <a onclick="window.location.href = '/customer_registration/'">👥 Register Customer</a>
-          <a onclick="window.location.href = '/customer_deposit/'">💳 Customer Deposit</a>
+        <a onclick="window.location.href = '/dashboard/salesperson/'"
+          >📊 Dashboard</a
+        >
+        <a onclick="window.location.href = '/sales/'" class="active"
+          >💰 Sales</a
+        >
+        <a onclick="window.location.href = '/customer_registration/'"
+          >👥 Register Customer</a
+        >
+        <a onclick="window.location.href = '/customer_deposit/'"
+          >💳 Customer Deposit</a
+        >
 
         {% elif request.user.groups.all.0.name == 'stockmanager' %}
-          <a onclick="window.location.href = '/dashboard/stockmanager/'">📊 Dashboard</a>
-          <a onclick="window.location.href = '/stock/'">📦 Stock</a>
-          <a onclick="window.location.href = '/supplier_credit/'">🚚 Supplier Credit</a>
-          <a onclick="window.location.href = '/sales/'" class="active">💰 View Sales</a>
+        <a onclick="window.location.href = '/dashboard/stockmanager/'"
+          >📊 Dashboard</a
+        >
+        <a onclick="window.location.href = '/stock/'">📦 Stock</a>
+        <a onclick="window.location.href = '/supplier_credit/'"
+          >🚚 Supplier Credit</a
+        >
+        <a onclick="window.location.href = '/sales/'" class="active"
+          >💰 View Sales</a
+        >
         {% endif %}
 
         <a onclick="window.location.href = '/logout/'">🚪 Logout</a>
@@ -335,16 +510,21 @@
     <div class="main">
       <div class="page-title">💰 Record a Sale</div>
 
-      <!-- show success or error messages -->
+      {% comment %} <!-- show success or error messages --> {% endcomment %}
+      {% comment %} {% if messages %} {% for message in messages %} {% if message.tags ==
+      'error' %}
+      <div class="alert-error">❌ {{ message }}</div>
+      {% else %}
+      <div class="alert-success">✅ {{ message }}</div>
+      {% endif %} {% endfor %} {% endif %} {% endcomment %}
+
       {% if messages %}
-        {% for message in messages %}
-          {% if message.tags == 'error' %}
-            <div class="alert-error">❌ {{ message }}</div>
-          {% else %}
-            <div class="alert-success">✅ {{ message }}</div>
-          {% endif %}
-        {% endfor %}
-      {% endif %}
+    {% for message in messages %}
+        <div class="alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
 
       <!-- hide sale form for stock manager — view only -->
       {% if request.user.groups.all.0.name != 'stockmanager' %}
@@ -355,10 +535,18 @@
           <div class="form-grid">
             <div>
               <label>Product</label>
-              <select name="product_id" id="product_select" onchange="fillPrice()">
+              <select
+                name="product_id"
+                id="product_select"
+                onchange="fillPrice()"
+              >
                 <option value="">-- Select Product --</option>
                 {% for product in products %}
-                <option value="{{ product.id }}" data-price="{{ product.unit_price }}" data-stock="{{ product.quantity }}">
+                <option
+                  value="{{ product.id }}"
+                  data-price="{{ product.unit_price }}"
+                  data-stock="{{ product.quantity }}"
+                >
                   {{ product.name }} ({{ product.quantity }} in stock)
                 </option>
                 {% endfor %}
@@ -367,12 +555,26 @@
 
             <div>
               <label>Quantity</label>
-              <input type="number" name="quantity" id="qty" placeholder="e.g. 10" oninput="calcTotal()" min="1" />
+              <input
+                type="number"
+                name="quantity"
+                id="qty"
+                placeholder="e.g. 10"
+                oninput="calcTotal()"
+                min="1"
+              />
             </div>
 
             <div>
               <label>Unit Price (UGX)</label>
-              <input type="number" name="unit_price_display" id="unit_price" placeholder="Auto-filled from stock" oninput="calcTotal()" readonly />
+              <input
+                type="number"
+                name="unit_price_display"
+                id="unit_price"
+                placeholder="Auto-filled from stock"
+                oninput="calcTotal()"
+                readonly
+              />
             </div>
 
             <div>
@@ -382,7 +584,14 @@
 
             <div>
               <label>Delivery Distance (km)</label>
-              <input type="number" name="distance_km" id="distance" placeholder="0 if customer picks up" oninput="calcTotal()" min="0" />
+              <input
+                type="number"
+                name="distance_km"
+                id="distance"
+                placeholder="0 if customer picks up"
+                oninput="calcTotal()"
+                min="0"
+              />
             </div>
 
             <div>
@@ -398,7 +607,8 @@
           <!-- transport charge rule note -->
           <div class="transport-note">
             🚚 <strong>Transport Rule:</strong> Free delivery within 10km for
-            orders ≥ UGX 500,000. Otherwise, an extra <strong>UGX 30,000</strong> is charged.
+            orders ≥ UGX 500,000. Otherwise, an extra
+            <strong>UGX 30,000</strong> is charged.
           </div>
 
           <!-- auto-calculated order total -->
@@ -413,8 +623,19 @@
       </div>
       {% else %}
       <!-- stock manager sees a view only notice -->
-      <div style="background: #fff7ed; border-left: 4px solid #f59e0b; padding: 14px 18px; border-radius: 8px; margin-bottom: 25px; font-size: 14px; color: #374151;">
-        👁 <strong>View Only:</strong> You can view sales records but cannot record new sales.
+      <div
+        style="
+          background: #fff7ed;
+          border-left: 4px solid #f59e0b;
+          padding: 14px 18px;
+          border-radius: 8px;
+          margin-bottom: 25px;
+          font-size: 14px;
+          color: #374151;
+        "
+      >
+        👁 <strong>View Only:</strong> You can view sales records but cannot
+        record new sales.
       </div>
       {% endif %}
 
@@ -445,17 +666,30 @@
               <td>{{ sale.quantity }}</td>
               <td>{{ sale.unit_price|floatformat:0 }}</td>
               <td>{{ sale.total_price|floatformat:0 }}</td>
-              <td>{% if sale.transport_fee == 0 %}Free{% else %}{{ sale.transport_fee|floatformat:0 }}{% endif %}</td>
+              <td>
+                {% if sale.transport_fee == 0 %}Free{% else %}{{sale.transport_fee|floatformat:0 }}{% endif %}
+              </td>
               <td>{{ sale.grand_total|floatformat:0 }}</td>
               <td>{{ sale.date|date:"d M Y" }}</td>
               {% if request.user.groups.all.0.name != 'stockmanager' %}
               <td>
                 <a href="/sales/edit/{{ sale.id }}/" class="btn-edit">✏ Edit</a>
-                <a href="/sales/delete/{{ sale.id }}/" class="btn-delete" onclick="return confirm('Delete this sale? Stock will be restored.');">🗑 Delete</a>
+                <a
+                  href="/sales/delete/{{ sale.id }}/"
+                  class="btn-delete"
+                  onclick="
+                    return confirm('Delete this sale? Stock will be restored.');
+                  "
+                  >🗑 Delete</a
+                >
+                <a href="/sales/receipt/{{ sale.id }}/" class="btn-print"
+                  >🧾 Receipt</a
+                >
               </td>
               {% endif %}
             </tr>
             {% empty %}
+            
             <tr>
               <td colspan="9" style="text-align: center; color: #9ca3af">
                 No sales recorded yet
@@ -479,7 +713,8 @@
 
       function calcTotal() {
         var qty = parseFloat(document.getElementById("qty").value) || 0;
-        var price = parseFloat(document.getElementById("unit_price").value) || 0;
+        var price =
+          parseFloat(document.getElementById("unit_price").value) || 0;
         var dist = parseFloat(document.getElementById("distance").value) || 0;
 
         var subtotal = qty * price;
@@ -491,9 +726,12 @@
 
         var grand = subtotal + transport;
 
-        document.getElementById("total-display").textContent = "UGX " + subtotal.toLocaleString();
-        document.getElementById("transport-display").textContent = "UGX " + transport.toLocaleString();
-        document.getElementById("grand-display").textContent = "UGX " + grand.toLocaleString();
+        document.getElementById("total-display").textContent =
+          "UGX " + subtotal.toLocaleString();
+        document.getElementById("transport-display").textContent =
+          "UGX " + transport.toLocaleString();
+        document.getElementById("grand-display").textContent =
+          "UGX " + grand.toLocaleString();
       }
     </script>
   </body>

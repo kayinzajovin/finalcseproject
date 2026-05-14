@@ -325,6 +325,24 @@
           grid-template-columns: 1fr;
         }
       }
+
+      .close-btn {
+  float: right;
+  font-size: 22px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.close-btn:hover {
+  color: black;
+}
+
+.close-btn{
+  float:right;
+  cursor:pointer;
+  font-size:24px;
+  font-weight:bold;
+}
     </style>
   </head>
   <body>
@@ -355,23 +373,39 @@
     <div class="main">
       <div class="page-title">💳 Customer Deposit</div>
 
-      {% comment %} <!-- show success or error messages --> {% endcomment %}
-      {% comment %} {% if messages %} {% for message in messages %} {% if message.tags ==
-      'error' %}
-      <div class="alert-error">❌ {{ message }}</div>
-      {% else %}
-      <div class="alert-success">✅ {{ message }}</div>
-      {% endif %} {% endfor %} {% endif %} {% endcomment %}
-
-      {% if messages %}
+{% if messages %}
   {% for message in messages %}
+
     {% if message.tags == 'error' %}
-      <div class="alert-error">❌ {{ message }}</div>
+      <div class="alert-error" id="msg{{ forloop.counter }}">
+        
+        <span class="close-btn"
+              onclick="document.getElementById('msg{{ forloop.counter }}').style.display='none'">
+          ×
+        </span>
+
+        {{ message }}
+
+      </div>
+
     {% else %}
-      <div class="alert-success">✅ {{ message }}</div>
+
+      <div class="alert-success" id="msg{{ forloop.counter }}">
+        
+        <span class="close-btn"
+              onclick="document.getElementById('msg{{ forloop.counter }}').style.display='none'">
+          ×
+        </span>
+
+        {{ message }}
+
+      </div>
+
     {% endif %}
+
   {% endfor %}
 {% endif %}
+
 
       <!-- scheme rules note -->
       <div class="scheme-note">
