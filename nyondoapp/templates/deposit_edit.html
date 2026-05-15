@@ -23,14 +23,38 @@
         border-radius: 12px;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         width: 100%;
-        max-width: 500px;
+        max-width: 520px;
       }
       h2 {
         font-size: 20px;
         margin-bottom: 20px;
         border-left: 4px solid #f59e0b;
         padding-left: 10px;
+        color: #1f2937;
       }
+
+      /* deposit info summary box */
+      .info {
+        background: #fff7ed;
+        border-left: 4px solid #f59e0b;
+        padding: 14px 16px;
+        border-radius: 8px;
+        font-size: 14px;
+        color: #374151;
+        margin-bottom: 24px;
+      }
+      .info p {
+        margin-bottom: 6px;
+      }
+      .info p:last-child {
+        margin-bottom: 0;
+      }
+      .info span {
+        font-weight: bold;
+        color: #1f2937;
+      }
+
+      /* form fields */
       label {
         display: block;
         font-size: 13px;
@@ -38,33 +62,48 @@
         margin-bottom: 6px;
         color: #374151;
       }
-      select {
+      select,
+      input[type="number"] {
         width: 100%;
         padding: 11px 13px;
         border: 1.5px solid #d1d5db;
         border-radius: 8px;
         font-size: 14px;
-        margin-bottom: 16px;
+        margin-bottom: 18px;
         outline: none;
+        color: #1f2937;
       }
-      select:focus {
+      select:focus,
+      input[type="number"]:focus {
         border-color: #f59e0b;
       }
-      .info {
-        background: #fff7ed;
-        border-left: 4px solid #f59e0b;
-        padding: 12px 16px;
-        border-radius: 8px;
-        font-size: 14px;
-        color: #374151;
+
+      /* pickup amount helper note */
+      .field-note {
+        font-size: 12px;
+        color: #6b7280;
+        margin-top: -14px;
+        margin-bottom: 18px;
+        font-style: italic;
+      }
+
+      /* divider between sections */
+      .divider {
+        border: none;
+        border-top: 1px solid #e5e7eb;
         margin-bottom: 20px;
       }
-      .info p {
-        margin-bottom: 6px;
-      }
-      .info span {
+
+      .section-label {
+        font-size: 12px;
         font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #9ca3af;
+        margin-bottom: 14px;
       }
+
+      /* buttons */
       .btn-save {
         background: #f59e0b;
         color: #1f2937;
@@ -95,62 +134,50 @@
   </head>
   <body>
     <div class="card">
-      <h2>✏ Edit Deposit Status</h2>
+      <h2>✏ Edit Deposit</h2>
 
-      <!-- show deposit details for reference -->
+      <!-- deposit details for reference -->
       <div class="info">
         <p>Customer: <span>{{ deposit.customer.full_name }}</span></p>
         <p>Product: <span>{{ deposit.product.name }}</span></p>
-        <p>Amount: <span>UGX {{ deposit.amount_deposited }}</span></p>
-        <p>Units: <span>{{ deposit.units_equivalent }}</span></p>
+        <p>Amount Deposited: <span>UGX {{ deposit.amount_deposited|floatformat:0 }}</span></p>
+        <p>Units Equivalent: <span>{{ deposit.units_equivalent }} units</span></p>
         <p>Date: <span>{{ deposit.date|date:"d M Y" }}</span></p>
+        <p>Amount Paid on Pickup: <span>UGX {{ deposit.amount_paid_on_pickup|floatformat:0 }}</span></p>
       </div>
 
       <form method="POST">
         {% csrf_token %}
 
-        <label>Update Status</label>
+        <!-- STATUS SECTION -->
+        <div class="section-label">Update Status</div>
+        <label>Status</label>
         <select name="status">
-          <option
-            value="active"
-            {%
-            if
-            deposit.status=""
-            ="active"
-            %}selected{%
-            endif
-            %}
-          >
-            Active
-          </option>
-          <option
-            value="ready_pickup"
-            {%
-            if
-            deposit.status=""
-            ="ready_pickup"
-            %}selected{%
-            endif
-            %}
-          >
-            Ready for Pickup
-          </option>
-          <option
-            value="collected"
-            {%
-            if
-            deposit.status=""
-            ="collected"
-            %}selected{%
-            endif
-            %}
-          >
-            Collected
-          </option>
+          <option value="active"        {% if deposit.status == "active" %}selected{% endif %}>Active</option>
+          <option value="ready_pickup"  {% if deposit.status == "ready_pickup" %}selected{% endif %}>Ready for Pickup</option>
+          <option value="collected"     {% if deposit.status == "collected" %}selected{% endif %}>Collected</option>
         </select>
 
-        <button class="btn-save" type="submit">Save Status</button>
+        <hr class="divider" />
+
+        <!-- PICKUP PAYMENT SECTION -->
+        <div class="section-label">Pickup Payment</div>
+        <label>Amount Paid on Pickup Day (UGX)</label>
+        <input
+          type="number"
+          name="amount_paid_on_pickup"
+          value="{{ deposit.amount_paid_on_pickup|floatformat:0 }}"
+          placeholder="e.g. 150000"
+          min="0"
+        />
+        <p class="field-note">
+          Enter the amount the customer paid on the day they collected their goods.
+          Leave as 0 if goods have not been picked up yet.
+        </p>
+
+        <button class="btn-save" type="submit">Save Changes</button>
       </form>
+
       <a class="back" href="/customer_deposit/">← Back to Deposits</a>
     </div>
   </body>

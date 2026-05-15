@@ -90,33 +90,34 @@ class Customer(models.Model):
 
 
 class CustomerDeposit(models.Model):
-    # each row is one deposit payment by a scheme customer
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    amount_deposited = models.DecimalField(max_digits=10, decimal_places=2)  # amount paid today
-    unit_price = models.DecimalField(max_digits=10, decimal_places=2)  # price per unit at deposit time
-    units_equivalent = models.IntegerField(default=0)  # units today's deposit can buy
 
     PAYMENT_CHOICES = [
         ('cash', 'Cash'),
         ('mobile_money', 'Mobile Money'),
         ('bank_transfer', 'Bank Transfer'),
     ]
-    payment_method = models.CharField(max_length=20, choices=PAYMENT_CHOICES, default='cash')
 
     STATUS_CHOICES = [
         ('active', 'Active'),
         ('ready_pickup', 'Ready for Pickup'),
         ('collected', 'Collected'),
     ]
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='active')
-    date = models.DateTimeField(auto_now_add=True)
+
+    # each row is one deposit payment by a scheme customer
+    customer              = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    product               = models.ForeignKey(Product, on_delete=models.CASCADE)
+    amount_deposited      = models.DecimalField(max_digits=10, decimal_places=2)
+    unit_price            = models.DecimalField(max_digits=10, decimal_places=2)
+    units_equivalent      = models.IntegerField(default=0)
+    amount_paid_on_pickup = models.DecimalField(max_digits=12, decimal_places=0, default=0)
+    payment_method        = models.CharField(max_length=20, choices=PAYMENT_CHOICES, default='cash')
+    status                = models.CharField(max_length=20, choices=STATUS_CHOICES, default='active')
+    date                  = models.DateField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
         # convert to float to avoid string comparison errors from form inputs
         amount = float(self.amount_deposited) if self.amount_deposited else 0
-        price = float(self.unit_price) if self.unit_price else 0
-
+        price  = float(self.unit_price) if self.unit_price else 0
         # auto-calculate how many units the deposit amount can buy
         if price > 0:
             self.units_equivalent = int(amount / price)

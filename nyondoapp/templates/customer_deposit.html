@@ -9,7 +9,7 @@
        #1f2937  → Dark Navy
        #f59e0b  → Amber/Gold
        #ffffff  → White
- */
+      */
 
       * {
         box-sizing: border-box;
@@ -22,7 +22,7 @@
         color: #1f2937;
       }
 
-      /*SIDEBAR*/
+      /* SIDEBAR */
       .sidebar {
         position: fixed;
         left: 0;
@@ -79,12 +79,11 @@
         font-weight: bold;
       }
 
-      /*MAIN*/
+      /* MAIN */
       .main {
         margin-left: 240px;
         padding: 35px 40px;
       }
-
       .page-title {
         font-size: 22px;
         font-weight: bold;
@@ -93,7 +92,7 @@
         margin-bottom: 10px;
       }
 
-      /* scheme note */
+      /* ALERTS */
       .scheme-note {
         background: #fff7ed;
         border-left: 4px solid #f59e0b;
@@ -103,8 +102,6 @@
         color: #374151;
         margin-bottom: 25px;
       }
-
-      /* success message */
       .alert-success {
         background: #dcfce7;
         color: #166534;
@@ -114,8 +111,6 @@
         font-weight: bold;
         font-size: 14px;
       }
-
-      /* error message */
       .alert-error {
         background: #fee2e2;
         color: #991b1b;
@@ -125,8 +120,17 @@
         font-weight: bold;
         font-size: 14px;
       }
+      .close-btn {
+        float: right;
+        cursor: pointer;
+        font-size: 24px;
+        font-weight: bold;
+      }
+      .close-btn:hover {
+        color: black;
+      }
 
-      /*DEPOSIT FORM*/
+      /* DEPOSIT FORM */
       .form-card {
         background: #fff;
         border-radius: 12px;
@@ -166,8 +170,6 @@
       select:focus {
         border-color: #f59e0b;
       }
-
-      /* balance summary box */
       .balance-box {
         margin-top: 18px;
         background: #1f2937;
@@ -185,7 +187,6 @@
         font-weight: bold;
         display: block;
       }
-
       .btn-submit {
         margin-top: 20px;
         background: #f59e0b;
@@ -201,8 +202,6 @@
         background: #1f2937;
         color: #f59e0b;
       }
-
-      /* print receipt button */
       .btn-receipt {
         margin-top: 20px;
         margin-left: 12px;
@@ -220,7 +219,7 @@
         color: #fff;
       }
 
-      /*DEPOSIT HISTORY TABLE*/
+      /* DEPOSIT HISTORY TABLE */
       .table-section {
         background: #fff;
         border-radius: 12px;
@@ -254,7 +253,7 @@
         background: #fff7ed;
       }
 
-      /* status badges */
+      /* STATUS BADGES */
       .badge-active {
         background: #dcfce7;
         color: #166534;
@@ -280,7 +279,7 @@
         font-weight: bold;
       }
 
-      /* edit and delete buttons */
+      /* ACTION BUTTONS */
       .btn-edit {
         background: #1f2937;
         color: #f59e0b;
@@ -311,43 +310,201 @@
         color: #fff;
       }
 
-      @media (max-width: 600px) {
+      /* CUSTOMER GROUP HEADER ROW */
+      .customer-group-header td {
+        background: #f0f4ff;
+        font-weight: bold;
+        font-size: 13px;
+        color: #1f2937;
+        border-top: 2px solid #1f2937;
+        letter-spacing: 0.3px;
+        padding: 10px 14px;
+      }
+
+      /* BALANCE SUMMARY ROW */
+      .balance-summary-row td {
+        background: #1f2937;
+        color: #fff;
+        font-size: 13px;
+        border-bottom: none;
+        padding: 14px;
+        vertical-align: top;
+      }
+      /* prevent hover highlight on special rows */
+      .balance-summary-row:hover td,
+      .customer-group-header:hover td,
+      .spacer-row:hover td {
+        background: inherit;
+      }
+      .bal-label {
+        color: #94a3b8;
+        font-size: 11px;
+        display: block;
+        margin-bottom: 4px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      .bal-value {
+        color: #f59e0b;
+        font-size: 15px;
+        font-weight: bold;
+      }
+      .bal-value.green {
+        color: #4ade80;
+      }
+      .bal-value.red {
+        color: #f87171;
+      }
+
+      /* SPACER BETWEEN CUSTOMER GROUPS */
+      .spacer-row td {
+        height: 14px;
+        background: #f4f6f8;
+        border: none;
+        padding: 0;
+      }
+
+      /* HAMBURGER BUTTON (mobile only) */
+      .hamburger {
+        display: none;
+        position: fixed;
+        top: 14px;
+        left: 14px;
+        z-index: 999;
+        background: #f59e0b;
+        color: #1f2937;
+        border: none;
+        border-radius: 8px;
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        line-height: 1;
+      }
+
+      /* overlay behind open sidebar on mobile */
+      .sidebar-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.45);
+        z-index: 997;
+      }
+      .sidebar-overlay.open { display: block; }
+
+      /* TABLE WRAPPER — horizontal scroll on small screens */
+      .table-wrapper {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      .table-wrapper table {
+        min-width: 780px;
+      }
+
+      /* TABLET  768px – 1024px */
+      @media (max-width: 1024px) {
         .sidebar {
-          width: 100%;
-          height: auto;
-          position: relative;
+          width: 200px;
         }
         .main {
-          margin-left: 0;
-          padding: 20px;
-        }
-        .form-grid {
-          grid-template-columns: 1fr;
+          margin-left: 200px;
+          padding: 25px 24px;
         }
       }
 
-      .close-btn {
-  float: right;
-  font-size: 22px;
-  font-weight: bold;
-  cursor: pointer;
-}
+      /* MOBILE  ≤ 768px */
+      @media (max-width: 768px) {
 
-.close-btn:hover {
-  color: black;
-}
+        /* show hamburger */
+        .hamburger { display: flex; }
 
-.close-btn{
-  float:right;
-  cursor:pointer;
-  font-size:24px;
-  font-weight:bold;
-}
+        /* sidebar slides in/out */
+        .sidebar {
+          position: fixed;
+          left: -260px;
+          top: 0;
+          width: 240px;
+          height: 100vh;
+          z-index: 998;
+          transition: left 0.25s ease;
+        }
+        .sidebar.open { left: 0; }
+
+        /* main fills full width */
+        .main {
+          margin-left: 0;
+          padding: 70px 16px 24px; /* top padding clears hamburger */
+        }
+
+        .page-title { font-size: 18px; }
+
+        /* form: single column */
+        .form-grid {
+          grid-template-columns: 1fr;
+        }
+
+        /* balance preview box stacks vertically */
+        .balance-box {
+          flex-direction: column;
+          gap: 14px;
+        }
+
+        /* buttons stack full width */
+        .btn-submit,
+        .btn-receipt {
+          display: block;
+          width: 100%;
+          margin-left: 0;
+          text-align: center;
+        }
+
+        /* balance summary row stacks as cards */
+        .balance-summary-row {
+          display: block;
+        }
+        .balance-summary-row td {
+          display: block;
+          width: 100% !important;
+          border-bottom: 1px solid #374151;
+          padding: 12px 14px;
+        }
+        .balance-summary-row td:last-child {
+          border-bottom: none;
+        }
+
+        /* customer group header slightly smaller */
+        .customer-group-header td {
+          font-size: 12px;
+        }
+
+        /* scheme note smaller text */
+        .scheme-note { font-size: 13px; }
+      }
+
+      /* VERY SMALL  ≤ 400px */
+      @media (max-width: 400px) {
+        .main { padding: 65px 10px 20px; }
+        .form-card { padding: 18px; }
+        .table-section { padding: 14px; }
+        .btn-submit, .btn-receipt { font-size: 14px; padding: 11px 16px; }
+      }
     </style>
   </head>
   <body>
-    <!-- SIDEBAR -->
-    <div class="sidebar">
+
+    <!-- Hamburger (mobile only) -->
+    <button class="hamburger" onclick="toggleSidebar()" aria-label="Open menu">☰</button>
+    <!-- Overlay behind open sidebar -->
+    <div class="sidebar-overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+    <!-- 
+         SIDEBAR
+     -->
+    <div class="sidebar" id="sidebar">
       <div class="logo-box">N</div>
       <h2>NYONDO</h2>
       <p class="tagline">Hardware Management System</p>
@@ -356,58 +513,39 @@
         <a onclick="window.location.href = '/dashboard/admin/'">📊 Dashboard</a>
         <a onclick="window.location.href = '/stock/'">📦 Stock</a>
         <a onclick="window.location.href = '/sales/'">💰 Sales</a>
-        <a onclick="window.location.href = '/customer_registration/'"
-          >👥 Register Customer</a
-        >
-        <a onclick="window.location.href = '/customer_deposit/'" class="active"
-          >💳 Customer Deposit</a
-        >
-        <a onclick="window.location.href = '/supplier_credit/'"
-          >🚚 Supplier Credit</a
-        >
+        <a onclick="window.location.href = '/customer_registration/'">👥 Register Customer</a>
+        <a onclick="window.location.href = '/customer_deposit/'" class="active">💳 Customer Deposit</a>
+        <a onclick="window.location.href = '/supplier_credit/'">🚚 Supplier Credit</a>
         <a onclick="window.location.href = '/login/'">🚪 Logout</a>
       </div>
     </div>
 
-    <!-- MAIN CONTENT -->
+    <!-- 
+         MAIN CONTENT
+     -->
     <div class="main">
       <div class="page-title">💳 Customer Deposit</div>
 
-{% if messages %}
-  {% for message in messages %}
+      <!-- Flash messages -->
+      {% if messages %}
+        {% for message in messages %}
+          {% if message.tags == 'error' %}
+            <div class="alert-error" id="msg{{ forloop.counter }}">
+              <span class="close-btn"
+                    onclick="document.getElementById('msg{{ forloop.counter }}').style.display='none'">×</span>
+              {{ message }}
+            </div>
+          {% else %}
+            <div class="alert-success" id="msg{{ forloop.counter }}">
+              <span class="close-btn"
+                    onclick="document.getElementById('msg{{ forloop.counter }}').style.display='none'">×</span>
+              {{ message }}
+            </div>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
 
-    {% if message.tags == 'error' %}
-      <div class="alert-error" id="msg{{ forloop.counter }}">
-        
-        <span class="close-btn"
-              onclick="document.getElementById('msg{{ forloop.counter }}').style.display='none'">
-          ×
-        </span>
-
-        {{ message }}
-
-      </div>
-
-    {% else %}
-
-      <div class="alert-success" id="msg{{ forloop.counter }}">
-        
-        <span class="close-btn"
-              onclick="document.getElementById('msg{{ forloop.counter }}').style.display='none'">
-          ×
-        </span>
-
-        {{ message }}
-
-      </div>
-
-    {% endif %}
-
-  {% endfor %}
-{% endif %}
-
-
-      <!-- scheme rules note -->
+      <!-- Scheme rule note -->
       <div class="scheme-note">
         ℹ️ <strong>Deposit Scheme Rule:</strong> When a customer comes to pick
         up goods, the quantity issued is determined by the
@@ -421,6 +559,7 @@
         <form method="POST" action="/customer_deposit/">
           {% csrf_token %}
           <div class="form-grid">
+
             <div>
               <label>Customer NIN</label>
               <input type="text" name="nin" placeholder="Enter customer NIN" />
@@ -438,24 +577,14 @@
 
             <div>
               <label>Amount Deposited (UGX)</label>
-              <input
-                type="number"
-                name="amount_deposited"
-                id="deposit_amt"
-                placeholder="e.g. 150000"
-                oninput="calcUnits()"
-              />
+              <input type="number" name="amount_deposited" id="deposit_amt"
+                     placeholder="e.g. 150000" oninput="calcUnits()" />
             </div>
 
             <div>
               <label>Unit Price (UGX) — from stock</label>
-              <input
-                type="number"
-                id="unit_p"
-                placeholder="e.g. 28000"
-                oninput="calcUnits()"
-                readonly
-              />
+              <input type="number" id="unit_p" placeholder="e.g. 28000"
+                     oninput="calcUnits()" readonly />
             </div>
 
             <div>
@@ -471,15 +600,18 @@
                 <option value="bank_transfer">Bank Transfer</option>
               </select>
             </div>
+
           </div>
 
-          <!-- running balance summary -->
+          <!-- Running balance preview -->
           <div class="balance-box">
             <div class="item">
-              Amount Deposited Today<span id="total-dep">UGX 0</span>
+              Amount Deposited Today
+              <span id="total-dep">UGX 0</span>
             </div>
             <div class="item">
-              Units Equivalent Today<span id="units-eq">0 units</span>
+              Units Equivalent Today
+              <span id="units-eq">0 units</span>
             </div>
           </div>
 
@@ -490,9 +622,13 @@
         </form>
       </div>
 
-      <!-- DEPOSIT HISTORY TABLE — real data from database -->
+      <!-- 
+           DEPOSIT HISTORY TABLE
+           Grouped by customer with balance summary
+       -->
       <div class="table-section">
         <h3>Deposit History</h3>
+        <div class="table-wrapper">
         <table>
           <thead>
             <tr>
@@ -508,61 +644,104 @@
             </tr>
           </thead>
           <tbody>
-            {% for deposit in deposits %}
-            <tr>
-              <td>{{ forloop.counter }}</td>
-              <td>{{ deposit.customer.full_name }}</td>
-              <td>{{ deposit.product.name }}</td>
-              <td>{{ deposit.amount_deposited|floatformat:0 }}</td>
-              <td>{{ deposit.units_equivalent }}</td>
-              <td>{{ deposit.get_payment_method_display }}</td>
-              <td>{{ deposit.date|date:"d M Y" }}</td>
-              <td>
-                {% if deposit.status == 'active' %}
-                <span class="badge-active">Active</span>
-                {% elif deposit.status == 'ready_pickup' %}
-                <span class="badge-pickup">Ready Pickup</span>
-                {% else %}
-                <span class="badge-done">Collected</span>
-                {% endif %}
-              </td>
-              <!-- edit and delete buttons -->
-              <td>
-                <a
-                  href="/customer_deposit/edit/{{ deposit.id }}/"
-                  class="btn-edit"
-                  >✏ Edit</a
-                >
-                <a
-                  href="/customer_deposit/delete/{{ deposit.id }}/"
-                  class="btn-delete"
-                  onclick="return confirm('Delete this deposit?');"
-                  >🗑 Delete</a
-                >
-              </td>
-            </tr>
+
+            {% for group in customer_groups %}
+
+              <!-- Customer group header -->
+              <tr class="customer-group-header">
+                <td colspan="9">
+                  👤 {{ group.customer.full_name }}
+                  &nbsp;—&nbsp;
+                  {{ group.deposits.0.product.name }} Deposits
+                </td>
+              </tr>
+
+              <!-- Individual deposit rows for this customer -->
+              {% for deposit in group.deposits %}
+              <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ deposit.customer.full_name }}</td>
+                <td>{{ deposit.product.name }}</td>
+                <td>{{ deposit.amount_deposited|floatformat:0 }}</td>
+                <td>{{ deposit.units_equivalent }}</td>
+                <td>{{ deposit.get_payment_method_display }}</td>
+                <td>{{ deposit.date|date:"d M Y" }}</td>
+                <td>
+                  {% if deposit.status == 'active' %}
+                    <span class="badge-active">Active</span>
+                  {% elif deposit.status == 'ready_pickup' %}
+                    <span class="badge-pickup">Ready Pickup</span>
+                  {% else %}
+                    <span class="badge-done">Collected</span>
+                  {% endif %}
+                </td>
+                <td>
+                  <a href="/customer_deposit/edit/{{ deposit.id }}/" class="btn-edit">✏ Edit</a>
+                  <a href="/customer_deposit/delete/{{ deposit.id }}/" class="btn-delete"
+                     onclick="return confirm('Delete this deposit?');">🗑 Delete</a>
+                </td>
+              </tr>
+              {% endfor %}
+
+              <!-- Balance summary row for this customer -->
+              <tr class="balance-summary-row">
+                <td colspan="2">
+                  <span class="bal-label">Total Deposited</span>
+                  <span class="bal-value">UGX {{ group.total_deposited|floatformat:0 }}</span>
+                </td>
+                <td colspan="2">
+                  <span class="bal-label">Amount Paid on Pickup</span>
+                  <span class="bal-value green">UGX {{ group.total_paid_pickup|floatformat:0 }}</span>
+                </td>
+                <td colspan="2">
+                  <span class="bal-label">Remaining Balance</span>
+                  {% if group.remaining == 0 %}
+                    <span class="bal-value green">UGX 0 &nbsp;✓ Cleared</span>
+                  {% else %}
+                    <span class="bal-value red">UGX {{ group.remaining|floatformat:0 }}</span>
+                  {% endif %}
+                </td>
+                <td colspan="2">
+                  <span class="bal-label">Total Units Earned</span>
+                  <span class="bal-value">{{ group.total_units }} units</span>
+                </td>
+                <td></td>
+              </tr>
+
+              <!-- Spacer between customer groups -->
+              <tr class="spacer-row"><td colspan="9"></td></tr>
+
             {% empty %}
-            <tr>
-              <td colspan="9" style="text-align: center; color: #9ca3af">
-                No deposits recorded yet
-              </td>
-            </tr>
+              <tr>
+                <td colspan="9" style="text-align: center; color: #9ca3af; padding: 30px;">
+                  No deposits recorded yet
+                </td>
+              </tr>
             {% endfor %}
+
           </tbody>
         </table>
-      </div>
-    </div>
+        </div><!-- end .table-wrapper -->
+    </div><!-- end .main -->
 
     <script>
-      /* calculate how many units today's deposit can buy */
+      /* Calculate how many units today's deposit amount can buy */
       function calcUnits() {
-        var amt = parseFloat(document.getElementById("deposit_amt").value) || 0;
+        var amt   = parseFloat(document.getElementById("deposit_amt").value) || 0;
         var price = parseFloat(document.getElementById("unit_p").value) || 1;
         var units = Math.floor(amt / price);
-        document.getElementById("total-dep").textContent =
-          "UGX " + amt.toLocaleString();
-        document.getElementById("units-eq").textContent = units + " unit(s)";
+        document.getElementById("total-dep").textContent  = "UGX " + amt.toLocaleString();
+        document.getElementById("units-eq").textContent   = units + " unit(s)";
+      }
+
+      /* Mobile sidebar toggle */
+      function toggleSidebar() {
+        var sidebar = document.getElementById("sidebar");
+        var overlay = document.getElementById("overlay");
+        sidebar.classList.toggle("open");
+        overlay.classList.toggle("open");
       }
     </script>
+
   </body>
 </html>

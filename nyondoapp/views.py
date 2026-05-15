@@ -28,6 +28,9 @@ from .models import CustomerDeposit
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
 from django.template.loader import render_to_string
+
+from collections import defaultdict
+
  
 # helper function to get the role of the logged in user
 #checks the groups the user belongs to and returns the role as a string
@@ -176,7 +179,7 @@ def dashboard_salesperson(request):
     sales_today_count = sales_today.count()
 
     # deposits today
-    deposits_today = CustomerDeposit.objects.filter(date__date=today)
+    deposits_today = CustomerDeposit.objects.filter(date=today)
     deposits_today_total = sum(d.amount_deposited for d in deposits_today)
     deposits_today_count = deposits_today.count()
 
@@ -626,46 +629,129 @@ def customer_delete(request, pk):
     return redirect('customer_registration')
 
 
+# @login_required(login_url='/login/')
+# def customer_deposit(request):
+#     # only admin and salesperson can access customer deposits
+#     role = get_user_role(request.user)
+#     if role == 'stockmanager':
+#         messages.error(request, 'You are not authorized to access customer deposits.')
+#         return redirect('/dashboard/stockmanager/')
+
+#     if request.method == 'POST':
+#         nin = request.POST.get('nin')
+#         product_id = request.POST.get('product_id')
+#         amount_deposited = request.POST.get('amount_deposited')
+#         payment_method = request.POST.get('payment_method')
+
+#         if not nin or not product_id or not amount_deposited:
+#             messages.error(request, 'Please fill in all required fields.')
+#             deposits = CustomerDeposit.objects.all().order_by('-date')
+#             customers = Customer.objects.all()
+#             products = Product.objects.all()
+#             return render(request, 'customer_deposit.html', {
+#                 'deposits': deposits,
+#                 'customers': customers,
+#                 'products': products,
+#             })
+
+#         if not Customer.objects.filter(NIN=nin).exists():
+#             messages.error(request, f'No customer found with NIN {nin}.')
+#             deposits = CustomerDeposit.objects.all().order_by('-date')
+#             customers = Customer.objects.all()
+#             products = Product.objects.all()
+#             return render(request, 'customer_deposit.html', {
+#                 'deposits': deposits,
+#                 'customers': customers,
+#                 'products': products,
+#             })
+
+#         customer = Customer.objects.get(NIN=nin)
+#         product = Product.objects.get(id=product_id)
+
+#         CustomerDeposit.objects.create(
+#             customer=customer,
+#             product=product,
+#             amount_deposited=amount_deposited,
+#             unit_price=product.unit_price,
+#             payment_method=payment_method,
+#         )
+
+#         messages.success(request, f'Deposit recorded for {customer.full_name}!')
+#         return redirect('customer_deposit')
+
+#     deposits = CustomerDeposit.objects.all().order_by('-date')
+#     customers = Customer.objects.all()
+#     products = Product.objects.all()
+#     return render(request, 'customer_deposit.html', {
+#         'deposits': deposits,
+#         'customers': customers,
+#         'products': products,
+#     })
+
 @login_required(login_url='/login/')
 def customer_deposit(request):
-    # only admin and salesperson can access customer deposits
     role = get_user_role(request.user)
     if role == 'stockmanager':
         messages.error(request, 'You are not authorized to access customer deposits.')
         return redirect('/dashboard/stockmanager/')
 
-    if request.method == 'POST':
-        nin = request.POST.get('nin')
-        product_id = request.POST.get('product_id')
-        amount_deposited = request.POST.get('amount_deposited')
-        payment_method = request.POST.get('payment_method')
+    # helper: build customer_groups from all deposits ──────────────────
+    def build_groups():
+        all_deposits = CustomerDeposit.objects.select_related(
+            'customer', 'product'
+        ).order_by('customer__full_name', '-date')
 
+        grouped = defaultdict(list)
+        for d in all_deposits:
+            grouped[d.customer].append(d)
+
+        customer_groups = []
+        for customer, dep_list in grouped.items():
+            total_deposited   = sum(d.amount_deposited   for d in dep_list)
+            total_paid_pickup = sum(d.amount_paid_on_pickup for d in dep_list)
+            remaining         = total_deposited - total_paid_pickup
+            total_units       = sum(d.units_equivalent   for d in dep_list)
+
+            customer_groups.append({
+                'customer':          customer,
+                'deposits':          dep_list,
+                'total_deposited':   total_deposited,
+                'total_paid_pickup': total_paid_pickup,
+                'remaining':         remaining,
+                'total_units':       total_units,
+            })
+        return customer_groups
+
+    # POST: save a new deposit ─────────────────────────────────────────
+    if request.method == 'POST':
+        nin              = request.POST.get('nin', '').strip()
+        product_id       = request.POST.get('product_id')
+        amount_deposited = request.POST.get('amount_deposited')
+        payment_method   = request.POST.get('payment_method')
+        payment_date     = request.POST.get('payment_date')
+
+        # validate required fields
         if not nin or not product_id or not amount_deposited:
             messages.error(request, 'Please fill in all required fields.')
-            deposits = CustomerDeposit.objects.all().order_by('-date')
-            customers = Customer.objects.all()
-            products = Product.objects.all()
             return render(request, 'customer_deposit.html', {
-                'deposits': deposits,
-                'customers': customers,
-                'products': products,
+                'customer_groups': build_groups(),
+                'products': Product.objects.all(),
             })
 
-        if not Customer.objects.filter(NIN=nin).exists():
+        # check customer exists
+        try:
+            customer = Customer.objects.get(NIN=nin)
+        except Customer.DoesNotExist:
             messages.error(request, f'No customer found with NIN {nin}.')
-            deposits = CustomerDeposit.objects.all().order_by('-date')
-            customers = Customer.objects.all()
-            products = Product.objects.all()
             return render(request, 'customer_deposit.html', {
-                'deposits': deposits,
-                'customers': customers,
-                'products': products,
+                'customer_groups': build_groups(),
+                'products': Product.objects.all(),
             })
 
-        customer = Customer.objects.get(NIN=nin)
         product = Product.objects.get(id=product_id)
 
-        CustomerDeposit.objects.create(
+        # create the deposit record
+        deposit = CustomerDeposit.objects.create(
             customer=customer,
             product=product,
             amount_deposited=amount_deposited,
@@ -673,33 +759,38 @@ def customer_deposit(request):
             payment_method=payment_method,
         )
 
-        messages.success(request, f'Deposit recorded for {customer.full_name}!')
+        # set payment date if provided
+        if payment_date:
+            deposit.date = payment_date
+            deposit.save()
+
+        messages.success(request, f'Deposit of UGX {int(float(amount_deposited)):,} recorded for {customer.full_name}!')
         return redirect('customer_deposit')
 
-    deposits = CustomerDeposit.objects.all().order_by('-date')
-    customers = Customer.objects.all()
-    products = Product.objects.all()
+    # GET: show the page 
     return render(request, 'customer_deposit.html', {
-        'deposits': deposits,
-        'customers': customers,
-        'products': products,
+        'customer_groups': build_groups(),
+        'products': Product.objects.all(),
     })
 
 
 @login_required(login_url='/login/')
 def deposit_edit(request, pk):
-    # only admin and salesperson can edit deposits
     role = get_user_role(request.user)
     if role == 'stockmanager':
         messages.error(request, 'You are not authorized to edit deposits.')
         return redirect('/dashboard/stockmanager/')
 
-    deposit = CustomerDeposit.objects.get(id=pk)
+    deposit = get_object_or_404(CustomerDeposit, id=pk)
 
     if request.method == 'POST':
-        deposit.status = request.POST.get('status')
-        deposit.save()
-        messages.success(request, 'Deposit status updated successfully!')
+        deposit.status                = request.POST.get('status')
+        deposit.amount_paid_on_pickup = request.POST.get('amount_paid_on_pickup', 0) or 0
+
+        # only update these two fields — never touch date
+        deposit.save(update_fields=['status', 'amount_paid_on_pickup'])
+
+        messages.success(request, 'Deposit updated successfully!')
         return redirect('customer_deposit')
 
     return render(request, 'deposit_edit.html', {'deposit': deposit})
