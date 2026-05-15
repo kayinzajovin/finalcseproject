@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Stock Manager Dashboard — NYONDO Hardware</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-+0r6rrwMZceTYFygJXRL7Hhdhsq6TOcKPEbb9Rwzc2b4EkJmO+iSWoZVata3u0G3UcNYI9dZe4UfgZ7HU5a3HQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
       /*  COLOR PALETTE 
        #1f2937  → Dark Navy
@@ -360,24 +361,24 @@
     <div class="sidebar">
       <div class="logo-box">N</div>
       <h2>NYONDO</h2>
-      <span class="role-badge">📦 Stock Manager</span>
+      <span class="role-badge"><i class="fa-solid fa-box"></i> Stock Manager</span>
 
       <div class="menu">
         <div class="menu-label">Overview</div>
         <a
           onclick="window.location.href = '/dashboard/stockmanager/'"
           class="active"
-          >📊 My Dashboard</a
+          ><i class="fa-solid fa-chart-pie"></i> My Dashboard</a
         >
 
         <div class="menu-label">Inventory</div>
-        <a onclick="window.location.href = '/stock/'">📦 Stock Management</a>
+        <a onclick="window.location.href = '/stock/'"><i class="fa-solid fa-box"></i> Stock Management</a>
         <a onclick="window.location.href = '/supplier_credit/'"
-          >🚚 Supplier Credit</a
+          ><i class="fa-solid fa-truck"></i> Supplier Credit</a
         >
 
         <div class="menu-label">Sales (View Only)</div>
-        <a onclick="window.location.href = '/sales/'">💰 View Sales</a>
+        <a onclick="window.location.href = '/sales/'"><i class="fa-solid fa-coins"></i> View Sales</a>
 
         <!-- locked sections — stock manager cannot access these -->
         <div class="menu-label">Restricted</div>
@@ -424,49 +425,49 @@
       <!-- STAT CARDS — real data -->
       <div class="cards">
         <div class="card">
-          <div class="icon">📦</div>
+          <div class="icon"><i class="fa-solid fa-box"></i></div>
           <h4>Total Stock Items</h4>
           <div class="val">{{ total_stock }}</div>
           <div class="sub">Across all products</div>
         </div>
         <div class="card alert">
-          <div class="icon">⚠️</div>
+          <div class="icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
           <h4>Critical Stock</h4>
           <div class="val">{{ critical_count }}</div>
           <div class="sub">Restock immediately</div>
         </div>
         <div class="card alert">
-          <div class="icon">📉</div>
+          <div class="icon"><i class="fa-solid fa-chart-line"></i></div>
           <h4>Low Stock</h4>
           <div class="val">{{ low_stock_count }}</div>
           <div class="sub">Monitor closely</div>
         </div>
         <div class="card">
-          <div class="icon">🚚</div>
+          <div class="icon"><i class="fa-solid fa-truck"></i></div>
           <h4>Supplier Credit</h4>
           <div class="val">UGX {{ supplier_credit_total|floatformat:0 }}</div>
           <div class="sub">{{ supplier_count }} active suppliers</div>
         </div>
         <div class="card">
-          <div class="icon">✅</div>
+          <div class="icon"><i class="fa-solid fa-circle-check"></i></div>
           <h4>Well Stocked</h4>
           <div class="val">{{ well_stocked }}</div>
           <div class="sub">Items at good levels</div>
         </div>
         <div class="card">
-          <div class="icon">📥</div>
+          <div class="icon"><i class="fa-solid fa-download"></i></div>
           <h4>Arrivals This Week</h4>
           <div class="val">{{ arrivals_this_week }}</div>
           <div class="sub">New stock entries</div>
         </div>
         <div class="card">
-          <div class="icon">💰</div>
+          <div class="icon"><i class="fa-solid fa-coins"></i></div>
           <h4>Stock Value (Cost)</h4>
           <div class="val">UGX {{ stock_cost_value|floatformat:0 }}</div>
           <div class="sub">Total cost of stock</div>
         </div>
         <div class="card">
-          <div class="icon">📊</div>
+          <div class="icon"><i class="fa-solid fa-chart-line"></i></div>
           <h4>Stock Value (Selling)</h4>
           <div class="val">UGX {{ stock_sell_value|floatformat:0 }}</div>
           <div class="sub">If all sold today</div>
@@ -485,7 +486,7 @@
           + Record Supplier Credit
         </button>
         <button class="btn-action" onclick="window.location.href = '/stock/'">
-          📦 View All Stock
+          <i class="fa-solid fa-box"></i> View All Stock
         </button>
       </div>
 
@@ -493,7 +494,7 @@
       <div class="two-col">
         <!-- STOCK LEVEL PROGRESS BARS — real data -->
         <div class="box">
-          <div class="box-title">📊 Stock Level Monitor</div>
+          <div class="box-title"><i class="fa-solid fa-chart-bar"></i> Stock Level Monitor</div>
           {% for product in products %}
           <div class="stock-item">
             <div class="s-header">
@@ -517,7 +518,7 @@
 
         <!-- SUPPLIER CREDIT TABLE — real data -->
         <div class="box">
-          <div class="box-title">🚚 Supplier Credit Status</div>
+          <div class="box-title"><i class="fa-solid fa-truck"></i> Supplier Credit Status</div>
           <table>
             <thead>
               <tr>
@@ -555,7 +556,7 @@
 
       <!-- RECENT STOCK ARRIVALS — real data -->
       <div class="box">
-        <div class="box-title">📥 Recent Stock Arrivals</div>
+        <div class="box-title"><i class="fa-solid fa-download"></i> Recent Stock Arrivals</div>
         <table>
           <thead>
             <tr>

@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sales — NYONDO Hardware</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-+0r6rrwMZceTYFygJXRL7Hhdhsq6TOcKPEbb9Rwzc2b4EkJmO+iSWoZVata3u0G3UcNYI9dZe4UfgZ7HU5a3HQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
       * {
         box-sizing: border-box;
@@ -442,54 +443,54 @@
       {% if request.user.groups.all.0.name == 'admin' %}
       <span class="role-badge">🔑 Admin</span>
       {% elif request.user.groups.all.0.name == 'salesperson' %}
-      <span class="role-badge">💰 Salesperson</span>
+      <span class="role-badge"><i class="fa-solid fa-coins"></i> Salesperson</span>
       {% elif request.user.groups.all.0.name == 'stockmanager' %}
-      <span class="role-badge">📦 Stock Manager</span>
+      <span class="role-badge"><i class="fa-solid fa-box"></i> Stock Manager</span>
       {% endif %}
 
       <p class="tagline">Hardware Management System</p>
       <div class="menu">
         {% if request.user.groups.all.0.name == 'admin' %}
         <a onclick="window.location.href = '/'">🏠 Home</a>
-        <a onclick="window.location.href = '/dashboard/admin/'">📊 Dashboard</a>
-        <a onclick="window.location.href = '/stock/'">📦 Stock</a>
+        <a onclick="window.location.href = '/dashboard/admin/'"><i class="fa-solid fa-chart-pie"></i> Dashboard</a>
+        <a onclick="window.location.href = '/stock/'"><i class="fa-solid fa-box"></i> Stock</a>
         <a onclick="window.location.href = '/sales/'" class="active"
-          >💰 Sales</a
+          ><i class="fa-solid fa-coins"></i> Sales</a
         >
         <a onclick="window.location.href = '/customer_registration/'"
-          >👥 Register Customer</a
+          ><i class="fa-solid fa-users"></i> Register Customer</a
         >
         <a onclick="window.location.href = '/customer_deposit/'"
-          >💳 Customer Deposit</a
+          ><i class="fa-solid fa-credit-card"></i> Customer Deposit</a
         >
         <a onclick="window.location.href = '/supplier_credit/'"
-          >🚚 Supplier Credit</a
+          ><i class="fa-solid fa-truck"></i> Supplier Credit</a
         >
 
         {% elif request.user.groups.all.0.name == 'salesperson' %}
         <a onclick="window.location.href = '/dashboard/salesperson/'"
-          >📊 Dashboard</a
+          ><i class="fa-solid fa-chart-pie"></i> Dashboard</a
         >
         <a onclick="window.location.href = '/sales/'" class="active"
-          >💰 Sales</a
+          ><i class="fa-solid fa-coins"></i> Sales</a
         >
         <a onclick="window.location.href = '/customer_registration/'"
-          >👥 Register Customer</a
+          ><i class="fa-solid fa-users"></i> Register Customer</a
         >
         <a onclick="window.location.href = '/customer_deposit/'"
-          >💳 Customer Deposit</a
+          ><i class="fa-solid fa-credit-card"></i> Customer Deposit</a
         >
 
         {% elif request.user.groups.all.0.name == 'stockmanager' %}
         <a onclick="window.location.href = '/dashboard/stockmanager/'"
-          >📊 Dashboard</a
+          ><i class="fa-solid fa-chart-pie"></i> Dashboard</a
         >
-        <a onclick="window.location.href = '/stock/'">📦 Stock</a>
+        <a onclick="window.location.href = '/stock/'"><i class="fa-solid fa-box"></i> Stock</a>
         <a onclick="window.location.href = '/supplier_credit/'"
-          >🚚 Supplier Credit</a
+          ><i class="fa-solid fa-truck"></i> Supplier Credit</a
         >
         <a onclick="window.location.href = '/sales/'" class="active"
-          >💰 View Sales</a
+          ><i class="fa-solid fa-coins"></i> View Sales</a
         >
         {% endif %}
 
@@ -499,14 +500,14 @@
 
     <!-- MAIN CONTENT -->
     <div class="main">
-      <div class="page-title">💰 Record a Sale</div>
+      <div class="page-title"><i class="fa-solid fa-coins"></i> Record a Sale</div>
 
       {% comment %} <!-- show success or error messages --> {% endcomment %}
       {% comment %} {% if messages %} {% for message in messages %} {% if message.tags ==
       'error' %}
-      <div class="alert-error">❌ {{ message }}</div>
+      <div class="alert-error"><i class="fa-solid fa-circle-xmark"></i> {{ message }}</div>
       {% else %}
-      <div class="alert-success">✅ {{ message }}</div>
+      <div class="alert-success"><i class="fa-solid fa-circle-check"></i> {{ message }}</div>
       {% endif %} {% endfor %} {% endif %} {% endcomment %}
 
       {% if messages %}
@@ -597,7 +598,7 @@
 
           <!-- transport charge rule note -->
           <div class="transport-note">
-            🚚 <strong>Transport Rule:</strong> Free delivery within 10km for
+            <i class="fa-solid fa-truck"></i> <strong>Transport Rule:</strong> Free delivery within 10km for
             orders ≥ UGX 500,000. Otherwise, an extra
             <strong>UGX 30,000</strong> is charged.
           </div>

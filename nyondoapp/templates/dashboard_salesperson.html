@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sales Dashboard — NYONDO Hardware</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-+0r6rrwMZceTYFygJXRL7Hhdhsq6TOcKPEbb9Rwzc2b4EkJmO+iSWoZVata3u0G3UcNYI9dZe4UfgZ7HU5a3HQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
       * {
         box-sizing: border-box;
@@ -360,21 +361,21 @@
     <div class="sidebar">
       <div class="logo-box">N</div>
       <h2>NYONDO</h2>
-      <span class="role-badge">💰 Salesperson</span>
+      <span class="role-badge"><i class="fa-solid fa-coins"></i> Salesperson</span>
 
       <div class="menu">
         <div class="menu-label">Overview</div>
-        <a onclick="window.location.href = '/dashboard/salesperson/'" class="active">📊 My Dashboard</a>
+        <a onclick="window.location.href = '/dashboard/salesperson/'" class="active"><i class="fa-solid fa-chart-pie"></i> My Dashboard</a>
 
         <div class="menu-label">Sales</div>
-        <a onclick="window.location.href = '/sales/'">💰 Record a Sale</a>
+        <a onclick="window.location.href = '/sales/'"><i class="fa-solid fa-coins"></i> Record a Sale</a>
 
         <div class="menu-label">Customers</div>
-        <a onclick="window.location.href = '/customer_registration/'">👥 Register Customer</a>
-        <a onclick="window.location.href = '/customer_deposit/'">💳 Customer Deposit</a>
+        <a onclick="window.location.href = '/customer_registration/'"><i class="fa-solid fa-users"></i> Register Customer</a>
+        <a onclick="window.location.href = '/customer_deposit/'"><i class="fa-solid fa-credit-card"></i> Customer Deposit</a>
 
         <div class="menu-label">Stock (View Only)</div>
-        <a onclick="window.location.href = '/stock/'">📦 Check Stock Levels</a>
+        <a onclick="window.location.href = '/stock/'"><i class="fa-solid fa-box"></i> Check Stock Levels</a>
 
         <div class="menu-label">Restricted</div>
         <span class="locked">🔒 Supplier Credit</span>
@@ -419,37 +420,37 @@
       <!-- STAT CARDS — real data -->
       <div class="cards">
         <div class="card">
-          <div class="icon">💰</div>
+          <div class="icon"><i class="fa-solid fa-coins"></i></div>
           <h4>Sales Today</h4>
           <div class="val">UGX {{ sales_today_total|floatformat:0 }}</div>
           <div class="sub">{{ sales_today_count }} transaction{{ sales_today_count|pluralize }}</div>
         </div>
         <div class="card">
-          <div class="icon">💳</div>
+          <div class="icon"><i class="fa-solid fa-credit-card"></i></div>
           <h4>Deposits Today</h4>
           <div class="val">UGX {{ deposits_today_total|floatformat:0 }}</div>
           <div class="sub">{{ deposits_today_count }} deposit payment{{ deposits_today_count|pluralize }}</div>
         </div>
         <div class="card">
-          <div class="icon">📦</div>
+          <div class="icon"><i class="fa-solid fa-box"></i></div>
           <h4>Items Available</h4>
           <div class="val">{{ total_stock }}</div>
           <div class="sub">Products with stock</div>
         </div>
         <div class="card">
-          <div class="icon">👥</div>
+          <div class="icon"><i class="fa-solid fa-users"></i></div>
           <h4>New Customers</h4>
           <div class="val">{{ new_customers }}</div>
           <div class="sub">Registered today</div>
         </div>
         <div class="card">
-          <div class="icon">🚚</div>
+          <div class="icon"><i class="fa-solid fa-truck"></i></div>
           <h4>Transport Charged</h4>
           <div class="val">UGX {{ transport_today|floatformat:0 }}</div>
           <div class="sub">Today's deliveries</div>
         </div>
         <div class="card">
-          <div class="icon">⏳</div>
+          <div class="icon"><i class="fa-solid fa-hourglass-half"></i></div>
           <h4>Pending Pickups</h4>
           <div class="val">{{ pending_count }}</div>
           <div class="sub">Awaiting collection</div>
@@ -461,12 +462,12 @@
         <button class="btn-action" onclick="window.location.href = '/sales/'">+ Record Sale</button>
         <button class="btn-action" onclick="window.location.href = '/customer_deposit/'">+ Record Deposit</button>
         <button class="btn-action" onclick="window.location.href = '/customer_registration/'">+ New Customer</button>
-        <button class="btn-action" onclick="window.location.href = '/stock/'">📦 Check Stock</button>
+        <button class="btn-action" onclick="window.location.href = '/stock/'"><i class="fa-solid fa-box"></i> Check Stock</button>
       </div>
 
       <!-- TRANSPORT CHARGE CALCULATOR -->
       <div class="calc-box">
-        <h3>🚚 Quick Transport Charge Calculator</h3>
+        <h3><i class="fa-solid fa-truck"></i> Quick Transport Charge Calculator</h3>
         <div class="calc-row">
           <div class="field">
             <label>Order Amount (UGX)</label>
@@ -522,7 +523,7 @@
 
         <!-- Pending Pickups -->
         <div class="box">
-          <div class="box-title">⏳ Ready for Pickup</div>
+          <div class="box-title"><i class="fa-solid fa-hourglass-half"></i> Ready for Pickup</div>
           <table>
             <thead>
               <tr>

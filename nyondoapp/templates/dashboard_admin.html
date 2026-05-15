@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin Dashboard — NYONDO Hardware</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-+0r6rrwMZceTYFygJXRL7Hhdhsq6TOcKPEbb9Rwzc2b4EkJmO+iSWoZVata3u0G3UcNYI9dZe4UfgZ7HU5a3HQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
       /*  COLOR PALETTE 
        #1f2937  → Dark Navy    (sidebar, headers)
@@ -342,29 +343,29 @@
       <div class="menu">
         <div class="menu-label">Overview</div>
         <a onclick="window.location.href = '/dashboard/admin/'" class="active"
-          >📊 Dashboard</a
+          ><i class="fa-solid fa-chart-pie"></i> Dashboard</a
         >
 
         <div class="menu-label">Inventory</div>
-        <a onclick="window.location.href = '/stock/'">📦 Stock Management</a>
+        <a onclick="window.location.href = '/stock/'"><i class="fa-solid fa-box"></i> Stock Management</a>
         <a onclick="window.location.href = '/supplier_credit/'"
-          >🚚 Supplier Credit</a
+          ><i class="fa-solid fa-truck"></i> Supplier Credit</a
         >
 
         <div class="menu-label">Sales</div>
-        <a onclick="window.location.href = '/sales/'">💰 Record Sale</a>
+        <a onclick="window.location.href = '/sales/'"><i class="fa-solid fa-coins"></i> Record Sale</a>
 
         <div class="menu-label">Customers</div>
         <a onclick="window.location.href = '/customer_registration/'"
-          >👥 Register Customer</a
+          ><i class="fa-solid fa-users"></i> Register Customer</a
         >
         <a onclick="window.location.href = '/customer_deposit/'"
-          >💳 Customer Deposits</a
+          ><i class="fa-solid fa-credit-card"></i> Customer Deposits</a
         >
 
         <div class="menu-label">Admin</div>
-        <a onclick="window.location.href = '#'">👤 Manage Staff</a>
-        <a onclick="window.location.href = '#'">📈 Reports</a>
+        <a onclick="window.location.href = '#'"><i class="fa-solid fa-user"></i> Manage Staff</a>
+        <a onclick="window.location.href = '#'"><i class="fa-solid fa-chart-line"></i> Reports</a>
         <a onclick="window.location.href = '#'">⚙️ Settings</a>
 
         <div class="menu-label">Account</div>
@@ -430,49 +431,49 @@
       {% comment %}
       <div class="cards">
         <div class="card">
-          <div class="icon">📦</div>
+          <div class="icon"><i class="fa-solid fa-box"></i></div>
           <h4>Total Stock Items</h4>
           <div class="val">250</div>
           <div class="sub">Across all products</div>
         </div>
         <div class="card">
-          <div class="icon">💰</div>
+          <div class="icon"><i class="fa-solid fa-coins"></i></div>
           <h4>Sales Today</h4>
           <div class="val">UGX 1,250,000</div>
           <div class="sub">8 transactions</div>
         </div>
         <div class="card alert">
-          <div class="icon">⚠️</div>
+          <div class="icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
           <h4>Low Stock Items</h4>
           <div class="val">12</div>
           <div class="sub">Needs restocking</div>
         </div>
         <div class="card">
-          <div class="icon">👥</div>
+          <div class="icon"><i class="fa-solid fa-users"></i></div>
           <h4>Deposit Members</h4>
           <div class="val">38</div>
           <div class="sub">Active scheme accounts</div>
         </div>
         <div class="card">
-          <div class="icon">🚚</div>
+          <div class="icon"><i class="fa-solid fa-truck"></i></div>
           <h4>Supplier Credit</h4>
           <div class="val">UGX 8.4M</div>
           <div class="sub">5 suppliers</div>
         </div>
         <div class="card">
-          <div class="icon">👤</div>
+          <div class="icon"><i class="fa-solid fa-user"></i></div>
           <h4>Staff Accounts</h4>
           <div class="val">4</div>
           <div class="sub">Active users</div>
         </div>
         <div class="card">
-          <div class="icon">💳</div>
+          <div class="icon"><i class="fa-solid fa-credit-card"></i></div>
           <h4>Pending Pickups</h4>
           <div class="val">7</div>
           <div class="sub">Deposit scheme orders</div>
         </div>
         <div class="card">
-          <div class="icon">📈</div>
+          <div class="icon"><i class="fa-solid fa-chart-line"></i></div>
           <h4>Monthly Sales</h4>
           <div class="val">UGX 18.4M</div>
           <div class="sub">June 2025</div>
@@ -482,43 +483,43 @@
 
       <div class="cards">
         <div class="card">
-          <div class="icon">📦</div>
+          <div class="icon"><i class="fa-solid fa-box"></i></div>
           <h4>Total Stock Items</h4>
           <div class="val">{{ total_stock }}</div>
           <div class="sub">Across all products</div>
         </div>
         <div class="card">
-          <div class="icon">💰</div>
+          <div class="icon"><i class="fa-solid fa-coins"></i></div>
           <h4>Sales Today</h4>
           <div class="val">UGX {{ sales_today_total|floatformat:0 }}</div>
           <div class="sub">{{ sales_today_count }} transactions</div>
         </div>
         <div class="card alert">
-          <div class="icon">⚠️</div>
+          <div class="icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
           <h4>Low Stock Items</h4>
           <div class="val">{{ low_stock_count }}</div>
           <div class="sub">Needs restocking</div>
         </div>
         <div class="card">
-          <div class="icon">👥</div>
+          <div class="icon"><i class="fa-solid fa-users"></i></div>
           <h4>Deposit Members</h4>
           <div class="val">{{ deposit_members }}</div>
           <div class="sub">Active scheme accounts</div>
         </div>
         <div class="card">
-          <div class="icon">🚚</div>
+          <div class="icon"><i class="fa-solid fa-truck"></i></div>
           <h4>Supplier Credit</h4>
           <div class="val">UGX {{ supplier_credit_total|floatformat:0 }}</div>
           <div class="sub">{{ supplier_count }} suppliers</div>
         </div>
         <div class="card">
-          <div class="icon">💳</div>
+          <div class="icon"><i class="fa-solid fa-credit-card"></i></div>
           <h4>Pending Pickups</h4>
           <div class="val">{{ pending_pickups }}</div>
           <div class="sub">Deposit scheme orders</div>
         </div>
         <div class="card">
-          <div class="icon">📈</div>
+          <div class="icon"><i class="fa-solid fa-chart-line"></i></div>
           <h4>Monthly Sales</h4>
           <div class="val">UGX {{ revenue_month|floatformat:0 }}</div>
           <div class="sub">This month</div>
@@ -632,7 +633,7 @@
         <!-- Low Stock Alert -->
         {% comment %}
         <div class="box">
-          <div class="box-title">⚠️ Low Stock Alerts</div>
+          <div class="box-title"><i class="fa-solid fa-triangle-exclamation"></i> Low Stock Alerts</div>
           <table>
             <thead>
               <tr>
@@ -669,7 +670,7 @@
       {% endcomment %}
 
       <div class="box">
-        <div class="box-title">⚠️ Low Stock Alerts</div>
+        <div class="box-title"><i class="fa-solid fa-triangle-exclamation"></i> Low Stock Alerts</div>
         <table>
           <thead>
             <tr>

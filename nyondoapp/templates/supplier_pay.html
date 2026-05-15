@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <title>Pay Supplier — NYONDO</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-+0r6rrwMZceTYFygJXRL7Hhdhsq6TOcKPEbb9Rwzc2b4EkJmO+iSWoZVata3u0G3UcNYI9dZe4UfgZ7HU5a3HQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
       * {
         box-sizing: border-box;
@@ -96,7 +97,7 @@
       <h2>💵 Pay Supplier</h2>
 
       {% if messages %} {% for message in messages %}
-      <div class="alert-error">❌ {{ message }}</div>
+      <div class="alert-error"><i class="fa-solid fa-circle-xmark"></i> {{ message }}</div>
       {% endfor %} {% endif %}
 
       <div class="balance">
@@ -116,7 +117,7 @@
           min="1"
           required
         />
-        <button class="btn-confirm" type="submit">✅ Confirm Payment</button>
+        <button class="btn-confirm" type="submit"><i class="fa-solid fa-circle-check"></i> Confirm Payment</button>
       </form>
 
       <a href="/supplier_credit/" class="btn-cancel">← Cancel, go back</a>
