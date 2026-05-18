@@ -568,10 +568,10 @@
 
             <div>
               <label>Product (scheme items only)</label>
-              <select name="product_id">
-                <option value="">-- Select --</option>
+              <select name="product_id" id="product_select" onchange="updateUnitPrice()">
+                <option value="" data-unit="0">-- Select --</option>
                 {% for product in products %}
-                <option value="{{ product.id }}">{{ product.name }}</option>
+                <option value="{{ product.id }}" data-unit="{{ product.unit_price }}">{{ product.name }} (UGX {{ product.unit_price|floatformat:0 }})</option>
                 {% endfor %}
               </select>
             </div>
@@ -585,7 +585,7 @@
             <div>
               <label>Unit Price (UGX) — from stock</label>
               <input type="number" id="unit_p" placeholder="e.g. 28000"
-                     oninput="calcUnits()" readonly />
+                     readonly />
             </div>
 
             <div>
@@ -726,13 +726,21 @@
     </div><!-- end .main -->
 
     <script>
+      function updateUnitPrice() {
+        var productSelect = document.getElementById("product_select");
+        var selectedOption = productSelect.options[productSelect.selectedIndex];
+        var price = parseFloat(selectedOption.dataset.unit) || 0;
+        document.getElementById("unit_p").value = price > 0 ? price : "";
+        calcUnits();
+      }
+
       /* Calculate how many units today's deposit amount can buy */
       function calcUnits() {
-        var amt   = parseFloat(document.getElementById("deposit_amt").value) || 0;
-        var price = parseFloat(document.getElementById("unit_p").value) || 1;
-        var units = Math.floor(amt / price);
-        document.getElementById("total-dep").textContent  = "UGX " + amt.toLocaleString();
-        document.getElementById("units-eq").textContent   = units + " unit(s)";
+        var amt = parseFloat(document.getElementById("deposit_amt").value) || 0;
+        var price = parseFloat(document.getElementById("unit_p").value) || 0;
+        var units = price > 0 ? Math.floor(amt / price) : 0;
+        document.getElementById("total-dep").textContent = "UGX " + amt.toLocaleString();
+        document.getElementById("units-eq").textContent = units + " unit(s)";
       }
 
       /* Mobile sidebar toggle */

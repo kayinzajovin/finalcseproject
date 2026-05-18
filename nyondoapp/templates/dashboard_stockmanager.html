@@ -504,34 +504,8 @@
         </button>
       </div>
 
-      <!-- TWO COL: Stock Levels + Supplier Credit -->
+      <!-- TWO COL: Supplier Credit only -->
       <div class="two-col">
-        <!-- STOCK LEVEL PROGRESS BARS — real data -->
-        <div class="box">
-          <div class="box-title">
-            <i class="fa-solid fa-chart-bar"></i> Stock Level Monitor
-          </div>
-          {% for product in products %}
-          <div class="stock-item">
-            <div class="s-header">
-              <span class="s-name">{{ product.name }}</span>
-              <span class="s-qty">{{ product.quantity }} units</span>
-            </div>
-            <div class="progress-track">
-              {% if product.quantity < 5 %}
-              <div class="progress-fill critical" style="width: 5%"></div>
-              {% elif product.quantity < 10 %}
-              <div class="progress-fill low" style="width: 20%"></div>
-              {% else %}
-              <div class="progress-fill good" style="width: 80%"></div>
-              {% endif %}
-            </div>
-          </div>
-          {% empty %}
-          <p style="color: #9ca3af; font-size: 13px">No products added yet</p>
-          {% endfor %}
-        </div>
-
         <!-- SUPPLIER CREDIT TABLE — real data -->
         <div class="box">
           <div class="box-title">
