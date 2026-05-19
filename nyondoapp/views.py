@@ -17,6 +17,7 @@ from django.contrib.auth import authenticate, login, logout
 
 #decorator to require login for certain views
 from django.contrib.auth.decorators import login_required
+from functools import wraps
 
 from decimal import Decimal
 
@@ -43,6 +44,25 @@ def get_user_role(user):
     elif 'stockmanager' in groups:
         return 'stockmanager'
     return None
+
+
+def allowed_roles(roles, message=None):
+    def decorator(view_func):
+        @wraps(view_func)
+        def _wrapped(request, *args, **kwargs):
+            role = get_user_role(request.user)
+            allowed = set(roles) if isinstance(roles, (list, tuple, set)) else {roles}
+            if role not in allowed:
+                if message:
+                    messages.error(request, message)
+                if role == 'stockmanager':
+                    return redirect('/dashboard/stockmanager/')
+                if role == 'salesperson':
+                    return redirect('/dashboard/salesperson/')
+                return redirect('/dashboard/admin/')
+            return view_func(request, *args, **kwargs)
+        return _wrapped
+    return decorator
 
 
 def index(request):
@@ -629,64 +649,6 @@ def customer_delete(request, pk):
     return redirect('customer_registration')
 
 
-# @login_required(login_url='/login/')
-# def customer_deposit(request):
-#     # only admin and salesperson can access customer deposits
-#     role = get_user_role(request.user)
-#     if role == 'stockmanager':
-#         messages.error(request, 'You are not authorized to access customer deposits.')
-#         return redirect('/dashboard/stockmanager/')
-
-#     if request.method == 'POST':
-#         nin = request.POST.get('nin')
-#         product_id = request.POST.get('product_id')
-#         amount_deposited = request.POST.get('amount_deposited')
-#         payment_method = request.POST.get('payment_method')
-
-#         if not nin or not product_id or not amount_deposited:
-#             messages.error(request, 'Please fill in all required fields.')
-#             deposits = CustomerDeposit.objects.all().order_by('-date')
-#             customers = Customer.objects.all()
-#             products = Product.objects.all()
-#             return render(request, 'customer_deposit.html', {
-#                 'deposits': deposits,
-#                 'customers': customers,
-#                 'products': products,
-#             })
-
-#         if not Customer.objects.filter(NIN=nin).exists():
-#             messages.error(request, f'No customer found with NIN {nin}.')
-#             deposits = CustomerDeposit.objects.all().order_by('-date')
-#             customers = Customer.objects.all()
-#             products = Product.objects.all()
-#             return render(request, 'customer_deposit.html', {
-#                 'deposits': deposits,
-#                 'customers': customers,
-#                 'products': products,
-#             })
-
-#         customer = Customer.objects.get(NIN=nin)
-#         product = Product.objects.get(id=product_id)
-
-#         CustomerDeposit.objects.create(
-#             customer=customer,
-#             product=product,
-#             amount_deposited=amount_deposited,
-#             unit_price=product.unit_price,
-#             payment_method=payment_method,
-#         )
-
-#         messages.success(request, f'Deposit recorded for {customer.full_name}!')
-#         return redirect('customer_deposit')
-
-#     deposits = CustomerDeposit.objects.all().order_by('-date')
-#     customers = Customer.objects.all()
-#     products = Product.objects.all()
-#     return render(request, 'customer_deposit.html', {
-#         'deposits': deposits,
-#         'customers': customers,
-#         'products': products,
-#     })
 
 @login_required(login_url='/login/')
 def customer_deposit(request):
@@ -750,12 +712,19 @@ def customer_deposit(request):
 
         product = Product.objects.get(id=product_id)
 
+        quantity_str = request.POST.get('quantity', '0') or '0'
+        try:
+            quantity = int(quantity_str)
+        except ValueError:
+            quantity = 0
+
         # create the deposit record
         deposit = CustomerDeposit.objects.create(
             customer=customer,
             product=product,
             amount_deposited=amount_deposited,
             unit_price=product.unit_price,
+            quantity=quantity,
             payment_method=payment_method,
         )
 
@@ -786,9 +755,14 @@ def deposit_edit(request, pk):
     if request.method == 'POST':
         deposit.status                = request.POST.get('status')
         deposit.amount_paid_on_pickup = request.POST.get('amount_paid_on_pickup', 0) or 0
+        quantity_str                  = request.POST.get('quantity', deposit.quantity) or deposit.quantity
+        try:
+            deposit.quantity = int(quantity_str)
+        except (ValueError, TypeError):
+            deposit.quantity = deposit.quantity
 
-        # only update these two fields — never touch date
-        deposit.save(update_fields=['status', 'amount_paid_on_pickup'])
+        # only update these fields — never touch date
+        deposit.save(update_fields=['status', 'amount_paid_on_pickup', 'quantity'])
 
         messages.success(request, 'Deposit updated successfully!')
         return redirect('customer_deposit')
@@ -811,8 +785,9 @@ def deposit_delete(request, pk):
 
 
 
+@login_required(login_url='/login/')
+@allowed_roles(['admin', 'stockmanager'], message='You are not authorized to access supplier payments.')
 def supplier_pay(request, supplier_id):
-    
     supplier = get_object_or_404(Supplier, id=supplier_id)
 
     if request.method == 'POST':

@@ -589,6 +589,12 @@
             </div>
 
             <div>
+              <label>Quantity</label>
+              <input type="number" name="quantity" id="deposit_qty"
+                     placeholder="e.g. 5" min="0" oninput="qtyChanged()" />
+            </div>
+
+            <div>
               <label>Payment Date</label>
               <input type="date" name="payment_date" />
             </div>
@@ -734,11 +740,20 @@
         calcUnits();
       }
 
+      function qtyChanged() {
+        var qty = parseInt(document.getElementById("deposit_qty").value) || 0;
+        var price = parseFloat(document.getElementById("unit_p").value) || 0;
+        var amount = qty > 0 && price > 0 ? qty * price : 0;
+        document.getElementById("deposit_amt").value = amount > 0 ? amount : "";
+        calcUnits();
+      }
+
       /* Calculate how many units today's deposit amount can buy */
       function calcUnits() {
         var amt = parseFloat(document.getElementById("deposit_amt").value) || 0;
         var price = parseFloat(document.getElementById("unit_p").value) || 0;
         var units = price > 0 ? Math.floor(amt / price) : 0;
+        document.getElementById("deposit_qty").value = units > 0 ? units : "";
         document.getElementById("total-dep").textContent = "UGX " + amt.toLocaleString();
         document.getElementById("units-eq").textContent = units + " unit(s)";
       }

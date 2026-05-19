@@ -108,6 +108,7 @@ class CustomerDeposit(models.Model):
     product               = models.ForeignKey(Product, on_delete=models.CASCADE)
     amount_deposited      = models.DecimalField(max_digits=10, decimal_places=2)
     unit_price            = models.DecimalField(max_digits=10, decimal_places=2)
+    quantity              = models.IntegerField(default=0)
     units_equivalent      = models.IntegerField(default=0)
     amount_paid_on_pickup = models.DecimalField(max_digits=12, decimal_places=0, default=0)
     payment_method        = models.CharField(max_length=20, choices=PAYMENT_CHOICES, default='cash')
