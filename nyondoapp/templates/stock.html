@@ -347,14 +347,6 @@
     <div class="main">
       <div class="page-title"><i class="fa-solid fa-box"></i> Stock Management</div>
 
-      <!-- show success or error messages -->
-      {% comment %} {% if messages %} {% for message in messages %} {% if message.tags ==
-      'error' %}
-      <div class="alert-error"><i class="fa-solid fa-circle-xmark"></i> {{ message }}</div>
-      {% else %}
-      <div class="alert-success"><i class="fa-solid fa-circle-check"></i> {{ message }}</div>
-      {% endif %} {% endfor %} {% endif %} {% endcomment %}
-
       {% if messages %}
     {% for message in messages %}
         {% if message.tags == 'error' %}
