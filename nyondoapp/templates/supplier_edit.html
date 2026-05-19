@@ -4,7 +4,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Edit Supplier — NYONDO Hardware</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-+0r6rrwMZceTYFygJXRL7Hhdhsq6TOcKPEbb9Rwzc2b4EkJmO+iSWoZVata3u0G3UcNYI9dZe4UfgZ7HU5a3HQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      integrity="sha512-+0r6rrwMZceTYFygJXRL7Hhdhsq6TOcKPEbb9Rwzc2b4EkJmO+iSWoZVata3u0G3UcNYI9dZe4UfgZ7HU5a3HQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
     <style>
       * {
         box-sizing: border-box;
@@ -184,9 +190,15 @@
       <p class="tagline">Hardware Management System</p>
       <div class="menu">
         <a onclick="window.location.href = '/'">🏠 Home</a>
-        <a onclick="window.location.href = '/dashboard/admin/'"><i class="fa-solid fa-chart-pie"></i> Dashboard</a>
-        <a onclick="window.location.href = '/stock/'"><i class="fa-solid fa-box"></i> Stock</a>
-        <a onclick="window.location.href = '/sales/'"><i class="fa-solid fa-coins"></i> Sales</a>
+        <a onclick="window.location.href = '/dashboard/admin/'"
+          ><i class="fa-solid fa-chart-pie"></i> Dashboard</a
+        >
+        <a onclick="window.location.href = '/stock/'"
+          ><i class="fa-solid fa-box"></i> Stock</a
+        >
+        <a onclick="window.location.href = '/sales/'"
+          ><i class="fa-solid fa-coins"></i> Sales</a
+        >
         <a onclick="window.location.href = '/customer_registration/'"
           ><i class="fa-solid fa-users"></i> Register Customer</a
         >
@@ -216,6 +228,37 @@
             <div>
               <label>Phone / Contact</label>
               <input type="text" name="phone" value="{{ supplier.phone }}" />
+            </div>
+            <div>
+              <label>Product (scheme items only)</label>
+              <select name="product_id">
+                <option value="">-- Select --</option>
+                {% for product in products %}
+                <option
+                  value="{{ product.id }}"
+                  {%
+                  if
+                  supplier.product
+                  and
+                  supplier.product.id=""
+                  ="product.id"
+                  %}selected{%
+                  endif
+                  %}
+                >
+                  {{ product.name }}
+                </option>
+                {% endfor %}
+              </select>
+            </div>
+            <div>
+              <label>Quantity</label>
+              <input
+                type="number"
+                name="quantity"
+                value="{{ supplier.quantity }}"
+                min="0"
+              />
             </div>
             <div>
               <label>Address</label>

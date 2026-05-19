@@ -4,7 +4,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Supplier Credit — NYONDO Hardware</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-+0r6rrwMZceTYFygJXRL7Hhdhsq6TOcKPEbb9Rwzc2b4EkJmO+iSWoZVata3u0G3UcNYI9dZe4UfgZ7HU5a3HQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      integrity="sha512-+0r6rrwMZceTYFygJXRL7Hhdhsq6TOcKPEbb9Rwzc2b4EkJmO+iSWoZVata3u0G3UcNYI9dZe4UfgZ7HU5a3HQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
     <style>
       /*  COLOR PALETTE 
        #1f2937  → Dark Navy
@@ -287,8 +293,14 @@
         text-decoration: none;
         display: inline-block;
       }
-      .btn-edit:hover { background: #f59e0b; color: #1f2937; }
-      .btn-delete:hover { background: #dc2626; color: #fff; }
+      .btn-edit:hover {
+        background: #f59e0b;
+        color: #1f2937;
+      }
+      .btn-delete:hover {
+        background: #dc2626;
+        color: #fff;
+      }
 
       /* pay button — green */
       .btn-pay {
@@ -302,13 +314,27 @@
         display: inline-block;
         margin-left: 5px;
       }
-      .btn-pay:hover { background: #16a34a; color: #fff; }
+      .btn-pay:hover {
+        background: #16a34a;
+        color: #fff;
+      }
 
       @media (max-width: 600px) {
-        .sidebar { width: 100%; height: auto; position: relative; }
-        .main { margin-left: 0; padding: 20px; }
-        .form-grid { grid-template-columns: 1fr; }
-        .summary-cards { grid-template-columns: 1fr; }
+        .sidebar {
+          width: 100%;
+          height: auto;
+          position: relative;
+        }
+        .main {
+          margin-left: 0;
+          padding: 20px;
+        }
+        .form-grid {
+          grid-template-columns: 1fr;
+        }
+        .summary-cards {
+          grid-template-columns: 1fr;
+        }
       }
     </style>
   </head>
@@ -319,28 +345,49 @@
       <h2>NYONDO</h2>
 
       {% if request.user.groups.all.0.name == 'admin' %}
-        <span class="role-badge">🔑 Admin</span>
+      <span class="role-badge">🔑 Admin</span>
       {% elif request.user.groups.all.0.name == 'stockmanager' %}
-        <span class="role-badge"><i class="fa-solid fa-box"></i> Stock Manager</span>
+      <span class="role-badge"
+        ><i class="fa-solid fa-box"></i> Stock Manager</span
+      >
       {% endif %}
 
       <p class="tagline">Hardware Management System</p>
       <div class="menu">
-
         {% if request.user.groups.all.0.name == 'admin' %}
-          <a onclick="window.location.href = '/'">🏠 Home</a>
-          <a onclick="window.location.href = '/dashboard/admin/'"><i class="fa-solid fa-chart-pie"></i> Dashboard</a>
-          <a onclick="window.location.href = '/stock/'"><i class="fa-solid fa-box"></i> Stock</a>
-          <a onclick="window.location.href = '/sales/'"><i class="fa-solid fa-coins"></i> Sales</a>
-          <a onclick="window.location.href = '/customer_registration/'"><i class="fa-solid fa-users"></i> Register Customer</a>
-          <a onclick="window.location.href = '/customer_deposit/'"><i class="fa-solid fa-credit-card"></i> Customer Deposit</a>
-          <a onclick="window.location.href = '/supplier_credit/'" class="active"><i class="fa-solid fa-truck"></i> Supplier Credit</a>
+        <a onclick="window.location.href = '/'">🏠 Home</a>
+        <a onclick="window.location.href = '/dashboard/admin/'"
+          ><i class="fa-solid fa-chart-pie"></i> Dashboard</a
+        >
+        <a onclick="window.location.href = '/stock/'"
+          ><i class="fa-solid fa-box"></i> Stock</a
+        >
+        <a onclick="window.location.href = '/sales/'"
+          ><i class="fa-solid fa-coins"></i> Sales</a
+        >
+        <a onclick="window.location.href = '/customer_registration/'"
+          ><i class="fa-solid fa-users"></i> Register Customer</a
+        >
+        <a onclick="window.location.href = '/customer_deposit/'"
+          ><i class="fa-solid fa-credit-card"></i> Customer Deposit</a
+        >
+        <a onclick="window.location.href = '/supplier_credit/'" class="active"
+          ><i class="fa-solid fa-truck"></i> Supplier Credit</a
+        >
 
         {% elif request.user.groups.all.0.name == 'stockmanager' %}
-          <a onclick="window.location.href = '/dashboard/stockmanager/'"><i class="fa-solid fa-chart-pie"></i> Dashboard</a>
-          <a onclick="window.location.href = '/stock/'"><i class="fa-solid fa-box"></i> Stock</a>
-          <a onclick="window.location.href = '/supplier_credit/'" class="active"><i class="fa-solid fa-truck"></i> Supplier Credit</a>
-          <a onclick="window.location.href = '/sales/'"><i class="fa-solid fa-coins"></i> View Sales</a>
+        <a onclick="window.location.href = '/dashboard/stockmanager/'"
+          ><i class="fa-solid fa-chart-pie"></i> Dashboard</a
+        >
+        <a onclick="window.location.href = '/stock/'"
+          ><i class="fa-solid fa-box"></i> Stock</a
+        >
+        <a onclick="window.location.href = '/supplier_credit/'" class="active"
+          ><i class="fa-solid fa-truck"></i> Supplier Credit</a
+        >
+        <a onclick="window.location.href = '/sales/'"
+          ><i class="fa-solid fa-coins"></i> View Sales</a
+        >
         {% endif %}
 
         <a onclick="window.location.href = '/logout/'">🚪 Logout</a>
@@ -349,18 +396,21 @@
 
     <!-- MAIN CONTENT -->
     <div class="main">
-      <div class="page-title"><i class="fa-solid fa-truck"></i> Supplier Credit</div>
+      <div class="page-title">
+        <i class="fa-solid fa-truck"></i> Supplier Credit
+      </div>
 
       <!-- show success or error messages -->
-      {% if messages %}
-        {% for message in messages %}
-          {% if message.tags == 'error' %}
-            <div class="alert-error"><i class="fa-solid fa-circle-xmark"></i> {{ message }}</div>
-          {% else %}
-            <div class="alert-success"><i class="fa-solid fa-circle-check"></i> {{ message }}</div>
-          {% endif %}
-        {% endfor %}
-      {% endif %}
+      {% if messages %} {% for message in messages %} {% if message.tags ==
+      'error' %}
+      <div class="alert-error">
+        <i class="fa-solid fa-circle-xmark"></i> {{ message }}
+      </div>
+      {% else %}
+      <div class="alert-success">
+        <i class="fa-solid fa-circle-check"></i> {{ message }}
+      </div>
+      {% endif %} {% endfor %} {% endif %}
 
       <!-- summary cards — real data from database -->
       <div class="summary-cards">
@@ -386,19 +436,52 @@
           <div class="form-grid">
             <div>
               <label>Supplier Name</label>
-              <input type="text" name="name" placeholder="e.g. Hima Cement Factory" />
+              <input
+                type="text"
+                name="name"
+                placeholder="e.g. Hima Cement Factory"
+              />
             </div>
             <div>
               <label>Supplier Phone / Contact</label>
               <input type="text" name="phone" placeholder="e.g. 0414-123456" />
             </div>
             <div>
+              <label>Product (scheme items only)</label>
+              <select name="product_id">
+                <option value="">-- Select --</option>
+                {% for product in products %}
+                <option value="{{ product.id }}">
+                  {{ product.name }} (UGX {{ product.unit_price|floatformat:0
+                  }})
+                </option>
+                {% endfor %}
+              </select>
+            </div>
+            <div>
+              <label>Quantity</label>
+              <input
+                type="number"
+                name="quantity"
+                placeholder="e.g. 10"
+                min="0"
+              />
+            </div>
+            <div>
               <label>Address</label>
-              <input type="text" name="address" placeholder="e.g. Kampala Road" />
+              <input
+                type="text"
+                name="address"
+                placeholder="e.g. Kampala Road"
+              />
             </div>
             <div>
               <label>Credit Amount (UGX)</label>
-              <input type="number" name="credit_amount" placeholder="e.g. 7500000" />
+              <input
+                type="number"
+                name="credit_amount"
+                placeholder="e.g. 7500000"
+              />
             </div>
           </div>
           <button class="btn-submit" type="submit">Save Supplier Credit</button>
@@ -414,6 +497,8 @@
               <th>#</th>
               <th>Supplier</th>
               <th>Phone</th>
+              <th>Product</th>
+              <th>Quantity</th>
               <th>Address</th>
               <th>Credit Amount (UGX)</th>
               <th>Status</th>
@@ -426,23 +511,40 @@
               <td>{{ forloop.counter }}</td>
               <td>{{ supplier.name }}</td>
               <td>{{ supplier.phone }}</td>
+              <td>
+                {% if supplier.product %}{{ supplier.product.name }}{% else
+                %}-{% endif %}
+              </td>
+              <td>{{ supplier.quantity|default:'-' }}</td>
               <td>{{ supplier.address }}</td>
               <td>{{ supplier.credit_amount|floatformat:0 }}</td>
               <td>
                 {% if supplier.credit_amount > 0 %}
-                  <span class="badge-unpaid">Unpaid</span>
+                <span class="badge-unpaid">Unpaid</span>
                 {% else %}
-                  <span class="badge-paid">Cleared</span>
+                <span class="badge-paid">Cleared</span>
                 {% endif %}
               </td>
               <!-- edit, delete and pay buttons -->
               <td>
-                <a href="/supplier_credit/edit/{{ supplier.id }}/" class="btn-edit">✏ Edit</a>
-                <a href="/supplier_credit/delete/{{ supplier.id }}/" class="btn-delete"
-                  onclick="return confirm('Delete {{ supplier.name }}?')">🗑 Delete</a>
+                <a
+                  href="/supplier_credit/edit/{{ supplier.id }}/"
+                  class="btn-edit"
+                  >✏ Edit</a
+                >
+                <a
+                  href="/supplier_credit/delete/{{ supplier.id }}/"
+                  class="btn-delete"
+                  onclick="return confirm('Delete {{ supplier.name }}?')"
+                  >🗑 Delete</a
+                >
                 {% if supplier.credit_amount > 0 %}
-                <a href="/supplier_credit/pay/{{ supplier.id }}/" class="btn-pay"
-                  onclick="return confirm('Record full payment for {{ supplier.name }}?')">💵 Pay</a>
+                <a
+                  href="/supplier_credit/pay/{{ supplier.id }}/"
+                  class="btn-pay"
+                  onclick="return confirm('Record full payment for {{ supplier.name }}?')"
+                  >💵 Pay</a
+                >
                 {% endif %}
               </td>
             </tr>

@@ -498,21 +498,40 @@ def supplier_credit(request):
         name = request.POST.get('name')
         phone = request.POST.get('phone')
         address = request.POST.get('address')
+        product_id = request.POST.get('product_id')
+        quantity = request.POST.get('quantity') or 0
         credit_amount = request.POST.get('credit_amount')
+
+        products = Product.objects.all()
 
         if not name or not credit_amount:
             messages.error(request, 'Supplier name and credit amount are required.')
             suppliers = Supplier.objects.all()
-            return render(request, 'supplier_credit.html', {'suppliers': suppliers})
+            return render(request, 'supplier_credit.html', {
+                'suppliers': suppliers,
+                'products': products,
+            })
+
+        product = Product.objects.get(id=product_id) if product_id else None
+        quantity = int(quantity)
 
         supplier, created = Supplier.objects.get_or_create(
             name=name,
-            defaults={'phone': phone, 'address': address, 'credit_amount': credit_amount}
+            defaults={
+                'phone': phone,
+                'address': address,
+                'product': product,
+                'quantity': quantity,
+                'credit_amount': credit_amount,
+            }
         )
 
         if not created:
             supplier.credit_amount = credit_amount
             supplier.phone = phone
+            supplier.address = address
+            supplier.product = product
+            supplier.quantity = quantity
             supplier.save()
 
         messages.success(request, f'Supplier {name} credit saved!')
@@ -522,12 +541,14 @@ def supplier_credit(request):
     total_credit = sum(s.credit_amount for s in suppliers)
     supplier_count = suppliers.count()
     suppliers_with_debt = suppliers.filter(credit_amount__gt=0).count()
+    products = Product.objects.all()
 
     return render(request, 'supplier_credit.html', {
         'suppliers': suppliers,
         'total_credit': total_credit,
         'supplier_count': supplier_count,
         'suppliers_with_debt': suppliers_with_debt,
+        'products': products,
     })
 
 
@@ -545,12 +566,16 @@ def supplier_edit(request, pk):
         supplier.name = request.POST.get('name')
         supplier.phone = request.POST.get('phone')
         supplier.address = request.POST.get('address')
+        supplier.quantity = request.POST.get('quantity') or 0
         supplier.credit_amount = request.POST.get('credit_amount')
+        product_id = request.POST.get('product_id')
+        supplier.product = Product.objects.get(id=product_id) if product_id else None
         supplier.save()
         messages.success(request, f'{supplier.name} updated successfully!')
         return redirect('supplier_credit')
 
-    return render(request, 'supplier_edit.html', {'supplier': supplier})
+    products = Product.objects.all()
+    return render(request, 'supplier_edit.html', {'supplier': supplier, 'products': products})
 
 
 @login_required(login_url='/login/')

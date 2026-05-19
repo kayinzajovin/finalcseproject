@@ -15,6 +15,8 @@ class Supplier(models.Model):
     name = models.CharField(max_length=200)
     phone = models.CharField(max_length=20)
     address = models.CharField(max_length=255, blank=True)
+    product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True, blank=True)
+    quantity = models.IntegerField(default=0)
     credit_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # how much we owe them
     date_added = models.DateField(auto_now_add=True)
 
