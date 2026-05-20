@@ -401,7 +401,7 @@
       </div>
 
       <!-- show success or error messages -->
-      {% if messages %} {% for message in messages %} {% if message.tags ==
+      {% comment %} {% if messages %} {% for message in messages %} {% if message.tags ==
       'error' %}
       <div class="alert-error">
         <i class="fa-solid fa-circle-xmark"></i> {{ message }}
@@ -410,7 +410,26 @@
       <div class="alert-success">
         <i class="fa-solid fa-circle-check"></i> {{ message }}
       </div>
-      {% endif %} {% endfor %} {% endif %}
+      {% endif %} {% endfor %} {% endif %} {% endcomment %}
+
+      <!-- show success or error messages -->
+{% if messages %}
+    {% for message in messages %}
+
+        {% if message.tags == 'error' %}
+            <div class="alert-error">
+                <i class="fa-solid fa-circle-xmark"></i> {{ message }}
+            </div>
+
+        {% else %}
+            <div class="alert-success">
+                <i class="fa-solid fa-circle-check"></i> {{ message }}
+            </div>
+
+        {% endif %}
+
+    {% endfor %}
+{% endif %}
 
       <!-- summary cards — real data from database -->
       <div class="summary-cards">
@@ -512,8 +531,8 @@
               <td>{{ supplier.name }}</td>
               <td>{{ supplier.phone }}</td>
               <td>
-                {% if supplier.product %}{{ supplier.product.name }}{% else
-                %}-{% endif %}
+                {% if supplier.product %} {{ supplier.product.name }} {% else %}
+                - {% endif %}
               </td>
               <td>{{ supplier.quantity|default:'-' }}</td>
               <td>{{ supplier.address }}</td>

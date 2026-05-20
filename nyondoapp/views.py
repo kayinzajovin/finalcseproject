@@ -1,36 +1,29 @@
 # nyondoapp/views.py
-# from django.shortcuts import render, redirect
 
+# Django shortcut helpers for rendering, redirecting, and object lookup.
 from django.shortcuts import render, redirect, get_object_or_404
 
-#shows the sucess or error messages on the frontend
+# Django messages framework for user-facing success/error notifications.
 from django.contrib import messages
 
-#works with date and time
+# Django timezone utilities for date-aware queries.
 from django.utils import timezone
 
-#import the models to interact with the database
+# Django auth helpers for login, logout, and user authentication.
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+
+# Standard library utilities.
+from functools import wraps
+from decimal import Decimal
+from collections import defaultdict
+
+# Application models for ORM access.
 from .models import Product, Supplier, Sale, CustomerDeposit, StockArrival, Customer
 
-#handles user authentication and login required decorator
-from django.contrib.auth import authenticate, login, logout
-
-#decorator to require login for certain views
-from django.contrib.auth.decorators import login_required
-from functools import wraps
-
-from decimal import Decimal
-
-
-# Import the correct model (IMPORTANT: not "Deposit")
-from .models import CustomerDeposit
-
-# Import Django utilities for rendering and response
-from django.shortcuts import get_object_or_404
+# HTTP response rendering and template helpers.
 from django.http import HttpResponse
 from django.template.loader import render_to_string
-
-from collections import defaultdict
 
  
 # helper function to get the role of the logged in user
@@ -47,6 +40,8 @@ def get_user_role(user):
 
 
 def allowed_roles(roles, message=None):
+    # Custom decorator to restrict a view to selected user role groups.
+    # Uses Django messages and redirect helpers when access is denied.
     def decorator(view_func):
         @wraps(view_func)
         def _wrapped(request, *args, **kwargs):
@@ -66,18 +61,19 @@ def allowed_roles(roles, message=None):
 
 
 def index(request):
+    # Simple view for the homepage using Django render shortcut.
     return render(request, 'index.html')
 
 
 def login_view(request):
-    # handle login form submission
-    #gets what the user entered in the form and checks if it matches a user in the database
+    # Handle login form submission and authenticate with Django auth.
+    # Uses django.contrib.auth.authenticate() and login() helpers.
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
         role = request.POST.get('role')
 
-        # check username and password against database
+        # Check username and password against the Django user database.
         user = authenticate(request, username=username, password=password)
 
         if user is not None:

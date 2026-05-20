@@ -8,7 +8,7 @@ urlpatterns = [
     path('login/', views.login_view, name='login'),
     path('logout/', views.logout_view, name='logout'),
 
-    # dashboards
+    # dashboard routes protected by login and role logic
     path('dashboard/admin/', views.dashboard_admin, name='dashboard_admin'),
     path('dashboard/salesperson/', views.dashboard_salesperson, name='dashboard_salesperson'),
     path('dashboard/stockmanager/', views.dashboard_stockmanager, name='dashboard_stockmanager'),
