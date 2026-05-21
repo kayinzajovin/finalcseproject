@@ -370,14 +370,15 @@
         <div class="menu-label">Sales</div>
         <a onclick="window.location.href = '/sales/'"><i class="fa-solid fa-coins"></i> Record a Sale</a>
 
-        <div class="menu-label">Customers</div>
-        <a onclick="window.location.href = '/customer_registration/'"><i class="fa-solid fa-users"></i> Register Customer</a>
-        <a onclick="window.location.href = '/customer_deposit/'"><i class="fa-solid fa-credit-card"></i> Customer Deposit</a>
+        {% comment %} <div class="menu-label">Customers</div> {% endcomment %}
+        {% comment %} <a onclick="window.location.href = '/customer_registration/'"><i class="fa-solid fa-users"></i> Register Customer</a>
+        <a onclick="window.location.href = '/customer_deposit/'"><i class="fa-solid fa-credit-card"></i> Customer Deposit</a> {% endcomment %}
 
         <div class="menu-label">Stock (View Only)</div>
         <a onclick="window.location.href = '/stock/'"><i class="fa-solid fa-box"></i> Check Stock Levels</a>
 
         <div class="menu-label">Restricted</div>
+        
         <span class="locked">🔒 Supplier Credit</span>
         <span class="locked">🔒 Reports</span>
         <span class="locked">🔒 Staff Management</span>
@@ -460,8 +461,6 @@
       <!-- QUICK ACTIONS -->
       <div class="actions">
         <button class="btn-action" onclick="window.location.href = '/sales/'">+ Record Sale</button>
-        <button class="btn-action" onclick="window.location.href = '/customer_deposit/'">+ Record Deposit</button>
-        <button class="btn-action" onclick="window.location.href = '/customer_registration/'">+ New Customer</button>
         <button class="btn-action" onclick="window.location.href = '/stock/'"><i class="fa-solid fa-box"></i> Check Stock</button>
       </div>
 

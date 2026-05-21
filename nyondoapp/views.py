@@ -2,6 +2,8 @@
 
 # Django shortcut helpers for rendering, redirecting, and object lookup.
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 
 # Django messages framework for user-facing success/error notifications.
 from django.contrib import messages
@@ -10,8 +12,7 @@ from django.contrib import messages
 from django.utils import timezone
 
 # Django auth helpers for login, logout, and user authentication.
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
+
 
 # Standard library utilities.
 from functools import wraps
@@ -26,45 +27,12 @@ from django.http import HttpResponse
 from django.template.loader import render_to_string
 
  
-# helper function to get the role of the logged in user
-#checks the groups the user belongs to and returns the role as a string
-def get_user_role(user):
-    groups = user.groups.values_list('name', flat=True)
-    if 'admin' in groups:
-        return 'admin'
-    elif 'salesperson' in groups:
-        return 'salesperson'
-    elif 'stockmanager' in groups:
-        return 'stockmanager'
-    return None
-
-
-def allowed_roles(roles, message=None):
-    # Custom decorator to restrict a view to selected user role groups.
-    # Uses Django messages and redirect helpers when access is denied.
-    def decorator(view_func):
-        @wraps(view_func)
-        def _wrapped(request, *args, **kwargs):
-            role = get_user_role(request.user)
-            allowed = set(roles) if isinstance(roles, (list, tuple, set)) else {roles}
-            if role not in allowed:
-                if message:
-                    messages.error(request, message)
-                if role == 'stockmanager':
-                    return redirect('/dashboard/stockmanager/')
-                if role == 'salesperson':
-                    return redirect('/dashboard/salesperson/')
-                return redirect('/dashboard/admin/')
-            return view_func(request, *args, **kwargs)
-        return _wrapped
-    return decorator
 
 
 def index(request):
     # Simple view for the homepage using Django render shortcut.
     return render(request, 'index.html')
-
-
+ 
 def login_view(request):
     # Handle login form submission and authenticate with Django auth.
     # Uses django.contrib.auth.authenticate() and login() helpers.
@@ -107,8 +75,44 @@ def logout_view(request):
     logout(request)
     return redirect('/login/')
 
+
+# helper function to get the role of the logged in user
+#checks the groups the user belongs to and returns the role as a string
+
+def get_user_role(user):
+    groups = user.groups.values_list('name', flat=True)
+    if 'admin' in groups:
+        return 'admin'
+    elif 'salesperson' in groups:
+        return 'salesperson'
+    elif 'stockmanager' in groups:
+        return 'stockmanager'
+    return None
+
+
+def allowed_roles(roles, message=None):
+    # Custom decorator to restrict a view to selected user role groups.
+    # Uses Django messages and redirect helpers when access is denied.
+    def decorator(view_func):
+        @wraps(view_func)
+        def _wrapped(request, *args, **kwargs):
+            role = get_user_role(request.user)
+            allowed = set(roles) if isinstance(roles, (list, tuple, set)) else {roles}
+            if role not in allowed:
+                if message:
+                    messages.error(request, message)
+                if role == 'stockmanager':
+                    return redirect('/dashboard/stockmanager/')
+                if role == 'salesperson':
+                    return redirect('/dashboard/salesperson/')
+                return redirect('/dashboard/admin/')
+            return view_func(request, *args, **kwargs)
+        return _wrapped
+    return decorator
+
+
 #user must be logged in to access any dashboard
-@login_required(login_url='/login/')
+@login_required
 def dashboard_admin(request):
     # only admin can access this dashboard
     role = get_user_role(request.user)
@@ -178,7 +182,7 @@ def dashboard_admin(request):
 
 
 
-@login_required(login_url='/login/')
+@login_required
 def dashboard_salesperson(request):
     # only salesperson can access this dashboard
     role = get_user_role(request.user)
@@ -231,7 +235,7 @@ def dashboard_salesperson(request):
     return render(request, 'dashboard_salesperson.html', context)
 
 
-@login_required(login_url='/login/')
+@login_required
 def dashboard_stockmanager(request):
     # only stock manager can access this dashboard
     role = get_user_role(request.user)
@@ -291,7 +295,7 @@ def dashboard_stockmanager(request):
     return render(request, 'dashboard_stockmanager.html', context)
 
 
-@login_required(login_url='/login/')
+@login_required
 def stock(request):
     # only admin and stock manager can access stock
     role = get_user_role(request.user)
@@ -343,7 +347,7 @@ def stock(request):
     return render(request, 'stock.html', {'products': products})
 
 
-@login_required(login_url='/login/')
+@login_required
 def stock_edit(request, pk):
     # only admin and stock manager can edit stock
     role = get_user_role(request.user)
@@ -365,7 +369,7 @@ def stock_edit(request, pk):
     return render(request, 'stock_edit.html', {'product': product})
 
 
-@login_required(login_url='/login/')
+@login_required
 def stock_delete(request, pk):
     # only admin and stock manager can delete stock
     role = get_user_role(request.user)
@@ -380,7 +384,7 @@ def stock_delete(request, pk):
     return redirect('stock')
 
 
-@login_required(login_url='/login/')
+@login_required
 def sales(request):
     # all roles can view sales but only admin and salesperson can record
     role = get_user_role(request.user)
@@ -430,7 +434,7 @@ def sales(request):
     return render(request, 'sales.html', {'sales': sales, 'products': products})
 
 
-@login_required(login_url='/login/')
+@login_required
 def sales_delete(request, pk):
     # only admin and salesperson can delete sales
     role = get_user_role(request.user)
@@ -446,7 +450,7 @@ def sales_delete(request, pk):
     messages.success(request, 'Sale deleted and stock restored!')
     return redirect('sales')
 
-@login_required(login_url='/login/')
+@login_required
 def sales_edit(request, pk):
     role = get_user_role(request.user)
     if role == 'stockmanager':
@@ -482,7 +486,7 @@ def sales_edit(request, pk):
     return render(request, 'sales_edit.html', {'sale': sale, 'products': products})
 
 
-@login_required(login_url='/login/')
+@login_required
 def supplier_credit(request):
     # only admin and stock manager can access supplier credit
     role = get_user_role(request.user)
@@ -548,7 +552,7 @@ def supplier_credit(request):
     })
 
 
-@login_required(login_url='/login/')
+@login_required
 def supplier_edit(request, pk):
     # only admin and stock manager can edit suppliers
     role = get_user_role(request.user)
@@ -574,7 +578,7 @@ def supplier_edit(request, pk):
     return render(request, 'supplier_edit.html', {'supplier': supplier, 'products': products})
 
 
-@login_required(login_url='/login/')
+@login_required
 def supplier_delete(request, pk):
     # only admin and stock manager can delete suppliers
     role = get_user_role(request.user)
@@ -589,7 +593,7 @@ def supplier_delete(request, pk):
     return redirect('supplier_credit')
 
 
-@login_required(login_url='/login/')
+@login_required
 def customer_registration(request):
     # only admin and salesperson can access customer registration
     role = get_user_role(request.user)
@@ -631,7 +635,7 @@ def customer_registration(request):
     return render(request, 'customer_registration.html', {'customers': customers})
 
 
-@login_required(login_url='/login/')
+@login_required
 def customer_edit(request, pk):
     # only admin and salesperson can edit customers
     role = get_user_role(request.user)
@@ -655,7 +659,7 @@ def customer_edit(request, pk):
     return render(request, 'customer_edit.html', {'customer': customer})
 
 
-@login_required(login_url='/login/')
+@login_required
 def customer_delete(request, pk):
     # only admin and salesperson can delete customers
     role = get_user_role(request.user)
@@ -671,7 +675,7 @@ def customer_delete(request, pk):
 
 
 
-@login_required(login_url='/login/')
+@login_required
 def customer_deposit(request):
     role = get_user_role(request.user)
     if role == 'stockmanager':
@@ -705,7 +709,7 @@ def customer_deposit(request):
             })
         return customer_groups
 
-    # POST: save a new deposit ─────────────────────────────────────────
+    # POST: save a new deposit 
     if request.method == 'POST':
         nin              = request.POST.get('nin', '').strip()
         product_id       = request.POST.get('product_id')
@@ -764,7 +768,7 @@ def customer_deposit(request):
     })
 
 
-@login_required(login_url='/login/')
+@login_required
 def deposit_edit(request, pk):
     role = get_user_role(request.user)
     if role == 'stockmanager':
@@ -791,7 +795,7 @@ def deposit_edit(request, pk):
     return render(request, 'deposit_edit.html', {'deposit': deposit})
 
 
-@login_required(login_url='/login/')
+@login_required
 def deposit_delete(request, pk):
     # only admin and salesperson can delete deposits
     role = get_user_role(request.user)
@@ -806,7 +810,7 @@ def deposit_delete(request, pk):
 
 
 
-@login_required(login_url='/login/')
+@login_required
 @allowed_roles(['admin', 'stockmanager'], message='You are not authorized to access supplier payments.')
 def supplier_pay(request, supplier_id):
     supplier = get_object_or_404(Supplier, id=supplier_id)
@@ -833,7 +837,7 @@ def supplier_pay(request, supplier_id):
     # GET — show the payment form
     return render(request, 'supplier_pay.html', {'supplier': supplier})
 
-@login_required(login_url='/login/')
+@login_required
 def sale_receipt(request, pk):
     # get the sale and display a printable receipt
     sale = Sale.objects.get(id=pk)

@@ -401,18 +401,6 @@
       </div>
 
       <!-- show success or error messages -->
-      {% comment %} {% if messages %} {% for message in messages %} {% if message.tags ==
-      'error' %}
-      <div class="alert-error">
-        <i class="fa-solid fa-circle-xmark"></i> {{ message }}
-      </div>
-      {% else %}
-      <div class="alert-success">
-        <i class="fa-solid fa-circle-check"></i> {{ message }}
-      </div>
-      {% endif %} {% endfor %} {% endif %} {% endcomment %}
-
-      <!-- show success or error messages -->
 {% if messages %}
     {% for message in messages %}
 
@@ -471,8 +459,7 @@
                 <option value="">-- Select --</option>
                 {% for product in products %}
                 <option value="{{ product.id }}">
-                  {{ product.name }} (UGX {{ product.unit_price|floatformat:0
-                  }})
+                  {{ product.name }} (UGX {{ product.unit_price|floatformat:0}})
                 </option>
                 {% endfor %}
               </select>
