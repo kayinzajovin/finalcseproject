@@ -34,7 +34,7 @@ urlpatterns = [
     path('customer_registration/edit/<int:pk>/', views.customer_edit, name='customer_edit'),
     path('customer_registration/delete/<int:pk>/', views.customer_delete, name='customer_delete'),
 
-    # customer deposit — list, edit, delete
+    # customer deposit — list, edit, delete 
     path('customer_deposit/', views.customer_deposit, name='customer_deposit'),
     path('customer_deposit/edit/<int:pk>/', views.deposit_edit, name='deposit_edit'),
     path('customer_deposit/delete/<int:pk>/', views.deposit_delete, name='deposit_delete'),

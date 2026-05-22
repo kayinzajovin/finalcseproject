@@ -33,40 +33,86 @@ def index(request):
     # Simple view for the homepage using Django render shortcut.
     return render(request, 'index.html')
  
+# def login_view(request):
+#     # Handle login form submission and authenticate with Django auth.
+#     # Uses django.contrib.auth.authenticate() and login() helpers.
+#     if request.method == 'POST':
+#         username = request.POST.get('username')
+#         password = request.POST.get('password')
+#         role = request.POST.get('role')
+
+#         # Check username and password against the Django user database.
+#         user = authenticate(request, username=username, password=password)
+
+#         if user is not None:
+#             # get the groups this user belongs to
+#             user_groups = user.groups.values_list('name', flat=True)
+
+#             # check user belongs to the selected role group
+#             if role == 'admin' and 'admin' in user_groups:
+#                 login(request, user)
+#                 return redirect('/dashboard/admin/')
+#             elif role == 'salesperson' and 'salesperson' in user_groups:
+#                 login(request, user)
+#                 return redirect('/dashboard/salesperson/')
+#             elif role == 'stockmanager' and 'stockmanager' in user_groups:
+#                 login(request, user)
+#                 return redirect('/dashboard/stockmanager/')
+#             else:
+#                 # user exists but wrong role selected
+#                 messages.error(request, 'You are not authorized for that role.')
+#                 return render(request, 'login.html')
+#         else:
+#             # wrong username or password
+#             messages.error(request, 'Invalid username or password.')
+#             return render(request, 'login.html')
+
+#     return render(request, 'login.html')
+
 def login_view(request):
-    # Handle login form submission and authenticate with Django auth.
-    # Uses django.contrib.auth.authenticate() and login() helpers.
+
+    # check if the form was submitted
     if request.method == 'POST':
+
+        # get username and password from the form
         username = request.POST.get('username')
         password = request.POST.get('password')
-        role = request.POST.get('role')
 
-        # Check username and password against the Django user database.
+        # check if the username and password are correct
         user = authenticate(request, username=username, password=password)
 
+        # if user exists
         if user is not None:
-            # get the groups this user belongs to
-            user_groups = user.groups.values_list('name', flat=True)
 
-            # check user belongs to the selected role group
-            if role == 'admin' and 'admin' in user_groups:
-                login(request, user)
+            # log the user into the system
+            login(request, user)
+
+            # check if user belongs to admin group
+            if user.groups.filter(name='admin').exists():
                 return redirect('/dashboard/admin/')
-            elif role == 'salesperson' and 'salesperson' in user_groups:
-                login(request, user)
-                return redirect('/dashboard/salesperson/')
-            elif role == 'stockmanager' and 'stockmanager' in user_groups:
-                login(request, user)
-                return redirect('/dashboard/stockmanager/')
-            else:
-                # user exists but wrong role selected
-                messages.error(request, 'You are not authorized for that role.')
-                return render(request, 'login.html')
-        else:
-            # wrong username or password
-            messages.error(request, 'Invalid username or password.')
-            return render(request, 'login.html')
 
+            # check if user belongs to salesperson group
+            elif user.groups.filter(name='salesperson').exists():
+                return redirect('/dashboard/salesperson/')
+
+            # check if user belongs to stockmanager group
+            elif user.groups.filter(name='stockmanager').exists():
+                return redirect('/dashboard/stockmanager/')
+
+            # if user has no group assigned
+            else:
+                messages.error(request, 'No role assigned to this account.')
+
+                # log user out
+                logout(request)
+
+                return render(request, 'login.html')
+
+        # if username or password is wrong
+        else:
+            messages.error(request, 'Invalid username or password.')
+
+    # open login page
     return render(request, 'login.html')
 
 

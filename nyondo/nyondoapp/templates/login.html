@@ -162,7 +162,7 @@
         {% csrf_token %}
 
         <!-- hidden input stores the selected role -->
-        <input type="hidden" name="role" id="role-input" value="admin" />
+        {% comment %} <input type="hidden" name="role" id="role-input" value="admin" />
 
         <label>Select Your Role</label>
         <div class="role-select">
@@ -175,7 +175,7 @@
           <div class="role-btn" onclick="selectRole(this, 'stockmanager')">
             <i class="fa-solid fa-box"></i> Stock
           </div>
-        </div>
+        </div> {% endcomment %}
 
         <label for="username">Username</label>
         <input
