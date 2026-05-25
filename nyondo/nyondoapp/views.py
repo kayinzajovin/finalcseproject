@@ -27,7 +27,7 @@ from collections import defaultdict
 # re: regular expressions for phone and NIN format validation
 import re
 
-# ORM models each maps to a database table
+# ORM (object relational mapping) models each maps to a database table
 from .models import Product, Supplier, Sale, CustomerDeposit, StockArrival, Customer
 
 # HttpResponse: return raw HTTP responses without a template
@@ -167,7 +167,8 @@ def dashboard_admin(request):
     # this month's revenue and profit
     sales_month    = Sale.objects.filter(date__month=this_month, date__year=this_year)
     revenue_month  = sum(s.total_price for s in sales_month)
-    cost_month     = sum(s.unit_price * s.quantity for s in sales_month)
+    # cost_month     = sum(s.unit_price * s.quantity for s in sales_month)
+    cost_month = sum(s.product.unit_cost * s.quantity for s in sales_month)
     gross_profit   = revenue_month - cost_month
 
     # deposit scheme stats
@@ -1029,8 +1030,7 @@ def supplier_pay(request, supplier_id):
 
     # GET show the payment form
     return render(request, 'supplier_pay.html', {'supplier': supplier})
-
-
+ 
 # Receipt─
 
 @login_required

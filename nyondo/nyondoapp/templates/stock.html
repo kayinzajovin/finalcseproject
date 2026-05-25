@@ -491,13 +491,13 @@
                 <a href="/stock/edit/{{ product.id }}/" class="btn-edit"
                   >✏ Edit</a
                 >
-                <a
+                {% comment %} <a
                   href="/stock/delete/{{ product.id }}/"
                   class="btn-delete"
                   onclick="return confirm('Are you sure you want to delete {{ product.name }}?')"
                 >
                   🗑 Delete
-                </a>
+                </a> {% endcomment %}
               </td>
               {% endif %}
             </tr>
