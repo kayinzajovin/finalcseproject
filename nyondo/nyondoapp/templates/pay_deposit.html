@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pay Deposit — NYONDO Hardware</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-+0r6rrwMZceTYFygJXRL7Hhdhsq6TOcKPEbb9Rwzc2b4EkJmO+iSWoZVata3u0G3UcNYI9dZe4UfgZ7HU5a3HQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+      * { box-sizing: border-box; margin: 0; padding: 0; font-family: Georgia, serif; }
+      body { background: #f4f6f8; color: #1f2937; }
+
+      /* SIDEBAR */
+      .sidebar {
+        position: fixed; left: 0; top: 0;
+        width: 240px; height: 100vh;
+        background: #1f2937; color: #fff;
+        padding: 25px 20px; overflow-y: auto;
+      }
+      .logo-box {
+        width: 55px; height: 55px; background: #f59e0b;
+        color: #1f2937; border-radius: 10px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 28px; font-weight: bold; margin: 0 auto 10px;
+      }
+      .sidebar h2 { text-align: center; font-size: 17px; margin-bottom: 4px; }
+      .sidebar p.tagline {
+        text-align: center; font-size: 12px;
+        color: #94a3b8; font-style: italic; margin-bottom: 30px;
+      }
+      .menu a {
+        display: block; color: #cbd5e1; text-decoration: none;
+        padding: 11px 12px; border-radius: 8px;
+        font-size: 15px; margin-bottom: 4px; cursor: pointer;
+      }
+      .menu a:hover { background: #374151; color: #fff; }
+      .menu a.active { background: #f59e0b; color: #1f2937; font-weight: bold; }
+
+      /* MAIN */
+      .main {
+        margin-left: 240px; padding: 35px 40px;
+        display: flex; flex-direction: column; align-items: center;
+      }
+      .page-title {
+        font-size: 22px; font-weight: bold;
+        border-left: 5px solid #f59e0b; padding-left: 12px;
+        margin-bottom: 30px; width: 100%; max-width: 560px;
+      }
+
+      /* ALERTS */
+      .alert-success {
+        background: #dcfce7; color: #166534;
+        padding: 12px 16px; border-radius: 8px;
+        margin-bottom: 20px; font-weight: bold; font-size: 14px;
+        width: 100%; max-width: 560px;
+      }
+      .alert-error {
+        background: #fee2e2; color: #991b1b;
+        padding: 12px 16px; border-radius: 8px;
+        margin-bottom: 20px; font-weight: bold; font-size: 14px;
+        width: 100%; max-width: 560px;
+      }
+
+      /* PAY CARD */
+      .pay-card {
+        background: #fff; border-radius: 14px;
+        padding: 35px 40px;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.09);
+        width: 100%; max-width: 560px;
+      }
+      .pay-card h3 {
+        font-size: 16px; color: #f59e0b;
+        border-bottom: 1px solid #e5e7eb;
+        padding-bottom: 10px; margin-bottom: 22px;
+      }
+
+      /* INFO BOX */
+      .info-box {
+        background: #fff7ed; border: 1.5px solid #f59e0b;
+        border-radius: 10px; padding: 16px 20px; margin-bottom: 24px;
+      }
+      .info-box .customer-name {
+        font-size: 16px; font-weight: bold;
+        color: #1f2937; margin-bottom: 6px;
+      }
+      .info-box .info-row {
+        font-size: 13px; color: #374151; margin-bottom: 3px;
+      }
+      .info-box .info-row span { font-weight: bold; color: #1f2937; }
+
+      /* BALANCE PREVIEW BOX */
+      .balance-box {
+        background: #1f2937; color: #fff;
+        padding: 16px 20px; border-radius: 10px;
+        font-size: 14px; display: flex;
+        gap: 20px; flex-wrap: wrap; margin-bottom: 22px;
+      }
+      .balance-box .item span {
+        color: #f59e0b; font-size: 17px;
+        font-weight: bold; display: block; margin-top: 4px;
+      }
+      .balance-box .item span.red { color: #f87171; }
+      .balance-box .item span.green { color: #4ade80; }
+
+      /* FORM FIELDS */
+      label {
+        display: block; font-size: 13px;
+        font-weight: bold; margin-bottom: 6px; color: #374151;
+      }
+      input, select {
+        width: 100%; padding: 11px 13px;
+        border: 1.5px solid #d1d5db; border-radius: 8px;
+        font-size: 14px; outline: none; margin-bottom: 18px;
+      }
+      input:focus, select:focus { border-color: #f59e0b; }
+      input[readonly] { background: #f9fafb; color: #6b7280; }
+
+      /* BUTTONS */
+      .btn-confirm {
+        width: 100%; background: #f59e0b; color: #1f2937;
+        padding: 14px; border: none; border-radius: 8px;
+        font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 4px;
+      }
+      .btn-confirm:hover { background: #1f2937; color: #f59e0b; }
+      .cancel-link {
+        display: block; text-align: center;
+        margin-top: 14px; font-size: 13px;
+        color: #6b7280; text-decoration: none;
+      }
+      .cancel-link:hover { color: #1f2937; }
+
+      /* HAMBURGER */
+      .hamburger {
+        display: none; position: fixed;
+        top: 14px; left: 14px; z-index: 999;
+        background: #f59e0b; color: #1f2937;
+        border: none; border-radius: 8px;
+        width: 40px; height: 40px; font-size: 20px;
+        cursor: pointer; align-items: center;
+        justify-content: center; font-weight: bold; line-height: 1;
+      }
+      .sidebar-overlay {
+        display: none; position: fixed; inset: 0;
+        background: rgba(0,0,0,0.45); z-index: 997;
+      }
+      .sidebar-overlay.open { display: block; }
+
+      @media (max-width: 1024px) {
+        .sidebar { width: 200px; }
+        .main { margin-left: 200px; padding: 25px 24px; }
+      }
+      @media (max-width: 768px) {
+        .hamburger { display: flex; }
+        .sidebar {
+          position: fixed; left: -260px; width: 240px;
+          height: 100vh; z-index: 998; transition: left 0.25s ease;
+        }
+        .sidebar.open { left: 0; }
+        .main { margin-left: 0; padding: 70px 16px 24px; }
+        .pay-card { padding: 24px 18px; }
+        .balance-box { flex-direction: column; gap: 12px; }
+      }
+    </style>
+  </head>
+  <body>
+
+    <button class="hamburger" onclick="toggleSidebar()" aria-label="Open menu">☰</button>
+    <div class="sidebar-overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+   
+
+    <!-- MAIN -->
+    <div class="main">
+
+      <div class="page-title">
+        <i class="fa-solid fa-credit-card"></i> Record Pickup Payment
+      </div>
+
+      {% if messages %}
+        {% for message in messages %}
+          {% if message.tags == 'error' %}
+            <div class="alert-error"><i class="fa-solid fa-circle-xmark"></i> {{ message }}</div>
+          {% else %}
+            <div class="alert-success"><i class="fa-solid fa-circle-check"></i> {{ message }}</div>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+
+      <div class="pay-card">
+        <h3><i class="fa-solid fa-money-bill-wave"></i> Pickup Payment — {{ deposit.customer.full_name }}</h3>
+
+        <!-- customer info -->
+        <div class="info-box">
+          <div class="customer-name">
+            <i class="fa-solid fa-user"></i> {{ deposit.customer.full_name }}
+          </div>
+          <div class="info-row">NIN: <span>{{ deposit.customer.nin }}</span></div>
+          <div class="info-row">Product: <span>{{ deposit.product.name }}</span></div>
+          <div class="info-row">Unit Price: <span>UGX {{ deposit.product.unit_price|floatformat:0 }}</span></div>
+          <div class="info-row">Total Deposited So Far: <span>UGX {{ deposit.amount_deposited|floatformat:0 }}</span></div>
+        </div>
+
+        <!-- live balance preview -->
+        <div class="balance-box">
+          <div class="item">
+            Total Cost
+            <span id="preview-total">UGX 0</span>
+          </div>
+          <div class="item">
+            Balance Due
+            <span>UGX {{ deposit.amount_deposited|floatformat:0 }}</span>
+          </div>
+          {% comment %} <div class="item">
+            Balance Due
+            <span id="preview-balance" class="red">UGX 0</span>
+          </div> {% endcomment %}
+        </div>
+
+        <!-- payment form -->
+        <form method="POST" action="/customer_deposit/pay/{{ deposit.id }}/">
+          {% csrf_token %}
+
+       
+
+          <label>Unit Price (UGX)</label>
+          <input
+            type="number"
+            id="pay_unit"
+            value="{{ deposit.product.unit_price }}"
+            readonly
+          />
+
+          <label>Amount Paying Now (UGX)</label>
+          <input
+            type="number"
+            name="amount_paid"
+            id="pay_amount"
+            placeholder="e.g. 500000"
+            required
+          />
+
+          <label>Payment Method</label>
+          <select name="payment_method">
+            <option value="cash">Cash</option>
+            <option value="mobile_money">Mobile Money</option>
+            <option value="bank_transfer">Bank Transfer</option>
+          </select>
+
+          <label>Payment Date</label>
+          <input type="date" name="payment_date" required />
+
+          <button class="btn-confirm" type="submit">
+            <i class="fa-solid fa-check"></i> Confirm Payment
+          </button>
+        </form>
+
+        <a class="cancel-link" href="/customer_deposit/">← Cancel, go back</a>
+      </div>
+    </div>
+
+    <script>
+      function calcTotal() {
+        var qty = parseInt(document.getElementById("pay_qty").value) || 0;
+        var price = parseFloat(document.getElementById("pay_unit").value) || 0;
+        var deposited = {{ deposit.amount_deposited }};
+        var total = qty * price;
+        var balance = total - deposited;
+        if (balance < 0) balance = 0;
+
+        document.getElementById("preview-total").textContent = "UGX " + total.toLocaleString();
+        document.getElementById("preview-balance").textContent = "UGX " + balance.toLocaleString();
+
+        // auto-fill amount field with balance due
+        document.getElementById("pay_amount").value = balance > 0 ? balance : 0;
+
+        // turn balance green if fully paid
+        var balSpan = document.getElementById("preview-balance");
+        balSpan.className = balance <= 0 ? "green" : "red";
+      }
+
+      function toggleSidebar() {
+        document.getElementById("sidebar").classList.toggle("open");
+        document.getElementById("overlay").classList.toggle("open");
+      }
+    </script>
+
+  </body>
+</html>

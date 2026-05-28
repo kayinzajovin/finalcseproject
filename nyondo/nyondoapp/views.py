@@ -1038,3 +1038,25 @@ def sale_receipt(request, pk):
     # fetch sale and render a printable receipt template
     sale = get_object_or_404(Sale, id=pk)
     return render(request, 'sale_receipt.html', {'sale': sale})
+
+
+def pay_deposit(request, deposit_id):
+    deposit = get_object_or_404(CustomerDeposit, id=deposit_id)
+
+    if request.method == 'POST':
+        amount_paid = request.POST.get('amount_paid')
+        payment_method = request.POST.get('payment_method')
+        payment_date = request.POST.get('payment_date')
+
+        # deduct the amount paid from the deposit
+        deposit.amount_deposited -= int(amount_paid)
+        if deposit.amount_deposited <= 0:
+            deposit.amount_deposited = 0
+            deposit.status = 'collected'
+        deposit.save()
+
+        messages.success(request, f"Payment of UGX {amount_paid} recorded for {deposit.customer.full_name}.")
+        return redirect('/customer_deposit/')
+
+    # GET — show the pay page
+    return render(request, 'pay_deposit.html', {'deposit': deposit})

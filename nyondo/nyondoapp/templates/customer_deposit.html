@@ -220,6 +220,18 @@
         color: #fff;
       }
 
+      /* optgroup styling */
+      optgroup {
+        font-weight: bold;
+        color: #1f2937;
+        background: #f9fafb;
+      }
+      optgroup option {
+        font-weight: normal;
+        color: #374151;
+        background: #fff;
+      }
+
       /* DEPOSIT HISTORY TABLE */
       .table-section {
         background: #fff;
@@ -438,7 +450,7 @@
         /* main fills full width */
         .main {
           margin-left: 0;
-          padding: 70px 16px 24px; /* top padding clears hamburger */
+          padding: 70px 16px 24px;
         }
 
         .page-title { font-size: 18px; }
@@ -493,6 +505,22 @@
         .table-section { padding: 14px; }
         .btn-submit, .btn-receipt { font-size: 14px; padding: 11px 16px; }
       }
+      /* pay button — green */
+.btn-pay {
+  background: #dcfce7;
+  color: #166534;
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: bold;
+  text-decoration: none;
+  display: inline-block;
+  margin-left: 5px;
+}
+.btn-pay:hover {
+  background: #16a34a;
+  color: #fff;
+}
     </style>
   </head>
   <body>
@@ -502,15 +530,13 @@
     <!-- Overlay behind open sidebar -->
     <div class="sidebar-overlay" id="overlay" onclick="toggleSidebar()"></div>
 
-    <!-- 
-         SIDEBAR
-     -->
+    <!-- SIDEBAR -->
     <div class="sidebar" id="sidebar">
       <div class="logo-box">N</div>
       <h2>NYONDO</h2>
       <p class="tagline">Hardware Management System</p>
       <div class="menu">
-        <a onclick="window.location.href = '/'">🏠 Home</a>
+        <a onclick="window.location.href = '/'"> Home</a>
         <a onclick="window.location.href = '/dashboard/admin/'"><i class="fa-solid fa-chart-pie"></i> Dashboard</a>
         <a onclick="window.location.href = '/stock/'"><i class="fa-solid fa-box"></i> Stock</a>
         <a onclick="window.location.href = '/sales/'"><i class="fa-solid fa-coins"></i> Sales</a>
@@ -521,9 +547,7 @@
       </div>
     </div>
 
-    <!-- 
-         MAIN CONTENT
-     -->
+    <!-- MAIN CONTENT -->
     <div class="main">
       <div class="page-title"><i class="fa-solid fa-credit-card"></i> Customer Deposit</div>
 
@@ -567,17 +591,45 @@
             </div>
 
             <div>
-              <label>Product (scheme items only)</label>
+              <label>Product (Cement, Iron Bars & Sheets only)</label>
               <select name="product_id" id="product_select" onchange="updateUnitPrice()">
                 <option value="" data-unit="0">-- Select --</option>
-                {% for product in products %}
-                <option value="{{ product.id }}" data-unit="{{ product.unit_price }}">{{ product.name }} (UGX {{ product.unit_price|floatformat:0 }})</option>
-                {% endfor %}
+
+                <optgroup label=" Cement">
+                  {% for product in products %}
+                    {% if 'Cement' in product.name %}
+                    <option value="{{ product.id }}" data-unit="{{ product.unit_price }}">
+                      {{ product.name }} (UGX {{ product.unit_price|floatformat:0 }})
+                    </option>
+                    {% endif %}
+                  {% endfor %}
+                </optgroup>
+
+                <optgroup label=" Iron Bars">
+                  {% for product in products %}
+                    {% if 'Iron Bar' in product.name %}
+                    <option value="{{ product.id }}" data-unit="{{ product.unit_price }}">
+                      {{ product.name }} (UGX {{ product.unit_price|floatformat:0 }})
+                    </option>
+                    {% endif %}
+                  {% endfor %}
+                </optgroup>
+
+                <optgroup label=" Iron Sheets">
+                  {% for product in products %}
+                    {% if 'Iron Sheet' in product.name %}
+                    <option value="{{ product.id }}" data-unit="{{ product.unit_price }}">
+                      {{ product.name }} (UGX {{ product.unit_price|floatformat:0 }})
+                    </option>
+                    {% endif %}
+                  {% endfor %}
+                </optgroup>
+
               </select>
             </div>
 
             <div>
-              <label>Amount Deposited (UGX)</label>
+              <label>Total Amount  (UGX)</label>
               <input type="number" name="amount_deposited" id="deposit_amt"
                      placeholder="e.g. 150000" oninput="calcUnits()" />
             </div>
@@ -629,107 +681,209 @@
         </form>
       </div>
 
-      <!-- 
-           DEPOSIT HISTORY TABLE
-           Grouped by customer with balance summary
-       -->
-      <div class="table-section">
-        <h3>Deposit History</h3>
-        <div class="table-wrapper">
-        <table>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Customer</th>
-              <th>Product</th>
-              <th>Amount (UGX)</th>
-              <th>Units</th>
-              <th>Payment</th>
-              <th>Date</th>
-              <th>Status</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
+    <!-- DEPOSIT HISTORY TABLE -->
+<div class="table-section">
+  <h3>Deposit History</h3>
 
-            {% for group in customer_groups %}
+  <div class="table-wrapper">
+    <table>
 
-              <!-- Customer group header -->
-              <tr class="customer-group-header">
-                <td colspan="9">
-                  <i class="fa-solid fa-user"></i> {{ group.customer.full_name }}
-                  &nbsp;—&nbsp;
-                  {{ group.deposits.0.product.name }} Deposits
-                </td>
-              </tr>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Customer</th>
+          <th>Product</th>
+          <th>Deposited Amount (UGX)</th>
+          <th>Units Earned</th>
+          <th>Payment Method</th>
+          <th>Date</th>
+          <th>Status</th>
+          <th>Outstanding Balance</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
 
-              <!-- Individual deposit rows for this customer -->
-              {% for deposit in group.deposits %}
-              <tr>
-                <td>{{ forloop.counter }}</td>
-                <td>{{ deposit.customer.full_name }}</td>
-                <td>{{ deposit.product.name }}</td>
-                <td>{{ deposit.amount_deposited|floatformat:0 }}</td>
-                <td>{{ deposit.units_equivalent }}</td>
-                <td>{{ deposit.get_payment_method_display }}</td>
-                <td>{{ deposit.date|date:"d M Y" }}</td>
-                <td>
-                  {% if deposit.status == 'active' %}
-                    <span class="badge-active">Active</span>
-                  {% elif deposit.status == 'ready_pickup' %}
-                    <span class="badge-pickup">Ready Pickup</span>
-                  {% else %}
-                    <span class="badge-done">Collected</span>
-                  {% endif %}
-                </td>
-                <td>
-                  <a href="/customer_deposit/edit/{{ deposit.id }}/" class="btn-edit">✏ Edit</a>
-                  <a href="/customer_deposit/delete/{{ deposit.id }}/" class="btn-delete"
-                     onclick="return confirm('Delete this deposit?');">🗑 Delete</a>
-                </td>
-              </tr>
-              {% endfor %}
+      <tbody>
 
-              <!-- Balance summary row for this customer -->
-              <tr class="balance-summary-row">
-                <td colspan="2">
-                  <span class="bal-label">Total Deposited</span>
-                  <span class="bal-value">UGX {{ group.total_deposited|floatformat:0 }}</span>
-                </td>
-                <td colspan="2">
-                  <span class="bal-label">Amount Paid on Pickup</span>
-                  <span class="bal-value green">UGX {{ group.total_paid_pickup|floatformat:0 }}</span>
-                </td>
-                <td colspan="2">
-                  <span class="bal-label">Remaining Balance</span>
-                  {% if group.remaining == 0 %}
-                    <span class="bal-value green">UGX 0 &nbsp;✓ Cleared</span>
-                  {% else %}
-                    <span class="bal-value red">UGX {{ group.remaining|floatformat:0 }}</span>
-                  {% endif %}
-                </td>
-                <td colspan="2">
-                  <span class="bal-label">Total Units Earned</span>
-                  <span class="bal-value">{{ group.total_units }} units</span>
-                </td>
-                <td></td>
-              </tr>
+        {% for group in customer_groups %}
 
-              <!-- Spacer between customer groups -->
-              <tr class="spacer-row"><td colspan="9"></td></tr>
+        <!-- CUSTOMER GROUP HEADER -->
+        <tr class="customer-group-header">
+          <td colspan="10">
+            <i class="fa-solid fa-user"></i>
+            {{ group.customer.full_name }}
+            &nbsp;—&nbsp;
+            {{ group.deposits.0.product.name }} Deposits
+          </td>
+        </tr>
 
-            {% empty %}
-              <tr>
-                <td colspan="9" style="text-align: center; color: #9ca3af; padding: 30px;">
-                  No deposits recorded yet
-                </td>
-              </tr>
-            {% endfor %}
+        <!-- INDIVIDUAL DEPOSIT ROWS -->
+        {% for deposit in group.deposits %}
+        <tr>
 
-          </tbody>
-        </table>
-        </div><!-- end .table-wrapper -->
-    </div><!-- end .main -->
+          <!-- Number -->
+          <td>{{ forloop.counter }}</td>
+
+          <!-- Customer -->
+          <td>{{ deposit.customer.full_name }}</td>
+
+          <!-- Product -->
+          <td>{{ deposit.product.name }}</td>
+
+          <!-- Deposited Amount -->
+          <td>
+            <span style="color:#f59e0b;font-weight:bold;">
+              UGX {{ deposit.amount_deposited|floatformat:0 }}
+            </span>
+          </td>
+
+          <!-- Units Earned -->
+          <td>
+            <span style="font-weight:bold;color:#1f2937;">
+              {{ deposit.units_equivalent }} unit(s)
+            </span>
+          </td>
+
+          <!-- Payment Method -->
+          <td>{{ deposit.get_payment_method_display }}</td>
+
+          <!-- Date -->
+          <td>{{ deposit.date|date:"d M Y" }}</td>
+
+          <!-- Status -->
+          <td>
+            {% if deposit.status == 'active' %}
+              <span class="badge-active">Active</span>
+
+            {% elif deposit.status == 'ready_pickup' %}
+              <span class="badge-pickup">Ready Pickup</span>
+
+            {% else %}
+              <span class="badge-done">Collected</span>
+            {% endif %}
+          </td>
+
+          <!-- Outstanding Balance -->
+          <td>
+
+            {% if group.remaining == 0 %}
+              <span style="color:#16a34a;font-weight:bold;">
+                UGX 0 ✓ Cleared
+              </span>
+
+            {% else %}
+              <span style="color:#dc2626;font-weight:bold;">
+                UGX {{ group.remaining|floatformat:0 }}
+              </span>
+            {% endif %}
+
+          </td>
+
+          <!-- ACTION BUTTONS -->
+          <td>
+
+            <a href="/customer_deposit/edit/{{ deposit.id }}/"
+               class="btn-edit">
+               ✏ Edit
+            </a>
+
+            <a href="/customer_deposit/delete/{{ deposit.id }}/"
+               class="btn-delete"
+               onclick="return confirm('Delete this deposit?');">
+               🗑 Delete
+            </a>
+
+            <a href="/customer_deposit/pay/{{ deposit.id }}/"
+               class="btn-pay">
+               Pay
+            </a>
+
+          </td>
+
+        </tr>
+        {% endfor %}
+
+        <!-- BALANCE SUMMARY ROW -->
+        <tr class="balance-summary-row">
+
+          <!-- TOTAL DEPOSITED -->
+          {% comment %} <td colspan="3">
+            <span class="bal-label">Total Deposited</span>
+
+            <span class="bal-value">
+              UGX {{ group.total_deposited|floatformat:0 }}
+            </span>
+          </td> {% endcomment %}
+
+          <!-- TOTAL UNITS -->
+          <td colspan="2">
+            <span class="bal-label">Total Units Earned</span>
+
+            <span class="bal-value">
+              {{ group.total_units }} units
+            </span>
+          </td>
+
+          <!-- AMOUNT PAID -->
+          <td colspan="2">
+            <span class="bal-label">Amount Paid on Pickup</span>
+
+            <span class="bal-value green">
+              UGX {{ group.total_paid_pickup|floatformat:0 }}
+            </span>
+          </td>
+
+          <!-- REMAINING BALANCE -->
+          <td colspan="3">
+
+            <span class="bal-label">
+              Outstanding Balance
+            </span>
+
+            {% if group.remaining == 0 %}
+
+              <span class="bal-value green">
+                UGX 0 ✓ Cleared
+              </span>
+
+            {% else %}
+
+              <span class="bal-value red">
+                UGX {{ group.remaining|floatformat:0 }}
+              </span>
+
+            {% endif %}
+
+          </td>
+
+        </tr>
+
+        <!-- SPACER -->
+        <tr class="spacer-row">
+          <td colspan="10"></td>
+        </tr>
+
+        {% empty %}
+
+        <!-- EMPTY STATE -->
+        <tr>
+          <td colspan="10"
+              style="text-align:center;
+                     color:#9ca3af;
+                     padding:30px;">
+
+            No deposits recorded yet
+
+          </td>
+        </tr>
+
+        {% endfor %}
+
+      </tbody>
+
+    </table>
+  </div>
+</div>
 
     <script>
       function updateUnitPrice() {
@@ -748,7 +902,6 @@
         calcUnits();
       }
 
-      /* Calculate how many units today's deposit amount can buy */
       function calcUnits() {
         var amt = parseFloat(document.getElementById("deposit_amt").value) || 0;
         var price = parseFloat(document.getElementById("unit_p").value) || 0;
@@ -758,7 +911,6 @@
         document.getElementById("units-eq").textContent = units + " unit(s)";
       }
 
-      /* Mobile sidebar toggle */
       function toggleSidebar() {
         var sidebar = document.getElementById("sidebar");
         var overlay = document.getElementById("overlay");
