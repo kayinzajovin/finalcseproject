@@ -4,6 +4,8 @@
 # Handles all HTTP request/response logic for: authentication, role-based dashboards,
 # stock management, sales, suppliers, customers, and customer deposits.
 
+from multiprocessing import context
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -1342,16 +1344,7 @@ def sale_receipt(request, pk):
 
 
 def pay_deposit(request, deposit_id):
-    """
-    Reduce a customer's deposit balance by the payment amount.
-
-    When the remaining balance reaches zero the deposit status is
-    automatically set to 'collected'. Partial payments are permitted.
-
-    Validation:
-    - Amount must be a positive whole number.
-    - Amount cannot exceed the current deposit balance.
-    """
+   
     deposit = get_object_or_404(CustomerDeposit, id=deposit_id)
 
     if request.method == 'POST':
@@ -1398,3 +1391,14 @@ def pay_deposit(request, deposit_id):
         return redirect('/customer_deposit/')
 
     return render(request, 'pay_deposit.html', {'deposit': deposit})
+
+@login_required
+def customer_deposit_receipt(request, pk):
+    deposit = get_object_or_404(CustomerDeposit, id=pk)
+
+    context = {
+        'deposit': deposit
+    }
+
+    return render(request, 'customer_deposit_receipt.html', context)
+
