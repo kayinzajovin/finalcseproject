@@ -6,586 +6,278 @@
     <title>Sales — NYONDO Hardware</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-+0r6rrwMZceTYFygJXRL7Hhdhsq6TOcKPEbb9Rwzc2b4EkJmO+iSWoZVata3u0G3UcNYI9dZe4UfgZ7HU5a3HQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
-      * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-        font-family: Georgia, serif;
-      }
-      body {
-        background: #f4f6f8;
-        color: #1f2937;
-      }
+      * { box-sizing: border-box; margin: 0; padding: 0; font-family: Georgia, serif; }
+      body { background: #f4f6f8; color: #1f2937; }
 
-      /* SIDEBAR */
+      /* ── SIDEBAR ── */
       .sidebar {
-        position: fixed;
-        left: 0;
-        top: 0;
-        width: 240px;
-        height: 100vh;
-        background: #1f2937;
-        color: #fff;
-        padding: 25px 20px;
-        overflow-y: auto;
+        position: fixed; left: 0; top: 0; width: 240px; height: 100vh;
+        background: #1f2937; color: #fff; padding: 25px 20px; overflow-y: auto;
       }
       .logo-box {
-        width: 55px;
-        height: 55px;
-        background: #f59e0b;
-        color: #1f2937;
-        border-radius: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 28px;
-        font-weight: bold;
-        margin: 0 auto 10px;
+        width: 55px; height: 55px; background: #f59e0b; color: #1f2937;
+        border-radius: 10px; display: flex; align-items: center;
+        justify-content: center; font-size: 28px; font-weight: bold; margin: 0 auto 10px;
       }
-      .sidebar h2 {
-        text-align: center;
-        font-size: 17px;
-        margin-bottom: 4px;
-      }
+      .sidebar h2 { text-align: center; font-size: 17px; margin-bottom: 4px; }
       .sidebar p.tagline {
-        text-align: center;
-        font-size: 12px;
-        color: #94a3b8;
-        font-style: italic;
-        margin-bottom: 30px;
+        text-align: center; font-size: 12px; color: #94a3b8;
+        font-style: italic; margin-bottom: 30px;
       }
       .role-badge {
-        display: block;
-        text-align: center;
-        background: #f59e0b;
-        color: #1f2937;
-        font-size: 11px;
-        font-weight: bold;
-        padding: 3px 10px;
-        border-radius: 20px;
-        margin: 0 auto 20px;
-        width: fit-content;
-        letter-spacing: 1px;
-        text-transform: uppercase;
+        display: block; text-align: center; background: #f59e0b; color: #1f2937;
+        font-size: 11px; font-weight: bold; padding: 3px 10px; border-radius: 20px;
+        margin: 0 auto 20px; width: fit-content; letter-spacing: 1px; text-transform: uppercase;
       }
       .menu a {
-        display: block;
-        color: #cbd5e1;
-        text-decoration: none;
-        padding: 11px 12px;
-        border-radius: 8px;
-        font-size: 15px;
-        margin-bottom: 4px;
-        cursor: pointer;
+        display: block; color: #cbd5e1; text-decoration: none;
+        padding: 11px 12px; border-radius: 8px; font-size: 15px; margin-bottom: 4px; cursor: pointer;
       }
-      .menu a:hover {
-        background: #374151;
-        color: #fff;
-      }
-      .menu a.active {
-        background: #f59e0b;
-        color: #1f2937;
-        font-weight: bold;
-      }
+      .menu a:hover { background: #374151; color: #fff; }
+      .menu a.active { background: #f59e0b; color: #1f2937; font-weight: bold; }
 
-      /* MAIN */
-      .main {
-        margin-left: 240px;
-        padding: 35px 40px;
-      }
-
+      /* ── MAIN ── */
+      .main { margin-left: 240px; padding: 35px 40px; }
       .page-title {
-        font-size: 22px;
-        font-weight: bold;
-        border-left: 5px solid #f59e0b;
-        padding-left: 12px;
-        margin-bottom: 25px;
+        font-size: 22px; font-weight: bold;
+        border-left: 5px solid #f59e0b; padding-left: 12px; margin-bottom: 25px;
       }
 
-      /* success message */
+      /* ── PAGE-LEVEL ALERTS (success / auth errors only) ── */
       .alert-success {
-        background: #dcfce7;
-        color: #166534;
-        padding: 12px 16px;
-        border-radius: 8px;
-        margin-bottom: 20px;
-        font-weight: bold;
-        font-size: 14px;
+        background: #dcfce7; color: #166534; padding: 12px 16px;
+        border-radius: 8px; margin-bottom: 20px; font-weight: bold; font-size: 14px;
       }
-
-      /* error message */
       .alert-error {
-        background: #fee2e2;
-        color: #991b1b;
-        padding: 12px 16px;
-        border-radius: 8px;
-        margin-bottom: 20px;
-        font-weight: bold;
-        font-size: 14px;
+        background: #fee2e2; color: #991b1b; padding: 12px 16px;
+        border-radius: 8px; margin-bottom: 20px; font-weight: bold; font-size: 14px;
       }
 
-      /* FORM CARD */
+      /* ── FORM CARD ── */
       .form-card {
-        background: #fff;
-        border-radius: 12px;
-        padding: 30px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-        margin-bottom: 35px;
+        background: #fff; border-radius: 12px; padding: 30px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 35px;
       }
       .form-card h3 {
-        font-size: 16px;
-        color: #f59e0b;
-        border-bottom: 1px solid #e5e7eb;
-        padding-bottom: 10px;
-        margin-bottom: 20px;
+        font-size: 16px; color: #f59e0b;
+        border-bottom: 1px solid #e5e7eb; padding-bottom: 10px; margin-bottom: 20px;
       }
-      .form-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 18px;
-      }
-      label {
-        display: block;
-        font-size: 13px;
-        font-weight: bold;
-        margin-bottom: 6px;
-        color: #374151;
-      }
-      input,
-      select {
-        width: 100%;
-        padding: 11px 13px;
-        border: 1.5px solid #d1d5db;
-        border-radius: 8px;
-        font-size: 14px;
-        outline: none;
-      }
-      input:focus,
-      select:focus {
-        border-color: #f59e0b;
-      }
+      .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
 
-      /* transport note box */
+      label { display: block; font-size: 13px; font-weight: bold; margin-bottom: 6px; color: #374151; }
+
+      input, select {
+        width: 100%; padding: 11px 13px; border: 1.5px solid #d1d5db;
+        border-radius: 8px; font-size: 14px; outline: none;
+      }
+      input:focus, select:focus { border-color: #f59e0b; }
+
+      /* ── INLINE VALIDATION — same as stock.html ── */
+      .field-error { border-color: #dc2626 !important; }
+      .error-msg { color: #dc2626; font-size: 12px; margin-top: 5px; display: block; }
+
+      /* transport note */
       .transport-note {
-        margin-top: 18px;
-        background: #fff7ed;
-        border-left: 4px solid #f59e0b;
-        padding: 12px 16px;
-        border-radius: 8px;
-        font-size: 14px;
-        color: #1f2937;
+        margin-top: 18px; background: #fff7ed;
+        border-left: 4px solid #f59e0b; padding: 12px 16px;
+        border-radius: 8px; font-size: 14px; color: #1f2937;
       }
 
-      /* order total summary box */
+      /* order total */
       .total-box {
-        margin-top: 18px;
-        background: #1f2937;
-        color: #ffffff;
-        padding: 16px 20px;
-        border-radius: 10px;
-        font-size: 16px;
+        margin-top: 18px; background: #1f2937; color: #ffffff;
+        padding: 16px 20px; border-radius: 10px; font-size: 16px;
       }
-      .total-box span {
-        color: #f59e0b;
-        font-size: 20px;
-        font-weight: bold;
-      }
+      .total-box span { color: #f59e0b; font-size: 20px; font-weight: bold; }
 
       .btn-submit {
-        margin-top: 20px;
-        background: #f59e0b;
-        color: #1f2937;
-        padding: 13px 30px;
-        border: none;
-        border-radius: 8px;
-        font-size: 15px;
-        font-weight: bold;
-        cursor: pointer;
+        margin-top: 20px; background: #f59e0b; color: #1f2937;
+        padding: 13px 30px; border: none; border-radius: 8px;
+        font-size: 15px; font-weight: bold; cursor: pointer;
       }
-      .btn-submit:hover {
-        background: #1f2937;
-        color: #f59e0b;
-      }
+      .btn-submit:hover { background: #1f2937; color: #f59e0b; }
 
-      /* SALES HISTORY TABLE */
+      /* ── TABLE ── */
       .table-section {
-        background: #fff;
-        border-radius: 12px;
-        padding: 25px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        background: #fff; border-radius: 12px; padding: 25px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
       }
       .table-section h3 {
-        font-size: 16px;
-        margin-bottom: 18px;
-        border-left: 4px solid #f59e0b;
-        padding-left: 10px;
+        font-size: 16px; margin-bottom: 18px;
+        border-left: 4px solid #f59e0b; padding-left: 10px;
       }
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 14px;
-      }
-      th {
-        background: #1f2937;
-        color: #f59e0b;
-        padding: 12px 14px;
-        text-align: left;
-        font-size: 13px;
-      }
-      td {
-        padding: 11px 14px;
-        border-bottom: 1px solid #e5e7eb;
-        color: #374151;
-      }
-      tr:hover td {
-        background: #fff7ed;
-      }
+      table { width: 100%; border-collapse: collapse; font-size: 14px; }
+      th { background: #1f2937; color: #f59e0b; padding: 12px 14px; text-align: left; font-size: 13px; }
+      td { padding: 11px 14px; border-bottom: 1px solid #e5e7eb; color: #374151; }
+      tr:hover td { background: #fff7ed; }
 
-      /* edit button */
       .btn-edit {
-        background: #1f2937;
-        color: #f59e0b;
-        padding: 5px 10px;
-        border-radius: 6px;
-        font-size: 9px;
-        font-weight: bold;
-        text-decoration: none;
-        display: flex;
-        margin-right: 5px;
-        align-items: center;
-        gap: 8px;
-        margin-bottom: 3px;
-        margin-top: 3px;
+        background: #1f2937; color: #f59e0b; padding: 5px 10px; border-radius: 6px;
+        font-size: 9px; font-weight: bold; text-decoration: none; display: flex;
+        margin-right: 5px; align-items: center; gap: 8px; margin-bottom: 3px; margin-top: 3px;
       }
-      .btn-edit:hover {
-        background: #f59e0b;
-        color: #1f2937;
-      }
-
-      /* delete button */
+      .btn-edit:hover { background: #f59e0b; color: #1f2937; }
       .btn-delete {
-        background: #fee2e2;
-        color: #991b1b;
-        padding: 5px 10px;
-        border-radius: 6px;
-        font-size: 9px;
-        font-weight: bold;
-        text-decoration: none;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        margin-bottom: 3px;
-        margin-top: 3px;
+        background: #fee2e2; color: #991b1b; padding: 5px 10px; border-radius: 6px;
+        font-size: 9px; font-weight: bold; text-decoration: none; display: flex;
+        align-items: center; gap: 8px; margin-bottom: 3px; margin-top: 3px;
       }
-      .btn-delete:hover {
-        background: #dc2626;
-        color: #fff;
-      }
-
-      /* 
-   TABLET + SMALL LAPTOP
- */
-@media (max-width: 992px) {
-  .main {
-    padding: 25px;
-  }
-
-  .form-grid {
-    grid-template-columns: 1fr;
-  }
-
-  table {
-    font-size: 13px;
-  }
-
-  .btn-edit,
-  .btn-delete,
-  .btn-print {
-    font-size: 10px;
-    padding: 6px 8px;
-  }
-}
-
-/* 
-   MOBILE VIEW
- */
-@media (max-width: 600px) {
-
-  /* SIDEBAR becomes top bar */
-  .sidebar {
-    width: 100%;
-    height: auto;
-    position: relative;
-    padding: 15px;
-    text-align: center;
-  }
-
-  .menu {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 6px;
-  }
-
-  .menu a {
-    margin-bottom: 0;
-    font-size: 13px;
-    padding: 8px 10px;
-  }
-
-  /* MAIN AREA */
-  .main {
-    margin-left: 0;
-    padding: 15px;
-  }
-
-  .page-title {
-    font-size: 18px;
-  }
-
-  /* FORM */
-  .form-card {
-    padding: 18px;
-  }
-
-  .form-grid {
-    grid-template-columns: 1fr;
-    gap: 12px;
-  }
-
-  /* TABLE becomes scrollable */
-  .table-section {
-    overflow-x: auto;
-  }
-
-  table {
-    min-width: 700px;
-  }
-
-  th, td {
-    font-size: 12px;
-    padding: 8px;
-  }
-
-  /* ACTION BUTTONS STACK NICELY */
-  td:last-child {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-
-  .btn-edit,
-  .btn-delete,
-  .btn-print {
-    width: 100%;
-    justify-content: center;
-    font-size: 11px;
-  }
-
-  /* TOTAL BOX */
-  .total-box {
-    font-size: 14px;
-  }
-}
-
+      .btn-delete:hover { background: #dc2626; color: #fff; }
       .btn-print {
-        background: #1f2937;
-        color: #f59e0b;
-        padding: 5px 10px;
-        border-radius: 6px;
-        font-size: 9px;
-        font-weight: bold;
-        text-decoration: none;
-        display: flex;
-        margin-left: 2px;
-        align-items: center;
-        gap: 8px;
-        margin-bottom: 3px;
-        margin-top: 3px;
+        background: #1f2937; color: #f59e0b; padding: 5px 10px; border-radius: 6px;
+        font-size: 9px; font-weight: bold; text-decoration: none; display: flex;
+        margin-left: 2px; align-items: center; gap: 8px; margin-bottom: 3px; margin-top: 3px;
       }
-      .btn-print:hover {
-        background: #f59e0b;
-        color: #1f2937;
+      .btn-print:hover { background: #f59e0b; color: #1f2937; }
+
+      /* ── RESPONSIVE ── */
+      @media (max-width: 992px) {
+        .main { padding: 25px; }
+        .form-grid { grid-template-columns: 1fr; }
+        table { font-size: 13px; }
+        .btn-edit, .btn-delete, .btn-print { font-size: 10px; padding: 6px 8px; }
       }
-
-      .alert-error {
-    background: #ffdddd;
-    color: #a70000;
-    padding: 10px;
-    margin: 10px 0;
-    border-radius: 5px;
-}
-
-.alert-success {
-    background: #ddffdd;
-    color: #0a6b0a;
-    padding: 10px;
-    margin: 10px 0;
-    border-radius: 5px;
-}
-
-.alert-info {
-    background: #dde9ff;
-    color: #0a3a8a;
-    padding: 10px;
-    margin: 10px 0;
-    border-radius: 5px;
-}
-
+      @media (max-width: 600px) {
+        .sidebar { width: 100%; height: auto; position: relative; padding: 15px; text-align: center; }
+        .menu { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
+        .menu a { margin-bottom: 0; font-size: 13px; padding: 8px 10px; }
+        .main { margin-left: 0; padding: 15px; }
+        .page-title { font-size: 18px; }
+        .form-card { padding: 18px; }
+        .form-grid { grid-template-columns: 1fr; gap: 12px; }
+        .table-section { overflow-x: auto; }
+        table { min-width: 700px; }
+        th, td { font-size: 12px; padding: 8px; }
+        td:last-child { display: flex; flex-direction: column; gap: 6px; }
+        .btn-edit, .btn-delete, .btn-print { width: 100%; justify-content: center; font-size: 11px; }
+        .total-box { font-size: 14px; }
+      }
     </style>
   </head>
   <body>
-    <!-- SIDEBAR — dynamic based on user role -->
+
+    <!-- SIDEBAR -->
     <div class="sidebar">
       <div class="logo-box">N</div>
       <h2>NYONDO</h2>
 
       {% if request.user.groups.all.0.name == 'admin' %}
-      <span class="role-badge">🔑 Admin</span>
+        <span class="role-badge">🔑 Admin</span>
       {% elif request.user.groups.all.0.name == 'salesperson' %}
-      <span class="role-badge"><i class="fa-solid fa-coins"></i> Salesperson</span>
+        <span class="role-badge"><i class="fa-solid fa-coins"></i> Salesperson</span>
       {% elif request.user.groups.all.0.name == 'stockmanager' %}
-      <span class="role-badge"><i class="fa-solid fa-box"></i> Stock Manager</span>
+        <span class="role-badge"><i class="fa-solid fa-box"></i> Stock Manager</span>
       {% endif %}
 
       <p class="tagline">Hardware Management System</p>
       <div class="menu">
         {% if request.user.groups.all.0.name == 'admin' %}
-        <a onclick="window.location.href = '/'">🏠 Home</a>
-        <a onclick="window.location.href = '/dashboard/admin/'"><i class="fa-solid fa-chart-pie"></i> Dashboard</a>
-        <a onclick="window.location.href = '/stock/'"><i class="fa-solid fa-box"></i> Stock</a>
-        <a onclick="window.location.href = '/sales/'" class="active"
-          ><i class="fa-solid fa-coins"></i> Sales</a
-        >
-        <a onclick="window.location.href = '/customer_registration/'"
-          ><i class="fa-solid fa-users"></i> Register Customer</a
-        >
-        <a onclick="window.location.href = '/customer_deposit/'"
-          ><i class="fa-solid fa-credit-card"></i> Customer Deposit</a
-        >
-        <a onclick="window.location.href = '/supplier_credit/'"
-          ><i class="fa-solid fa-truck"></i> Supplier Credit</a
-        >
-
+          <a onclick="window.location.href='/'">🏠 Home</a>
+          <a onclick="window.location.href='/dashboard/admin/'"><i class="fa-solid fa-chart-pie"></i> Dashboard</a>
+          <a onclick="window.location.href='/stock/'"><i class="fa-solid fa-box"></i> Stock</a>
+          <a onclick="window.location.href='/sales/'" class="active"><i class="fa-solid fa-coins"></i> Sales</a>
+          <a onclick="window.location.href='/customer_registration/'"><i class="fa-solid fa-users"></i> Register Customer</a>
+          <a onclick="window.location.href='/customer_deposit/'"><i class="fa-solid fa-credit-card"></i> Customer Deposit</a>
+          <a onclick="window.location.href='/supplier_credit/'"><i class="fa-solid fa-truck"></i> Supplier Credit</a>
         {% elif request.user.groups.all.0.name == 'salesperson' %}
-        <a onclick="window.location.href = '/dashboard/salesperson/'"
-          ><i class="fa-solid fa-chart-pie"></i> Dashboard</a
-        >
-        <a onclick="window.location.href = '/sales/'" class="active"
-          ><i class="fa-solid fa-coins"></i> Sales</a
-        >
-        {% comment %} <a onclick="window.location.href = '/customer_registration/'"
-          ><i class="fa-solid fa-users"></i> Register Customer</a
-        >
-        <a onclick="window.location.href = '/customer_deposit/'"
-          ><i class="fa-solid fa-credit-card"></i> Customer Deposit</a
-        > {% endcomment %}
-
+          <a onclick="window.location.href='/dashboard/salesperson/'"><i class="fa-solid fa-chart-pie"></i> Dashboard</a>
+          <a onclick="window.location.href='/sales/'" class="active"><i class="fa-solid fa-coins"></i> Sales</a>
         {% elif request.user.groups.all.0.name == 'stockmanager' %}
-        <a onclick="window.location.href = '/dashboard/stockmanager/'"
-          ><i class="fa-solid fa-chart-pie"></i> Dashboard</a
-        >
-        <a onclick="window.location.href = '/stock/'"><i class="fa-solid fa-box"></i> Stock</a>
-        <a onclick="window.location.href = '/supplier_credit/'"
-          ><i class="fa-solid fa-truck"></i> Supplier Credit</a
-        >
-        <a onclick="window.location.href = '/sales/'" class="active"
-          ><i class="fa-solid fa-coins"></i> View Sales</a
-        >
+          <a onclick="window.location.href='/dashboard/stockmanager/'"><i class="fa-solid fa-chart-pie"></i> Dashboard</a>
+          <a onclick="window.location.href='/stock/'"><i class="fa-solid fa-box"></i> Stock</a>
+          <a onclick="window.location.href='/supplier_credit/'"><i class="fa-solid fa-truck"></i> Supplier Credit</a>
+          <a onclick="window.location.href='/sales/'" class="active"><i class="fa-solid fa-coins"></i> View Sales</a>
         {% endif %}
-
-        <a onclick="window.location.href = '/logout/'">🚪 Logout</a>
+        <a onclick="window.location.href='/logout/'">🚪 Logout</a>
       </div>
     </div>
 
-    <!-- MAIN CONTENT -->
+    <!-- MAIN -->
     <div class="main">
       <div class="page-title"><i class="fa-solid fa-coins"></i> Record a Sale</div>
 
-      {% comment %} <!-- show success or error messages --> {% endcomment %}
-      {% comment %} {% if messages %} {% for message in messages %} {% if message.tags ==
-      'error' %}
-      <div class="alert-error"><i class="fa-solid fa-circle-xmark"></i> {{ message }}</div>
-      {% else %}
-      <div class="alert-success"><i class="fa-solid fa-circle-check"></i> {{ message }}</div>
-      {% endif %} {% endfor %} {% endif %} {% endcomment %}
-
+      <!-- Page-level messages: success toasts and auth errors only -->
       {% if messages %}
-    {% for message in messages %}
-        <div class="alert-{{ message.tags }}">
-            {{ message }}
-        </div>
-    {% endfor %}
-{% endif %}
+        {% for message in messages %}
+          {% if message.tags == 'error' %}
+            <div class="alert-error"><i class="fa-solid fa-circle-xmark"></i> {{ message }}</div>
+          {% else %}
+            <div class="alert-success"><i class="fa-solid fa-circle-check"></i> {{ message }}</div>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
 
-      <!-- hide sale form for stock manager — view only -->
       {% if request.user.groups.all.0.name != 'stockmanager' %}
       <div class="form-card">
         <h3>+ New Sale Entry</h3>
         <form method="POST" action="/sales/">
           {% csrf_token %}
           <div class="form-grid">
+
+            <!-- Product -->
             <div>
               <label>Product</label>
-              <select
-                name="product_id"
-                id="product_select"
-                onchange="fillPrice()"
-              >
+              <select name="product_id" id="product_select" onchange="fillPrice()"
+                class="{% if errors.product_id %}field-error{% endif %}">
                 <option value="">-- Select Product --</option>
                 {% for product in products %}
                 <option
                   value="{{ product.id }}"
                   data-price="{{ product.unit_price }}"
                   data-stock="{{ product.quantity }}"
+                  {% if form_data.product_id == product.id|stringformat:"s" %}selected{% endif %}
                 >
                   {{ product.name }} ({{ product.quantity }} in stock)
                 </option>
                 {% endfor %}
               </select>
+              {% if errors.product_id %}
+                <span class="error-msg"><i class="fa-solid fa-triangle-exclamation"></i> {{ errors.product_id }}</span>
+              {% endif %}
             </div>
 
+            <!-- Quantity -->
             <div>
               <label>Quantity</label>
-              <input
-                type="number"
-                name="quantity"
-                id="qty"
-                placeholder="e.g. 10"
+              <input type="number" name="quantity" id="qty"
+                placeholder="e.g. 10" min="1"
                 oninput="calcTotal()"
-                min="1"
-              />
+                value="{{ form_data.quantity|default:'' }}"
+                class="{% if errors.quantity %}field-error{% endif %}" />
+              {% if errors.quantity %}
+                <span class="error-msg"><i class="fa-solid fa-triangle-exclamation"></i> {{ errors.quantity }}</span>
+              {% endif %}
             </div>
 
+            <!-- Unit Price (read-only, auto-filled by JS) -->
             <div>
               <label>Unit Price (UGX)</label>
-              <input
-                type="number"
-                name="unit_price_display"
-                id="unit_price"
+              <input type="number" name="unit_price_display" id="unit_price"
                 placeholder="Auto-filled from stock"
-                oninput="calcTotal()"
-                readonly
-              />
+                oninput="calcTotal()" readonly />
             </div>
 
+            <!-- Sale Date -->
             <div>
               <label>Sale Date</label>
-              <input type="date" name="sale_date" />
+              <input type="date" name="sale_date"
+                value="{{ form_data.sale_date|default:'' }}" />
             </div>
 
+            <!-- Delivery Distance -->
             <div>
               <label>Delivery Distance (km)</label>
-              <input
-                type="number"
-                name="distance_km"
-                id="distance"
-                placeholder="0 if customer picks up"
+              <input type="number" name="distance_km" id="distance"
+                placeholder="0 if customer picks up" min="0"
                 oninput="calcTotal()"
-                min="0"
-              />
+                value="{{ form_data.distance_km|default:'' }}"
+                class="{% if errors.distance_km %}field-error{% endif %}" />
+              {% if errors.distance_km %}
+                <span class="error-msg"><i class="fa-solid fa-triangle-exclamation"></i> {{ errors.distance_km }}</span>
+              {% endif %}
             </div>
 
+            <!-- Customer Type -->
             <div>
               <label>Customer Type</label>
               <select name="customer_type">
@@ -594,16 +286,15 @@
                 <option>Wholesaler</option>
               </select>
             </div>
-          </div>
 
-          <!-- transport charge rule note -->
+          </div><!-- /form-grid -->
+
           <div class="transport-note">
-            <i class="fa-solid fa-truck"></i> <strong>Transport Rule:</strong> Free delivery within 10km for
-            orders ≥ UGX 500,000. Otherwise, an extra
-            <strong>UGX 30,000</strong> is charged.
+            <i class="fa-solid fa-truck"></i> <strong>Transport Rule:</strong>
+            Free delivery within 10 km for orders ≥ UGX 500,000.
+            Otherwise an extra <strong>UGX 30,000</strong> is charged.
           </div>
 
-          <!-- auto-calculated order total -->
           <div class="total-box">
             Order Total: <span id="total-display">UGX 0</span> &nbsp;|&nbsp;
             Transport: <span id="transport-display">UGX 0</span> &nbsp;|&nbsp;
@@ -614,24 +305,13 @@
         </form>
       </div>
       {% else %}
-      <!-- stock manager sees a view only notice -->
-      <div
-        style="
-          background: #fff7ed;
-          border-left: 4px solid #f59e0b;
-          padding: 14px 18px;
-          border-radius: 8px;
-          margin-bottom: 25px;
-          font-size: 14px;
-          color: #374151;
-        "
-      >
-        👁 <strong>View Only:</strong> You can view sales records but cannot
-        record new sales.
+      <div style="background:#fff7ed;border-left:4px solid #f59e0b;padding:14px 18px;
+                  border-radius:8px;margin-bottom:25px;font-size:14px;color:#374151;">
+        👁 <strong>View Only:</strong> You can view sales records but cannot record new sales.
       </div>
       {% endif %}
 
-      <!-- SALES HISTORY TABLE — real data from database -->
+      <!-- SALES HISTORY TABLE -->
       <div class="table-section">
         <h3>Sales History</h3>
         <table>
@@ -658,29 +338,20 @@
               <td>{{ sale.quantity }}</td>
               <td>{{ sale.unit_price|floatformat:0 }}</td>
               <td>{{ sale.total_price|floatformat:0 }}</td>
-              <td>
-                {% if sale.transport_fee == 0 %}Free{% else %}{{sale.transport_fee|floatformat:0 }}{% endif %}
-              </td>
+              <td>{% if sale.transport_fee == 0 %}Free{% else %}{{ sale.transport_fee|floatformat:0 }}{% endif %}</td>
               <td>{{ sale.grand_total|floatformat:0 }}</td>
               <td>{{ sale.date|date:"d M Y" }}</td>
               {% if request.user.groups.all.0.name != 'stockmanager' %}
               <td>
                 <a href="/sales/edit/{{ sale.id }}/" class="btn-edit">✏ Edit</a>
-                <a href="/sales/receipt/{{ sale.id }}/" class="btn-print"
-                  >🧾 Receipt</a
-                >
-                <a href="/sales/delete/{{ sale.id }}/" class="btn-delete"
-                  >🗑 Delete</a
-                >
+                <a href="/sales/receipt/{{ sale.id }}/" class="btn-print">🧾 Receipt</a>
+                <a href="/sales/delete/{{ sale.id }}/" class="btn-delete">🗑 Delete</a>
               </td>
               {% endif %}
             </tr>
             {% empty %}
-            
             <tr>
-              <td colspan="9" style="text-align: center; color: #9ca3af">
-                No sales recorded yet
-              </td>
+              <td colspan="9" style="text-align:center;color:#9ca3af;">No sales recorded yet</td>
             </tr>
             {% endfor %}
           </tbody>
@@ -688,38 +359,33 @@
       </div>
     </div>
 
-    <!-- transport calculation script -->
     <script>
       function fillPrice() {
         var select = document.getElementById("product_select");
         var option = select.options[select.selectedIndex];
-        var price = option.getAttribute("data-price") || 0;
+        var price  = option.getAttribute("data-price") || 0;
         document.getElementById("unit_price").value = price;
         calcTotal();
       }
 
       function calcTotal() {
-        var qty = parseFloat(document.getElementById("qty").value) || 0;
-        var price =
-          parseFloat(document.getElementById("unit_price").value) || 0;
-        var dist = parseFloat(document.getElementById("distance").value) || 0;
-
+        var qty      = parseFloat(document.getElementById("qty").value)       || 0;
+        var price    = parseFloat(document.getElementById("unit_price").value) || 0;
+        var dist     = parseFloat(document.getElementById("distance").value)   || 0;
         var subtotal = qty * price;
-
         var transport = 0;
-        if (dist > 0) {
-          transport = subtotal >= 500000 && dist <= 10 ? 0 : 30000;
-        }
-
+        if (dist > 0) { transport = (subtotal >= 500000 && dist <= 10) ? 0 : 30000; }
         var grand = subtotal + transport;
-
-        document.getElementById("total-display").textContent =
-          "UGX " + subtotal.toLocaleString();
-        document.getElementById("transport-display").textContent =
-          "UGX " + transport.toLocaleString();
-        document.getElementById("grand-display").textContent =
-          "UGX " + grand.toLocaleString();
+        document.getElementById("total-display").textContent     = "UGX " + subtotal.toLocaleString();
+        document.getElementById("transport-display").textContent = "UGX " + transport.toLocaleString();
+        document.getElementById("grand-display").textContent     = "UGX " + grand.toLocaleString();
       }
+
+      /* Re-fill the price display if the form re-renders after a validation error */
+      (function () {
+        var select = document.getElementById("product_select");
+        if (select && select.value) { fillPrice(); }
+      })();
     </script>
   </body>
 </html>

@@ -7,10 +7,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-+0r6rrwMZceTYFygJXRL7Hhdhsq6TOcKPEbb9Rwzc2b4EkJmO+iSWoZVata3u0G3UcNYI9dZe4UfgZ7HU5a3HQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
       /*  COLOR PALETTE 
-       #1f2937  → Dark Navy
-       #f59e0b  → Amber/Gold
-       #ffffff  → White
- */
+         #1f2937  → Dark Navy
+         #f59e0b  → Amber/Gold
+         #ffffff  → White
+      */
 
       * {
         box-sizing: border-box;
@@ -105,7 +105,7 @@
         margin-bottom: 25px;
       }
 
-      /* success message */
+      /* success / error flash messages */
       .alert-success {
         background: #dcfce7;
         color: #166534;
@@ -115,8 +115,6 @@
         font-weight: bold;
         font-size: 14px;
       }
-
-      /* error message */
       .alert-error {
         background: #fee2e2;
         color: #991b1b;
@@ -169,7 +167,24 @@
         border-color: #f59e0b;
       }
 
-      /* full width field */
+      /* red border on invalid fields */
+      input.input-error,
+      select.input-error {
+        border-color: #dc2626;
+        background: #fff5f5;
+      }
+
+      /* inline field-level error text */
+      .field-error {
+        color: #dc2626;
+        font-size: 12px;
+        margin-top: 5px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      /* full-width grid cell */
       .full {
         grid-column: 1 / -1;
       }
@@ -224,7 +239,7 @@
         background: #fff7ed;
       }
 
-      /* edit and delete buttons */
+      /* action buttons */
       .btn-edit {
         background: #1f2937;
         color: #f59e0b;
@@ -248,7 +263,7 @@
         text-decoration: none;
         display: inline-block;
         margin-bottom: 3px;
-         margin-top: 3px;
+        margin-top: 3px;
       }
       .btn-edit:hover {
         background: #f59e0b;
@@ -276,7 +291,8 @@
     </style>
   </head>
   <body>
-    <!-- SIDEBAR -->
+
+    <!-- ═══════════════════════════ SIDEBAR ═══════════════════════════ -->
     <div class="sidebar">
       <div class="logo-box">N</div>
       <h2>NYONDO</h2>
@@ -286,126 +302,174 @@
         <a onclick="window.location.href = '/dashboard/admin/'"><i class="fa-solid fa-chart-pie"></i> Dashboard</a>
         <a onclick="window.location.href = '/stock/'"><i class="fa-solid fa-box"></i> Stock</a>
         <a onclick="window.location.href = '/sales/'"><i class="fa-solid fa-coins"></i> Sales</a>
-        <a
-          onclick="window.location.href = '/customer_registration/'"
-          class="active"
-          ><i class="fa-solid fa-users"></i> Register Customer</a
-        >
-        <a onclick="window.location.href = '/customer_deposit/'"
-          ><i class="fa-solid fa-credit-card"></i> Customer Deposit</a
-        >
-        <a onclick="window.location.href = '/supplier_credit/'"
-          ><i class="fa-solid fa-truck"></i> Supplier Credit</a
-        >
+        <a onclick="window.location.href = '/customer_registration/'" class="active">
+          <i class="fa-solid fa-users"></i> Register Customer
+        </a>
+        <a onclick="window.location.href = '/customer_deposit/'"><i class="fa-solid fa-credit-card"></i> Customer Deposit</a>
+        <a onclick="window.location.href = '/supplier_credit/'"><i class="fa-solid fa-truck"></i> Supplier Credit</a>
         <a onclick="window.location.href = '/login/'">🚪 Logout</a>
       </div>
     </div>
 
-    <!-- MAIN CONTENT -->
+    <!-- ═══════════════════════════ MAIN ═══════════════════════════ -->
     <div class="main">
       <div class="page-title"><i class="fa-solid fa-users"></i> Customer Registration</div>
 
-      <!-- show success or error messages -->
-      {% comment %} {% if messages %} {% for message in messages %} {% if message.tags ==
-      'error' %}
-      <div class="alert-error"><i class="fa-solid fa-circle-xmark"></i> {{ message }}</div>
-      {% else %}
-      <div class="alert-success"><i class="fa-solid fa-circle-check"></i> {{ message }}</div>
-      {% endif %} {% endfor %} {% endif %} {% endcomment %}
-
+      <!-- Flash messages (success / role-based errors from views.py) -->
       {% if messages %}
-  {% for message in messages %}
-    {% if message.tags == 'error' %}
-      <div class="alert-error"><i class="fa-solid fa-circle-xmark"></i> {{ message }}</div>
-    {% else %}
-      <div class="alert-success"><i class="fa-solid fa-circle-check"></i> {{ message }}</div>
-    {% endif %}
-  {% endfor %}
-{% endif %}
+        {% for message in messages %}
+          {% if message.tags == 'error' %}
+            <div class="alert-error"><i class="fa-solid fa-circle-xmark"></i> {{ message }}</div>
+          {% else %}
+            <div class="alert-success"><i class="fa-solid fa-circle-check"></i> {{ message }}</div>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
 
-      <!-- scheme info note -->
+      <!-- Scheme info -->
       <div class="scheme-note">
-        ℹ️ <strong>Deposit Scheme:</strong> This form registers salary earners
-        into the deposit scheme. Only
-        <strong>Cement, Iron Sheets, and Iron Bars</strong> are available under
-        this program. Customer names must match their
-        <strong>National ID (NIN)</strong> exactly.
+        ℹ️ <strong>Deposit Scheme:</strong> This form registers salary earners into the deposit
+        scheme. Only <strong>Cement, Iron Sheets, and Iron Bars</strong> are available under this
+        program. Customer names must match their <strong>National ID (NIN)</strong> exactly.
       </div>
 
-      <!-- REGISTRATION FORM -->
+      <!-- ─── REGISTRATION FORM ─── -->
       <div class="form-card">
         <h3>+ New Customer Registration</h3>
+
         <form method="POST" action="/customer_registration/">
           {% csrf_token %}
           <div class="form-grid">
+
+            <!-- Full Name -->
             <div>
               <label>Full Name (as on National ID)</label>
               <input
                 type="text"
                 name="full_name"
                 placeholder="e.g. NAMUTEBI SARAH"
+                value="{{ form_data.full_name|default:'' }}"
+                class="{% if errors.full_name %}input-error{% endif %}"
               />
+              {% if errors.full_name %}
+                <div class="field-error">
+                  <i class="fa-solid fa-circle-exclamation"></i> {{ errors.full_name }}
+                </div>
+              {% endif %}
             </div>
 
+            <!-- NIN -->
             <div>
               <label>NIN (National Identification Number)</label>
               <input
                 type="text"
                 name="NIN"
-                placeholder="e.g. CF12345678ABCD"
+                placeholder="e.g. CM20100012345678"
                 maxlength="20"
+                value="{{ form_data.NIN|default:'' }}"
+                class="{% if errors.NIN %}input-error{% endif %}"
               />
+              {% if errors.NIN %}
+                <div class="field-error">
+                  <i class="fa-solid fa-circle-exclamation"></i> {{ errors.NIN }}
+                </div>
+              {% endif %}
             </div>
 
+            <!-- Phone -->
             <div>
               <label>Phone Number</label>
-              <input type="tel" name="phone" placeholder="e.g. 0701234567" />
+              <input
+                type="tel"
+                name="phone"
+                placeholder="e.g. 0701234567"
+                value="{{ form_data.phone|default:'' }}"
+                class="{% if errors.phone %}input-error{% endif %}"
+              />
+              {% if errors.phone %}
+                <div class="field-error">
+                  <i class="fa-solid fa-circle-exclamation"></i> {{ errors.phone }}
+                </div>
+              {% endif %}
             </div>
 
+            <!-- Employer (required) -->
             <div>
-              <label>Employer / Workplace</label>
+              <label>Employer / Workplace <span style="color:#dc2626">*</span></label>
               <input
                 type="text"
                 name="employer"
                 placeholder="e.g. Kampala City Council"
+                value="{{ form_data.employer|default:'' }}"
+                class="{% if errors.employer %}input-error{% endif %}"
+              />
+              {% if errors.employer %}
+                <div class="field-error">
+                  <i class="fa-solid fa-circle-exclamation"></i> {{ errors.employer }}
+                </div>
+              {% endif %}
+            </div>
+
+            <!-- Preferred Product (required) -->
+            <div>
+              <label>Preferred Product <span style="color:#dc2626">*</span></label>
+              <select
+                name="preferred_product"
+                class="{% if errors.preferred_product %}input-error{% endif %}"
+              >
+                <option value="">-- Select Product --</option>
+                <option value="cement_cem2"   {% if form_data.preferred_product == 'cement_cem2'   %}selected{% endif %}>Cement CEM II N</option>
+                <option value="cement_cem3"   {% if form_data.preferred_product == 'cement_cem3'   %}selected{% endif %}>Cement CEM III N</option>
+                <option value="iron_bar_10"   {% if form_data.preferred_product == 'iron_bar_10'   %}selected{% endif %}>Iron Bar 10mm</option>
+                <option value="iron_bar_12"   {% if form_data.preferred_product == 'iron_bar_12'   %}selected{% endif %}>Iron Bar 12mm</option>
+                <option value="iron_bar_16"   {% if form_data.preferred_product == 'iron_bar_16'   %}selected{% endif %}>Iron Bar 16mm</option>
+                <option value="iron_sheet_26" {% if form_data.preferred_product == 'iron_sheet_26' %}selected{% endif %}>Iron Sheets 26G</option>
+                <option value="iron_sheet_28" {% if form_data.preferred_product == 'iron_sheet_28' %}selected{% endif %}>Iron Sheets 28G</option>
+                <option value="iron_sheet_30" {% if form_data.preferred_product == 'iron_sheet_30' %}selected{% endif %}>Iron Sheets 30G</option>
+              </select>
+              {% if errors.preferred_product %}
+                <div class="field-error">
+                  <i class="fa-solid fa-circle-exclamation"></i> {{ errors.preferred_product }}
+                </div>
+              {% endif %}
+            </div>
+
+            <!-- Registration Date (optional — view does not process this field yet) -->
+            <div>
+              <label>Registration Date</label>
+              <input
+                type="date"
+                name="registration_date"
+                value="{{ form_data.registration_date|default:'' }}"
               />
             </div>
 
-            <div>
-              <label>Preferred Product</label>
-              <select name="preferred_product">
-                <option value="">-- Select Product --</option>
-                <option value="cement_cem2">Cement CEM II N</option>
-                <option value="cement_cem3">Cement CEM III N</option>
-                <option value="iron_bar_10">Iron Bar 10mm</option>
-                <option value="iron_bar_12">Iron Bar 12mm</option>
-                <option value="iron_bar_16">Iron Bar 16mm</option>
-                <option value="iron_sheet_26">Iron Sheets 26G</option>
-                <option value="iron_sheet_28">Iron Sheets 28G</option>
-                <option value="iron_sheet_30">Iron Sheets 30G</option>
-              </select>
-            </div>
-
-            <div>
-              <label>Registration Date</label>
-              <input type="date" name="registration_date" />
-            </div>
-
-            <!-- full width address field -->
+            <!-- Address (required, full-width) -->
             <div class="full">
-              <label>Physical Address / Area</label>
+              <label>Physical Address / Area <span style="color:#dc2626">*</span></label>
               <input
                 type="text"
                 name="address"
                 placeholder="e.g. Nansana, Wakiso District"
+                value="{{ form_data.address|default:'' }}"
+                class="{% if errors.address %}input-error{% endif %}"
               />
+              {% if errors.address %}
+                <div class="field-error">
+                  <i class="fa-solid fa-circle-exclamation"></i> {{ errors.address }}
+                </div>
+              {% endif %}
             </div>
-          </div>
-          <button class="btn-submit" type="submit">Register Customer</button>
-        </form>
-      </div>
 
-      <!-- REGISTERED CUSTOMERS LIST — real data from database -->
+          </div><!-- /form-grid -->
+
+          <button class="btn-submit" type="submit">
+            <i class="fa-solid fa-user-plus"></i> Register Customer
+          </button>
+        </form>
+      </div><!-- /form-card -->
+
+      <!-- ─── REGISTERED CUSTOMERS TABLE ─── -->
       <div class="table-section">
         <h3>Registered Scheme Members</h3>
         <table>
@@ -431,31 +495,26 @@
               <td>{{ customer.employer }}</td>
               <td>{{ customer.get_preferred_product_display }}</td>
               <td>{{ customer.registration_date }}</td>
-              <!-- edit and delete buttons -->
               <td>
-                <a
-                  href="/customer_registration/edit/{{ customer.id }}/"
-                  class="btn-edit"
-                  >✏ Edit</a
-                >
+                <a href="/customer_registration/edit/{{ customer.id }}/" class="btn-edit">✏ Edit</a>
                 <a
                   href="/customer_registration/delete/{{ customer.id }}/"
                   class="btn-delete"
                   onclick="return confirm('Delete {{ customer.full_name }}?')"
-                  >🗑 Delete</a
-                >
+                >🗑 Delete</a>
               </td>
             </tr>
             {% empty %}
             <tr>
-              <td colspan="8" style="text-align: center; color: #9ca3af">
+              <td colspan="8" style="text-align:center; color:#9ca3af;">
                 No customers registered yet
               </td>
             </tr>
             {% endfor %}
           </tbody>
         </table>
-      </div>
-    </div>
+      </div><!-- /table-section -->
+
+    </div><!-- /main -->
   </body>
 </html>

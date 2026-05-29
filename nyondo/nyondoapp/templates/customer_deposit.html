@@ -4,920 +4,880 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Customer Deposit — NYONDO Hardware</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-+0r6rrwMZceTYFygJXRL7Hhdhsq6TOcKPEbb9Rwzc2b4EkJmO+iSWoZVata3u0G3UcNYI9dZe4UfgZ7HU5a3HQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <style>
-      /*  COLOR PALETTE 
-       #1f2937  → Dark Navy
-       #f59e0b  → Amber/Gold
-       #ffffff  → White
-      */
 
-      * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-        font-family: Georgia, serif;
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+
+    <style>
+
+      *{
+        margin:0;
+        padding:0;
+        box-sizing:border-box;
+        font-family:Georgia, serif;
       }
-      body {
-        background: #f4f6f8;
-        color: #1f2937;
+
+      body{
+        background:#f4f6f8;
+        color:#1f2937;
       }
 
       /* SIDEBAR */
-      .sidebar {
-        position: fixed;
-        left: 0;
-        top: 0;
-        width: 240px;
-        height: 100vh;
-        background: #1f2937;
-        color: #fff;
-        padding: 25px 20px;
-        overflow-y: auto;
+
+      .sidebar{
+        position:fixed;
+        left:0;
+        top:0;
+        width:240px;
+        height:100vh;
+        background:#1f2937;
+        color:#fff;
+        padding:25px 20px;
+        overflow-y:auto;
       }
-      .logo-box {
-        width: 55px;
-        height: 55px;
-        background: #f59e0b;
-        color: #1f2937;
-        border-radius: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 28px;
-        font-weight: bold;
-        margin: 0 auto 10px;
+
+      .logo-box{
+        width:55px;
+        height:55px;
+        background:#f59e0b;
+        color:#1f2937;
+        border-radius:10px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        font-size:28px;
+        font-weight:bold;
+        margin:0 auto 10px;
       }
-      .sidebar h2 {
-        text-align: center;
-        font-size: 17px;
-        margin-bottom: 4px;
+
+      .sidebar h2{
+        text-align:center;
+        font-size:17px;
+        margin-bottom:4px;
       }
-      .sidebar p.tagline {
-        text-align: center;
-        font-size: 12px;
-        color: #94a3b8;
-        font-style: italic;
-        margin-bottom: 30px;
+
+      .sidebar p.tagline{
+        text-align:center;
+        font-size:12px;
+        color:#94a3b8;
+        font-style:italic;
+        margin-bottom:30px;
       }
-      .menu a {
-        display: block;
-        color: #cbd5e1;
-        text-decoration: none;
-        padding: 11px 12px;
-        border-radius: 8px;
-        font-size: 15px;
-        margin-bottom: 4px;
-        cursor: pointer;
+
+      .menu a{
+        display:block;
+        color:#cbd5e1;
+        text-decoration:none;
+        padding:11px 12px;
+        border-radius:8px;
+        font-size:15px;
+        margin-bottom:4px;
       }
-      .menu a:hover {
-        background: #374151;
-        color: #fff;
+
+      .menu a:hover{
+        background:#374151;
+        color:#fff;
       }
-      .menu a.active {
-        background: #f59e0b;
-        color: #1f2937;
-        font-weight: bold;
+
+      .menu a.active{
+        background:#f59e0b;
+        color:#1f2937;
+        font-weight:bold;
       }
 
       /* MAIN */
-      .main {
-        margin-left: 240px;
-        padding: 35px 40px;
+
+      .main{
+        margin-left:240px;
+        padding:35px 40px;
       }
-      .page-title {
-        font-size: 22px;
-        font-weight: bold;
-        border-left: 5px solid #f59e0b;
-        padding-left: 12px;
-        margin-bottom: 10px;
+
+      .page-title{
+        font-size:22px;
+        font-weight:bold;
+        border-left:5px solid #f59e0b;
+        padding-left:12px;
+        margin-bottom:10px;
       }
 
       /* ALERTS */
-      .scheme-note {
-        background: #fff7ed;
-        border-left: 4px solid #f59e0b;
-        padding: 12px 16px;
-        border-radius: 8px;
-        font-size: 14px;
-        color: #374151;
-        margin-bottom: 25px;
-      }
-      .alert-success {
-        background: #dcfce7;
-        color: #166534;
-        padding: 12px 16px;
-        border-radius: 8px;
-        margin-bottom: 20px;
-        font-weight: bold;
-        font-size: 14px;
-      }
-      .alert-error {
-        background: #fee2e2;
-        color: #991b1b;
-        padding: 12px 16px;
-        border-radius: 8px;
-        margin-bottom: 20px;
-        font-weight: bold;
-        font-size: 14px;
-      }
-      .close-btn {
-        float: right;
-        cursor: pointer;
-        font-size: 24px;
-        font-weight: bold;
-      }
-      .close-btn:hover {
-        color: black;
+
+      .scheme-note{
+        background:#fff7ed;
+        border-left:4px solid #f59e0b;
+        padding:12px 16px;
+        border-radius:8px;
+        font-size:14px;
+        color:#374151;
+        margin-bottom:25px;
       }
 
-      /* DEPOSIT FORM */
-      .form-card {
-        background: #fff;
-        border-radius: 12px;
-        padding: 30px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-        margin-bottom: 35px;
+      .alert-success{
+        background:#dcfce7;
+        color:#166534;
+        padding:12px 16px;
+        border-radius:8px;
+        margin-bottom:20px;
+        font-weight:bold;
+        font-size:14px;
       }
-      .form-card h3 {
-        font-size: 16px;
-        color: #f59e0b;
-        border-bottom: 1px solid #e5e7eb;
-        padding-bottom: 10px;
-        margin-bottom: 20px;
+
+      .alert-error{
+        background:#fee2e2;
+        color:#991b1b;
+        padding:12px 16px;
+        border-radius:8px;
+        margin-bottom:20px;
+        font-weight:bold;
+        font-size:14px;
       }
-      .form-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 18px;
+
+      /* FORM */
+
+      .form-card{
+        background:#fff;
+        border-radius:12px;
+        padding:30px;
+        box-shadow:0 2px 8px rgba(0,0,0,0.08);
+        margin-bottom:35px;
       }
-      label {
-        display: block;
-        font-size: 13px;
-        font-weight: bold;
-        margin-bottom: 6px;
-        color: #374151;
+
+      .form-card h3{
+        font-size:16px;
+        color:#f59e0b;
+        border-bottom:1px solid #e5e7eb;
+        padding-bottom:10px;
+        margin-bottom:20px;
       }
+
+      .form-grid{
+        display:grid;
+        grid-template-columns:1fr 1fr;
+        gap:18px;
+      }
+
+      label{
+        display:block;
+        font-size:13px;
+        font-weight:bold;
+        margin-bottom:6px;
+        color:#374151;
+      }
+
       input,
-      select {
-        width: 100%;
-        padding: 11px 13px;
-        border: 1.5px solid #d1d5db;
-        border-radius: 8px;
-        font-size: 14px;
-        outline: none;
+      select{
+        width:100%;
+        padding:11px 13px;
+        border:1.5px solid #d1d5db;
+        border-radius:8px;
+        font-size:14px;
+        outline:none;
       }
+
       input:focus,
-      select:focus {
-        border-color: #f59e0b;
-      }
-      .balance-box {
-        margin-top: 18px;
-        background: #1f2937;
-        color: #fff;
-        padding: 16px 20px;
-        border-radius: 10px;
-        font-size: 15px;
-        display: flex;
-        gap: 30px;
-        flex-wrap: wrap;
-      }
-      .balance-box .item span {
-        color: #f59e0b;
-        font-size: 20px;
-        font-weight: bold;
-        display: block;
-      }
-      .btn-submit {
-        margin-top: 20px;
-        background: #f59e0b;
-        color: #1f2937;
-        padding: 13px 30px;
-        border: none;
-        border-radius: 8px;
-        font-size: 15px;
-        font-weight: bold;
-        cursor: pointer;
-      }
-      .btn-submit:hover {
-        background: #1f2937;
-        color: #f59e0b;
-      }
-      .btn-receipt {
-        margin-top: 20px;
-        margin-left: 12px;
-        background: #ffffff;
-        color: #1f2937;
-        padding: 13px 30px;
-        border: 2px solid #1f2937;
-        border-radius: 8px;
-        font-size: 15px;
-        font-weight: bold;
-        cursor: pointer;
-      }
-      .btn-receipt:hover {
-        background: #1f2937;
-        color: #fff;
+      select:focus{
+        border-color:#f59e0b;
       }
 
-      /* optgroup styling */
-      optgroup {
-        font-weight: bold;
-        color: #1f2937;
-        background: #f9fafb;
-      }
-      optgroup option {
-        font-weight: normal;
-        color: #374151;
-        background: #fff;
+      /* VALIDATION */
+
+      .input-error{
+        border-color:#dc2626;
+        background:#fff5f5;
       }
 
-      /* DEPOSIT HISTORY TABLE */
-      .table-section {
-        background: #fff;
-        border-radius: 12px;
-        padding: 25px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-      }
-      .table-section h3 {
-        font-size: 16px;
-        margin-bottom: 18px;
-        border-left: 4px solid #f59e0b;
-        padding-left: 10px;
-      }
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 14px;
-      }
-      th {
-        background: #1f2937;
-        color: #f59e0b;
-        padding: 12px 14px;
-        text-align: left;
-        font-size: 13px;
-      }
-      td {
-        padding: 11px 14px;
-        border-bottom: 1px solid #e5e7eb;
-        color: #374151;
-      }
-      tr:hover td {
-        background: #fff7ed;
+      .field-error{
+        color:#dc2626;
+        font-size:12px;
+        margin-top:5px;
       }
 
-      /* STATUS BADGES */
-      .badge-active {
-        background: #dcfce7;
-        color: #166534;
-        padding: 3px 10px;
-        border-radius: 20px;
-        font-size: 12px;
-        font-weight: bold;
+      /* BUTTONS */
+
+      .btn-submit{
+        margin-top:20px;
+        background:#f59e0b;
+        color:#1f2937;
+        padding:13px 30px;
+        border:none;
+        border-radius:8px;
+        font-size:15px;
+        font-weight:bold;
+        cursor:pointer;
       }
-      .badge-pickup {
-        background: #fef9c3;
-        color: #854d0e;
-        padding: 3px 10px;
-        border-radius: 20px;
-        font-size: 12px;
-        font-weight: bold;
+
+      .btn-submit:hover{
+        background:#1f2937;
+        color:#f59e0b;
       }
-      .badge-done {
-        background: #e5e7eb;
-        color: #374151;
-        padding: 3px 10px;
-        border-radius: 20px;
-        font-size: 12px;
-        font-weight: bold;
+
+      .btn-receipt{
+        margin-top:20px;
+        margin-left:12px;
+        background:#fff;
+        color:#1f2937;
+        padding:13px 30px;
+        border:2px solid #1f2937;
+        border-radius:8px;
+        font-size:15px;
+        font-weight:bold;
+        cursor:pointer;
+      }
+
+      .btn-receipt:hover{
+        background:#1f2937;
+        color:#fff;
+      }
+
+      /* BALANCE */
+
+      .balance-box{
+        margin-top:18px;
+        background:#1f2937;
+        color:#fff;
+        padding:16px 20px;
+        border-radius:10px;
+        font-size:15px;
+        display:flex;
+        gap:30px;
+        flex-wrap:wrap;
+      }
+
+      .balance-box .item span{
+        color:#f59e0b;
+        font-size:20px;
+        font-weight:bold;
+        display:block;
+      }
+
+      /* TABLE */
+
+      .table-section{
+        background:#fff;
+        border-radius:12px;
+        padding:25px;
+        box-shadow:0 2px 8px rgba(0,0,0,0.08);
+      }
+
+      .table-section h3{
+        font-size:16px;
+        margin-bottom:18px;
+        border-left:4px solid #f59e0b;
+        padding-left:10px;
+      }
+
+      table{
+        width:100%;
+        border-collapse:collapse;
+        font-size:14px;
+      }
+
+      th{
+        background:#1f2937;
+        color:#f59e0b;
+        padding:12px 14px;
+        text-align:left;
+        font-size:13px;
+      }
+
+      td{
+        padding:11px 14px;
+        border-bottom:1px solid #e5e7eb;
+        color:#374151;
+      }
+
+      tr:hover td{
+        background:#fff7ed;
+      }
+
+      /* BADGES */
+
+      .badge-active{
+        background:#dcfce7;
+        color:#166534;
+        padding:3px 10px;
+        border-radius:20px;
+        font-size:12px;
+        font-weight:bold;
+      }
+
+      .badge-done{
+        background:#e5e7eb;
+        color:#374151;
+        padding:3px 10px;
+        border-radius:20px;
+        font-size:12px;
+        font-weight:bold;
       }
 
       /* ACTION BUTTONS */
-      .btn-edit {
-        background: #1f2937;
-        color: #f59e0b;
-        padding: 5px 12px;
-        border-radius: 6px;
-        font-size: 12px;
-        font-weight: bold;
-        text-decoration: none;
-        margin-right: 5px;
-        display: inline-block;
-      }
-      .btn-delete {
-        background: #fee2e2;
-        color: #991b1b;
-        padding: 5px 12px;
-        border-radius: 6px;
-        font-size: 12px;
-        font-weight: bold;
-        text-decoration: none;
-        display: inline-block;
-      }
-      .btn-edit:hover {
-        background: #f59e0b;
-        color: #1f2937;
-      }
-      .btn-delete:hover {
-        background: #dc2626;
-        color: #fff;
+
+      .btn-edit{
+        background:#1f2937;
+        color:#f59e0b;
+        padding:5px 12px;
+        border-radius:6px;
+        font-size:12px;
+        font-weight:bold;
+        text-decoration:none;
       }
 
-      /* CUSTOMER GROUP HEADER ROW */
-      .customer-group-header td {
-        background: #f0f4ff;
-        font-weight: bold;
-        font-size: 13px;
-        color: #1f2937;
-        border-top: 2px solid #1f2937;
-        letter-spacing: 0.3px;
-        padding: 10px 14px;
+      .btn-delete{
+        background:#fee2e2;
+        color:#991b1b;
+        padding:5px 12px;
+        border-radius:6px;
+        font-size:12px;
+        font-weight:bold;
+        text-decoration:none;
       }
 
-      /* BALANCE SUMMARY ROW */
-      .balance-summary-row td {
-        background: #1f2937;
-        color: #fff;
-        font-size: 13px;
-        border-bottom: none;
-        padding: 14px;
-        vertical-align: top;
-      }
-      /* prevent hover highlight on special rows */
-      .balance-summary-row:hover td,
-      .customer-group-header:hover td,
-      .spacer-row:hover td {
-        background: inherit;
-      }
-      .bal-label {
-        color: #94a3b8;
-        font-size: 11px;
-        display: block;
-        margin-bottom: 4px;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-      }
-      .bal-value {
-        color: #f59e0b;
-        font-size: 15px;
-        font-weight: bold;
-      }
-      .bal-value.green {
-        color: #4ade80;
-      }
-      .bal-value.red {
-        color: #f87171;
+      .btn-pay{
+        background:#dcfce7;
+        color:#166534;
+        padding:5px 12px;
+        border-radius:6px;
+        font-size:12px;
+        font-weight:bold;
+        text-decoration:none;
       }
 
-      /* SPACER BETWEEN CUSTOMER GROUPS */
-      .spacer-row td {
-        height: 14px;
-        background: #f4f6f8;
-        border: none;
-        padding: 0;
+      .btn-edit:hover{
+        background:#f59e0b;
+        color:#1f2937;
       }
 
-      /* HAMBURGER BUTTON (mobile only) */
-      .hamburger {
-        display: none;
-        position: fixed;
-        top: 14px;
-        left: 14px;
-        z-index: 999;
-        background: #f59e0b;
-        color: #1f2937;
-        border: none;
-        border-radius: 8px;
-        width: 40px;
-        height: 40px;
-        font-size: 20px;
-        cursor: pointer;
-        align-items: center;
-        justify-content: center;
-        font-weight: bold;
-        line-height: 1;
+      .btn-delete:hover{
+        background:#dc2626;
+        color:#fff;
       }
 
-      /* overlay behind open sidebar on mobile */
-      .sidebar-overlay {
-        display: none;
-        position: fixed;
-        inset: 0;
-        background: rgba(0,0,0,0.45);
-        z-index: 997;
-      }
-      .sidebar-overlay.open { display: block; }
-
-      /* TABLE WRAPPER — horizontal scroll on small screens */
-      .table-wrapper {
-        width: 100%;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-      }
-      .table-wrapper table {
-        min-width: 780px;
+      .btn-pay:hover{
+        background:#16a34a;
+        color:#fff;
       }
 
-      /* TABLET  768px – 1024px */
-      @media (max-width: 1024px) {
-        .sidebar {
-          width: 200px;
-        }
-        .main {
-          margin-left: 200px;
-          padding: 25px 24px;
-        }
-      }
+      /* MOBILE */
 
-      /* MOBILE  ≤ 768px */
-      @media (max-width: 768px) {
+      @media(max-width:768px){
 
-        /* show hamburger */
-        .hamburger { display: flex; }
-
-        /* sidebar slides in/out */
-        .sidebar {
-          position: fixed;
-          left: -260px;
-          top: 0;
-          width: 240px;
-          height: 100vh;
-          z-index: 998;
-          transition: left 0.25s ease;
-        }
-        .sidebar.open { left: 0; }
-
-        /* main fills full width */
-        .main {
-          margin-left: 0;
-          padding: 70px 16px 24px;
+        .sidebar{
+          position:relative;
+          width:100%;
+          height:auto;
         }
 
-        .page-title { font-size: 18px; }
-
-        /* form: single column */
-        .form-grid {
-          grid-template-columns: 1fr;
+        .main{
+          margin-left:0;
+          padding:20px;
         }
 
-        /* balance preview box stacks vertically */
-        .balance-box {
-          flex-direction: column;
-          gap: 14px;
+        .form-grid{
+          grid-template-columns:1fr;
         }
 
-        /* buttons stack full width */
-        .btn-submit,
-        .btn-receipt {
-          display: block;
-          width: 100%;
-          margin-left: 0;
-          text-align: center;
+        .balance-box{
+          flex-direction:column;
         }
 
-        /* balance summary row stacks as cards */
-        .balance-summary-row {
-          display: block;
-        }
-        .balance-summary-row td {
-          display: block;
-          width: 100% !important;
-          border-bottom: 1px solid #374151;
-          padding: 12px 14px;
-        }
-        .balance-summary-row td:last-child {
-          border-bottom: none;
-        }
-
-        /* customer group header slightly smaller */
-        .customer-group-header td {
-          font-size: 12px;
-        }
-
-        /* scheme note smaller text */
-        .scheme-note { font-size: 13px; }
       }
 
-      /* VERY SMALL  ≤ 400px */
-      @media (max-width: 400px) {
-        .main { padding: 65px 10px 20px; }
-        .form-card { padding: 18px; }
-        .table-section { padding: 14px; }
-        .btn-submit, .btn-receipt { font-size: 14px; padding: 11px 16px; }
-      }
-      /* pay button — green */
-.btn-pay {
-  background: #dcfce7;
-  color: #166534;
-  padding: 5px 12px;
-  border-radius: 6px;
-  font-size: 12px;
-  font-weight: bold;
-  text-decoration: none;
-  display: inline-block;
-  margin-left: 5px;
-}
-.btn-pay:hover {
-  background: #16a34a;
-  color: #fff;
-}
     </style>
   </head>
+
   <body>
 
-    <!-- Hamburger (mobile only) -->
-    <button class="hamburger" onclick="toggleSidebar()" aria-label="Open menu">☰</button>
-    <!-- Overlay behind open sidebar -->
-    <div class="sidebar-overlay" id="overlay" onclick="toggleSidebar()"></div>
-
     <!-- SIDEBAR -->
-    <div class="sidebar" id="sidebar">
+
+    <div class="sidebar">
+
       <div class="logo-box">N</div>
+
       <h2>NYONDO</h2>
-      <p class="tagline">Hardware Management System</p>
+
+      <p class="tagline">
+        Hardware Management System
+      </p>
+
       <div class="menu">
-        <a onclick="window.location.href = '/'"> Home</a>
-        <a onclick="window.location.href = '/dashboard/admin/'"><i class="fa-solid fa-chart-pie"></i> Dashboard</a>
-        <a onclick="window.location.href = '/stock/'"><i class="fa-solid fa-box"></i> Stock</a>
-        <a onclick="window.location.href = '/sales/'"><i class="fa-solid fa-coins"></i> Sales</a>
-        <a onclick="window.location.href = '/customer_registration/'"><i class="fa-solid fa-users"></i> Register Customer</a>
-        <a onclick="window.location.href = '/customer_deposit/'" class="active"><i class="fa-solid fa-credit-card"></i> Customer Deposit</a>
-        <a onclick="window.location.href = '/supplier_credit/'"><i class="fa-solid fa-truck"></i> Supplier Credit</a>
-        <a onclick="window.location.href = '/login/'">🚪 Logout</a>
+
+        <a href="/">Home</a>
+
+        <a href="/dashboard/admin/">
+          <i class="fa-solid fa-chart-pie"></i>
+          Dashboard
+        </a>
+
+        <a href="/stock/">
+          <i class="fa-solid fa-box"></i>
+          Stock
+        </a>
+
+        <a href="/sales/">
+          <i class="fa-solid fa-coins"></i>
+          Sales
+        </a>
+
+        <a href="/customer_registration/">
+          <i class="fa-solid fa-users"></i>
+          Register Customer
+        </a>
+
+        <a href="/customer_deposit/" class="active">
+          <i class="fa-solid fa-credit-card"></i>
+          Customer Deposit
+        </a>
+
+        <a href="/supplier_credit/">
+          <i class="fa-solid fa-truck"></i>
+          Supplier Credit
+        </a>
+
+        <a href="/login/">
+          Logout
+        </a>
+
       </div>
+
     </div>
 
-    <!-- MAIN CONTENT -->
-    <div class="main">
-      <div class="page-title"><i class="fa-solid fa-credit-card"></i> Customer Deposit</div>
+    <!-- MAIN -->
 
-      <!-- Flash messages -->
+    <div class="main">
+
+      <div class="page-title">
+        <i class="fa-solid fa-credit-card"></i>
+        Customer Deposit
+      </div>
+
+      <!-- FLASH MESSAGES -->
+
       {% if messages %}
         {% for message in messages %}
+
           {% if message.tags == 'error' %}
-            <div class="alert-error" id="msg{{ forloop.counter }}">
-              <span class="close-btn"
-                    onclick="document.getElementById('msg{{ forloop.counter }}').style.display='none'">×</span>
+            <div class="alert-error">
               {{ message }}
             </div>
           {% else %}
-            <div class="alert-success" id="msg{{ forloop.counter }}">
-              <span class="close-btn"
-                    onclick="document.getElementById('msg{{ forloop.counter }}').style.display='none'">×</span>
+            <div class="alert-success">
               {{ message }}
             </div>
           {% endif %}
+
         {% endfor %}
       {% endif %}
 
-      <!-- Scheme rule note -->
+      <!-- NOTE -->
+
       <div class="scheme-note">
-        ℹ️ <strong>Deposit Scheme Rule:</strong> When a customer comes to pick
-        up goods, the quantity issued is determined by the
-        <strong>amount paid on that day</strong> — not the total deposited. A
-        temporary receipt is printed after every deposit payment.
+
+        <strong>Deposit Scheme Rule:</strong>
+
+        Quantity issued depends on
+        the amount paid during pickup.
+
       </div>
 
-      <!-- RECORD DEPOSIT FORM -->
+      <!-- FORM -->
+
       <div class="form-card">
-        <h3>+ Record Deposit Payment</h3>
+
+        <h3>Record Deposit Payment</h3>
+
         <form method="POST" action="/customer_deposit/">
+
           {% csrf_token %}
+
           <div class="form-grid">
 
+            <!-- NIN -->
+
             <div>
+
               <label>Customer NIN</label>
-              <input type="text" name="nin" placeholder="Enter customer NIN" />
+
+              <input
+                type="text"
+                name="nin"
+                placeholder="Enter customer NIN"
+                value="{{ form_data.nin|default:'' }}"
+                class="{% if errors.nin %}input-error{% endif %}"
+              />
+
+              {% if errors.nin %}
+                <div class="field-error">
+                  {{ errors.nin }}
+                </div>
+              {% endif %}
+
             </div>
 
+            <!-- PRODUCT -->
+
             <div>
-              <label>Product (Cement, Iron Bars & Sheets only)</label>
-              <select name="product_id" id="product_select" onchange="updateUnitPrice()">
-                <option value="" data-unit="0">-- Select --</option>
 
-                <optgroup label=" Cement">
-                  {% for product in products %}
-                    {% if 'Cement' in product.name %}
-                    <option value="{{ product.id }}" data-unit="{{ product.unit_price }}">
-                      {{ product.name }} (UGX {{ product.unit_price|floatformat:0 }})
-                    </option>
-                    {% endif %}
-                  {% endfor %}
-                </optgroup>
+              <label>Product</label>
 
-                <optgroup label=" Iron Bars">
-                  {% for product in products %}
-                    {% if 'Iron Bar' in product.name %}
-                    <option value="{{ product.id }}" data-unit="{{ product.unit_price }}">
-                      {{ product.name }} (UGX {{ product.unit_price|floatformat:0 }})
-                    </option>
-                    {% endif %}
-                  {% endfor %}
-                </optgroup>
+              <select
+                name="product_id"
+                class="{% if errors.product_id %}input-error{% endif %}"
+              >
 
-                <optgroup label=" Iron Sheets">
-                  {% for product in products %}
-                    {% if 'Iron Sheet' in product.name %}
-                    <option value="{{ product.id }}" data-unit="{{ product.unit_price }}">
-                      {{ product.name }} (UGX {{ product.unit_price|floatformat:0 }})
-                    </option>
-                    {% endif %}
-                  {% endfor %}
-                </optgroup>
+                <option value="">-- Select Product --</option>
+
+                {% for product in products %}
+
+                <option
+                  value="{{ product.id }}"
+                  {% if form_data.product_id == product.id|stringformat:"s" %}
+                  selected
+                  {% endif %}
+                >
+
+                  {{ product.name }}
+                  —
+                  UGX {{ product.unit_price|floatformat:0 }}
+
+                </option>
+
+                {% endfor %}
 
               </select>
+
+              {% if errors.product_id %}
+                <div class="field-error">
+                  {{ errors.product_id }}
+                </div>
+              {% endif %}
+
             </div>
 
-            <div>
-              <label>Total Amount  (UGX)</label>
-              <input type="number" name="amount_deposited" id="deposit_amt"
-                     placeholder="e.g. 150000" oninput="calcUnits()" />
-            </div>
+            <!-- AMOUNT -->
 
             <div>
-              <label>Unit Price (UGX) — from stock</label>
-              <input type="number" id="unit_p" placeholder="e.g. 28000"
-                     readonly />
+
+              <label>Total Amount Deposited</label>
+
+              <input
+                type="number"
+                name="amount_deposited"
+                placeholder="e.g. 150000"
+                value="{{ form_data.amount_deposited|default:'' }}"
+                class="{% if errors.amount_deposited %}input-error{% endif %}"
+              />
+
+              {% if errors.amount_deposited %}
+                <div class="field-error">
+                  {{ errors.amount_deposited }}
+                </div>
+              {% endif %}
+
             </div>
 
+            <!-- UNIT PRICE -->
+
             <div>
+
+              <label>Unit Price</label>
+
+              <input
+                type="number"
+                value="{{ unit_price }}"
+                readonly
+                class="{% if errors.unit_price %}input-error{% endif %}"
+              />
+
+              {% if errors.unit_price %}
+                <div class="field-error">
+                  {{ errors.unit_price }}
+                </div>
+              {% endif %}
+
+            </div>
+
+            <!-- QUANTITY -->
+
+            <div>
+
               <label>Quantity</label>
-              <input type="number" name="quantity" id="deposit_qty"
-                     placeholder="e.g. 5" min="0" oninput="qtyChanged()" />
+
+              <input
+                type="number"
+                value="{{ units }}"
+                readonly
+                class="{% if errors.quantity %}input-error{% endif %}"
+              />
+
+              {% if errors.quantity %}
+                <div class="field-error">
+                  {{ errors.quantity }}
+                </div>
+              {% endif %}
+
             </div>
 
+            <!-- DATE -->
+
             <div>
+
               <label>Payment Date</label>
-              <input type="date" name="payment_date" />
+
+              <input
+                type="date"
+                name="payment_date"
+                value="{{ form_data.payment_date|default:'' }}"
+                class="{% if errors.payment_date %}input-error{% endif %}"
+              />
+
+              {% if errors.payment_date %}
+                <div class="field-error">
+                  {{ errors.payment_date }}
+                </div>
+              {% endif %}
+
             </div>
+
+            <!-- PAYMENT METHOD -->
 
             <div>
+
               <label>Payment Method</label>
-              <select name="payment_method">
-                <option value="cash">Cash</option>
-                <option value="mobile_money">Mobile Money</option>
-                <option value="bank_transfer">Bank Transfer</option>
+
+              <select
+                name="payment_method"
+                class="{% if errors.payment_method %}input-error{% endif %}"
+              >
+
+                <option value="">-- Select Method --</option>
+
+                <option
+                  value="cash"
+                  {% if form_data.payment_method == 'cash' %}
+                  selected
+                  {% endif %}
+                >
+                  Cash
+                </option>
+
+                <option
+                  value="mobile_money"
+                  {% if form_data.payment_method == 'mobile_money' %}
+                  selected
+                  {% endif %}
+                >
+                  Mobile Money
+                </option>
+
+                <option
+                  value="bank_transfer"
+                  {% if form_data.payment_method == 'bank_transfer' %}
+                  selected
+                  {% endif %}
+                >
+                  Bank Transfer
+                </option>
+
               </select>
+
+              {% if errors.payment_method %}
+                <div class="field-error">
+                  {{ errors.payment_method }}
+                </div>
+              {% endif %}
+
             </div>
 
           </div>
 
-          <!-- Running balance preview -->
+          <!-- BALANCE BOX -->
+
           <div class="balance-box">
+
             <div class="item">
+
               Amount Deposited Today
-              <span id="total-dep">UGX 0</span>
+
+              <span>
+                UGX {{ amount|default:"0" }}
+              </span>
+
             </div>
+
             <div class="item">
-              Units Equivalent Today
-              <span id="units-eq">0 units</span>
+
+              Units Equivalent
+
+              <span>
+                {{ units|default:"0" }} units
+              </span>
+
             </div>
+
           </div>
 
-          <button class="btn-submit" type="submit">Save Deposit</button>
-          <button type="button" class="btn-receipt" onclick="window.print()">
-            🖨 Print Temp. Receipt
+          <button class="btn-submit" type="submit">
+            Save Deposit
           </button>
+
+          <button
+            type="button"
+            class="btn-receipt"
+            onclick="window.print()">
+
+            Print Receipt
+
+          </button>
+
         </form>
+
       </div>
 
-    <!-- DEPOSIT HISTORY TABLE -->
-<div class="table-section">
-  <h3>Deposit History</h3>
+      <!-- TABLE -->
 
-  <div class="table-wrapper">
-    <table>
+      <div class="table-section">
 
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Customer</th>
-          <th>Product</th>
-          <th>Deposited Amount (UGX)</th>
-          <th>Units Earned</th>
-          <th>Payment Method</th>
-          <th>Date</th>
-          <th>Status</th>
-          <th>Outstanding Balance</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
+        <h3>Deposit History</h3>
 
-      <tbody>
+        <table>
 
-        {% for group in customer_groups %}
+          <thead>
 
-        <!-- CUSTOMER GROUP HEADER -->
-        <tr class="customer-group-header">
-          <td colspan="10">
-            <i class="fa-solid fa-user"></i>
-            {{ group.customer.full_name }}
-            &nbsp;—&nbsp;
-            {{ group.deposits.0.product.name }} Deposits
-          </td>
-        </tr>
+            <tr>
 
-        <!-- INDIVIDUAL DEPOSIT ROWS -->
-        {% for deposit in group.deposits %}
-        <tr>
+              <th>#</th>
+              <th>Customer</th>
+              <th>Product</th>
+              <th>Amount</th>
+              <th>Units</th>
+              <th>Method</th>
+              <th>Date</th>
+              <th>Status</th>
+              <th>Outstanding</th>
+              <th>Actions</th>
 
-          <!-- Number -->
-          <td>{{ forloop.counter }}</td>
+            </tr>
 
-          <!-- Customer -->
-          <td>{{ deposit.customer.full_name }}</td>
+          </thead>
 
-          <!-- Product -->
-          <td>{{ deposit.product.name }}</td>
+          <tbody>
 
-          <!-- Deposited Amount -->
-          <td>
-            <span style="color:#f59e0b;font-weight:bold;">
-              UGX {{ deposit.amount_deposited|floatformat:0 }}
-            </span>
-          </td>
+            {% for deposit in deposits %}
 
-          <!-- Units Earned -->
-          <td>
-            <span style="font-weight:bold;color:#1f2937;">
-              {{ deposit.units_equivalent }} unit(s)
-            </span>
-          </td>
+            <tr>
 
-          <!-- Payment Method -->
-          <td>{{ deposit.get_payment_method_display }}</td>
+              <td>{{ forloop.counter }}</td>
 
-          <!-- Date -->
-          <td>{{ deposit.date|date:"d M Y" }}</td>
+              <td>{{ deposit.customer.full_name }}</td>
 
-          <!-- Status -->
-          <td>
-            {% if deposit.status == 'active' %}
-              <span class="badge-active">Active</span>
+              <td>{{ deposit.product.name }}</td>
 
-            {% elif deposit.status == 'ready_pickup' %}
-              <span class="badge-pickup">Ready Pickup</span>
+              <td>
+                UGX {{ deposit.amount_deposited|floatformat:0 }}
+              </td>
 
-            {% else %}
-              <span class="badge-done">Collected</span>
-            {% endif %}
-          </td>
+              <td>
+                {{ deposit.units_equivalent }}
+              </td>
 
-          <!-- Outstanding Balance -->
-          <td>
+              <td>
+                {{ deposit.get_payment_method_display }}
+              </td>
 
-            {% if group.remaining == 0 %}
-              <span style="color:#16a34a;font-weight:bold;">
-                UGX 0 ✓ Cleared
-              </span>
+              <td>
+                {{ deposit.date|date:"d M Y" }}
+              </td>
 
-            {% else %}
-              <span style="color:#dc2626;font-weight:bold;">
-                UGX {{ group.remaining|floatformat:0 }}
-              </span>
-            {% endif %}
+              <td>
 
-          </td>
+                {% if deposit.status == 'active' %}
 
-          <!-- ACTION BUTTONS -->
-          <td>
+                  <span class="badge-active">
+                    Active
+                  </span>
 
-            <a href="/customer_deposit/edit/{{ deposit.id }}/"
-               class="btn-edit">
-               ✏ Edit
-            </a>
+                {% else %}
 
-            <a href="/customer_deposit/delete/{{ deposit.id }}/"
-               class="btn-delete"
-               onclick="return confirm('Delete this deposit?');">
-               🗑 Delete
-            </a>
+                  <span class="badge-done">
+                    Collected
+                  </span>
 
-            <a href="/customer_deposit/pay/{{ deposit.id }}/"
-               class="btn-pay">
-               Pay
-            </a>
+                {% endif %}
 
-          </td>
+              </td>
 
-        </tr>
-        {% endfor %}
+              <td>
 
-        <!-- BALANCE SUMMARY ROW -->
-        <tr class="balance-summary-row">
+                {% if deposit.remaining_balance == 0 %}
 
-          <!-- TOTAL DEPOSITED -->
-          {% comment %} <td colspan="3">
-            <span class="bal-label">Total Deposited</span>
+                  <span style="color:#16a34a;font-weight:bold;">
+                    UGX 0 Cleared
+                  </span>
 
-            <span class="bal-value">
-              UGX {{ group.total_deposited|floatformat:0 }}
-            </span>
-          </td> {% endcomment %}
+                {% else %}
 
-          <!-- TOTAL UNITS -->
-          <td colspan="2">
-            <span class="bal-label">Total Units Earned</span>
+                  <span style="color:#dc2626;font-weight:bold;">
+                    UGX {{ deposit.remaining_balance|floatformat:0 }}
+                  </span>
 
-            <span class="bal-value">
-              {{ group.total_units }} units
-            </span>
-          </td>
+                {% endif %}
 
-          <!-- AMOUNT PAID -->
-          <td colspan="2">
-            <span class="bal-label">Amount Paid on Pickup</span>
+              </td>
 
-            <span class="bal-value green">
-              UGX {{ group.total_paid_pickup|floatformat:0 }}
-            </span>
-          </td>
+              <td>
 
-          <!-- REMAINING BALANCE -->
-          <td colspan="3">
+                <a
+                  href="/customer_deposit/edit/{{ deposit.id }}/"
+                  class="btn-edit">
 
-            <span class="bal-label">
-              Outstanding Balance
-            </span>
+                  Edit
 
-            {% if group.remaining == 0 %}
+                </a>
 
-              <span class="bal-value green">
-                UGX 0 ✓ Cleared
-              </span>
+                <a
+                  href="/customer_deposit/delete/{{ deposit.id }}/"
+                  class="btn-delete">
 
-            {% else %}
+                  Delete
 
-              <span class="bal-value red">
-                UGX {{ group.remaining|floatformat:0 }}
-              </span>
+                </a>
 
-            {% endif %}
+                <a
+                  href="/customer_deposit/pay/{{ deposit.id }}/"
+                  class="btn-pay">
 
-          </td>
+                  Pay
 
-        </tr>
+                </a>
 
-        <!-- SPACER -->
-        <tr class="spacer-row">
-          <td colspan="10"></td>
-        </tr>
+              </td>
 
-        {% empty %}
+            </tr>
 
-        <!-- EMPTY STATE -->
-        <tr>
-          <td colspan="10"
-              style="text-align:center;
-                     color:#9ca3af;
-                     padding:30px;">
+            {% empty %}
 
-            No deposits recorded yet
+            <tr>
 
-          </td>
-        </tr>
+              <td colspan="10"
+                  style="text-align:center;color:#9ca3af;">
 
-        {% endfor %}
+                No deposits recorded yet
 
-      </tbody>
+              </td>
 
-    </table>
-  </div>
-</div>
+            </tr>
 
-    <script>
-      function updateUnitPrice() {
-        var productSelect = document.getElementById("product_select");
-        var selectedOption = productSelect.options[productSelect.selectedIndex];
-        var price = parseFloat(selectedOption.dataset.unit) || 0;
-        document.getElementById("unit_p").value = price > 0 ? price : "";
-        calcUnits();
-      }
+            {% endfor %}
 
-      function qtyChanged() {
-        var qty = parseInt(document.getElementById("deposit_qty").value) || 0;
-        var price = parseFloat(document.getElementById("unit_p").value) || 0;
-        var amount = qty > 0 && price > 0 ? qty * price : 0;
-        document.getElementById("deposit_amt").value = amount > 0 ? amount : "";
-        calcUnits();
-      }
+          </tbody>
 
-      function calcUnits() {
-        var amt = parseFloat(document.getElementById("deposit_amt").value) || 0;
-        var price = parseFloat(document.getElementById("unit_p").value) || 0;
-        var units = price > 0 ? Math.floor(amt / price) : 0;
-        document.getElementById("deposit_qty").value = units > 0 ? units : "";
-        document.getElementById("total-dep").textContent = "UGX " + amt.toLocaleString();
-        document.getElementById("units-eq").textContent = units + " unit(s)";
-      }
+        </table>
 
-      function toggleSidebar() {
-        var sidebar = document.getElementById("sidebar");
-        var overlay = document.getElementById("overlay");
-        sidebar.classList.toggle("open");
-        overlay.classList.toggle("open");
-      }
-    </script>
+      </div>
+
+    </div>
 
   </body>
 </html>

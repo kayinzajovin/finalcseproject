@@ -58,6 +58,11 @@
         margin-bottom: 30px;
       }
 
+      /* wraps each label + input + error message */
+      .field {
+        margin-bottom: 18px;
+      }
+
       label {
         display: block;
         font-size: 14px;
@@ -73,7 +78,6 @@
         border: 1.5px solid #d1d5db;
         border-radius: 8px;
         font-size: 15px;
-        margin-bottom: 20px;
         outline: none;
       }
 
@@ -81,38 +85,17 @@
         border-color: #f59e0b;
       }
 
-      .role-select {
-        display: flex;
-        gap: 10px;
-        margin-bottom: 20px;
-      }
-      .role-btn {
-        flex: 1;
-        padding: 10px 6px;
-        border: 2px solid #d1d5db;
-        border-radius: 8px;
-        background: #fff;
-        color: #6b7280;
-        font-size: 12px;
-        font-weight: bold;
-        cursor: pointer;
-        text-align: center;
-      }
-      .role-btn.selected {
-        border-color: #f59e0b;
-        background: #fff7ed;
-        color: #1f2937;
+      /* red border when field has an error */
+      .field-error {
+        border-color: #dc2626 !important;
       }
 
-      /* error message box */
-      .alert-error {
-        background: #fee2e2;
-        color: #991b1b;
-        padding: 10px 14px;
-        border-radius: 8px;
-        margin-bottom: 18px;
-        font-size: 13px;
-        font-weight: bold;
+      /* small red text shown directly below the input */
+      .error-msg {
+        color: #dc2626;
+        font-size: 12px;
+        margin-top: 5px;
+        display: block;
       }
 
       .btn-login {
@@ -125,6 +108,7 @@
         border: none;
         border-radius: 8px;
         cursor: pointer;
+        margin-top: 8px;
       }
 
       .btn-login:hover {
@@ -155,66 +139,61 @@
     <div class="login-card">
       <div class="card-logo">N</div>
       <h2>NYONDO HARDWARE</h2>
-      <p class="sub">Sign in to manage stock & sales</p>
+      <p class="sub">Sign in to manage stock &amp; sales</p>
 
-      <!-- real POST form with csrf token -->
-      <form id="login-form" method="POST" action="/login/">
+      <form method="POST" action="/login/">
         {% csrf_token %}
 
-        <!-- hidden input stores the selected role -->
-        {% comment %} <input type="hidden" name="role" id="role-input" value="admin" />
+        <!-- USERNAME FIELD -->
+        <div class="field">
+          <label for="username">Username</label>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            placeholder="Enter your username"
+            value="{{ request.POST.username|default:'' }}"
+            class="{% if errors.username %}field-error{% endif %}"
+          />
+          {% if errors.username %}
+            <span class="error-msg">
+              <i class="fa-solid fa-triangle-exclamation"></i> {{ errors.username }}
+            </span>
+          {% endif %}
+        </div>
 
-        <label>Select Your Role</label>
-        <div class="role-select">
-          <div class="role-btn selected" onclick="selectRole(this, 'admin')">
-            🔑 Admin
-          </div>
-          <div class="role-btn" onclick="selectRole(this, 'salesperson')">
-            <i class="fa-solid fa-coins"></i> Sales
-          </div>
-          <div class="role-btn" onclick="selectRole(this, 'stockmanager')">
-            <i class="fa-solid fa-box"></i> Stock
-          </div>
-        </div> {% endcomment %}
+        <!-- PASSWORD FIELD -->
+        <div class="field">
+          <label for="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Enter your password"
+            class="{% if errors.password %}field-error{% endif %}"
+          />
+          {% if errors.password %}
+            <span class="error-msg">
+              <i class="fa-solid fa-triangle-exclamation"></i> {{ errors.password }}
+            </span>
+          {% endif %}
+        </div>
 
-        <label for="username">Username</label>
-        <input
-          type="text"
-          id="username"
-          name="username"
-          placeholder="Enter your username"
-        />
+        <!-- general error shown when username or password is wrong -->
+        {% if errors.general %}
+  <span class="error-msg" style="margin-bottom:14px;">
+    <i class="fa-solid fa-triangle-exclamation"></i> {{ errors.general }}
+  </span>
+{% endif %}
 
-        <label for="password">Password</label>
-        <input
-          type="password"
-          id="password"
-          name="password"
-          placeholder="Enter your password"
-        />
-
-        <!-- show error message if login fails -->
-        {% if messages %} {% for message in messages %}
-        <div class="alert-error"><i class="fa-solid fa-circle-xmark"></i> {{ message }}</div>
-        {% endfor %} {% endif %}
-
-        <button class="btn-login" type="submit">LOGIN</button>
+        <button class="btn-login" type="submit">
+          <i class="fa-solid fa-right-to-bracket"></i> LOGIN
+        </button>
       </form>
 
       <div class="back-link">
         <a onclick="window.location.href = '/'">← Back to Home</a>
       </div>
     </div>
-
-    <script>
-      /* update hidden role input when a role button is clicked */
-      function selectRole(el, role) {
-        document.querySelectorAll(".role-btn").forEach(function (b) {
-          b.classList.remove("selected");
-        });
-        el.classList.add("selected");
-        document.getElementById("role-input").value = role;
-      }
-    </script>
   </body>
 </html>
