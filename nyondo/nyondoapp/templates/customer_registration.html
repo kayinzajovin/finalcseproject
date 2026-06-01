@@ -434,15 +434,24 @@
               {% endif %}
             </div>
 
-            <!-- Registration Date (optional — view does not process this field yet) -->
-            <div>
-              <label>Registration Date</label>
-              <input
-                type="date"
-                name="registration_date"
-                value="{{ form_data.registration_date|default:'' }}"
-              />
-            </div>
+            
+     <!-- Registration Date -->
+      <div>
+  <label>Registration Date</label>
+  <input
+    type="date"
+    name="date"
+    value="{{ form_data.date|default:'' }}"
+    class="{% if errors.date %}input-error{% endif %}"
+  />
+  {% if errors.date %}
+    <div class="field-error">
+      <i class="fa-solid fa-circle-exclamation"></i> {{ errors.date }}
+    </div>
+  {% endif %}
+</div>
+
+
 
             <!-- Address (required, full-width) -->
             <div class="full">

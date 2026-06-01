@@ -22,6 +22,7 @@ from django.template.loader import render_to_string
 
 
 
+
 # VALIDATION HELPERS
 # Reusable input-validation utilities shared across all views.
 # These centralise error messages and keep view logic free of boilerplate.
@@ -201,7 +202,8 @@ def login_view(request):
                 return render(request, 'login.html')
         else:
             # Use '__all__' key so the template renders this as a non-field (form-level) error
-            errors['__all__'] = 'Invalid username or password.'
+            # errors['__all__'] = 'Invalid username or password.'
+            errors['general'] = 'Invalid username or password.'
             return render(request, 'login.html', {'errors': errors, 'form_data': {'username': username}})
 
     return render(request, 'login.html')
@@ -426,6 +428,7 @@ def stock(request):
         quantity_raw   = request.POST.get('quantity', '')
         unit_cost_raw  = request.POST.get('unit_cost', '')
         unit_price_raw = request.POST.get('unit_price', '')
+        arrival_date   = request.POST.get('date', '').strip()
 
         errors    = {}
         form_data = {
@@ -434,6 +437,7 @@ def stock(request):
             'quantity':      quantity_raw,
             'unit_cost':     unit_cost_raw,
             'unit_price':    unit_price_raw,
+            'date':           arrival_date,
         }
 
         #  Field-level validation 
@@ -441,6 +445,8 @@ def stock(request):
             errors['product_name'] = 'Product name is required.'
         if not supplier_name:
             errors['supplier_name'] = 'Supplier name is required.'
+        if not arrival_date:
+            errors['date'] = 'Arrival date is required.'
 
         quantity,   err = parse_positive_int(quantity_raw, 'Quantity')
         if err: errors['quantity'] = err
@@ -601,12 +607,14 @@ def sales(request):
         quantity_raw = request.POST.get('quantity', '')
         # Default distance to '0' when not supplied (in-store sale, no delivery)
         distance_raw = request.POST.get('distance_km', '0') or '0'
+        sale_date_raw = request.POST.get('date', '').strip()
 
         errors    = {}
         form_data = {
             'product_id':  product_id,
             'quantity':    quantity_raw,
             'distance_km': distance_raw,
+            'date':          sale_date_raw,
         }
 
         #  Field-level validation 
@@ -619,6 +627,15 @@ def sales(request):
         # min_value=0: distance 0 means in-store / no delivery charge
         distance, err = parse_positive_decimal(distance_raw, 'Distance', min_value=0)
         if err: errors['distance_km'] = err
+        if not sale_date_raw:
+            errors['date'] = 'Sale date is required.'
+        else:
+            try:
+                sale_date = timezone.datetime.strptime(sale_date_raw, '%Y-%m-%d').date()
+                if sale_date > timezone.now().date():
+                    errors['date'] = 'Sale date cannot be in the future.'
+            except ValueError:
+                errors['date'] = 'Invalid date format. Use YYYY-MM-DD.'
 
         # Stock availability check 
         # Only runs after product_id and quantity have individually passed validation
@@ -932,19 +949,107 @@ def supplier_delete(request, pk):
 # NIN uniqueness is enforced to prevent duplicate registrations.
 
 
+# @login_required
+# def customer_registration(request):
+#     """
+#     List registered customers and handle new registrations.
+
+#     Validation enforces:
+#     - Ugandan NIN format (14 alphanumeric chars).
+#     - Uniqueness of NIN across all customers.
+#     - Valid Ugandan mobile phone number.
+#     - Employer/workplace is required (scheme is for salary earners only).
+#     - Preferred product must be selected.
+#     - Physical address is required.
+#     """
+#     role = get_user_role(request.user)
+#     if role == 'stockmanager':
+#         messages.error(request, 'You are not authorized to access customer registration.')
+#         return redirect('/dashboard/stockmanager/')
+
+#     customers = Customer.objects.all()
+
+#     if request.method == 'POST':
+#         full_name         = request.POST.get('full_name', '').strip()
+#         NIN               = request.POST.get('NIN', '').strip().upper()
+#         phone             = request.POST.get('phone', '').strip()
+#         employer          = request.POST.get('employer', '').strip()
+#         address           = request.POST.get('address', '').strip()
+#         preferred_product = request.POST.get('preferred_product', '').strip()
+#         sale_date_raw     = request.POST.get('date', '').strip()
+
+#         errors    = {}
+#         form_data = {
+#             'full_name': full_name, 'NIN': NIN, 'phone': phone,
+#             'employer': employer, 'address': address, 'preferred_product': preferred_product, 'date': sale_date_raw,
+#         }
+
+#         if not full_name:
+#             errors['full_name'] = 'Full name is required.'
+
+#         # NIN: required, correct format, and not already in use
+#         if not NIN:
+#             errors['NIN'] = 'NIN is required.'
+#         elif not is_valid_nin(NIN):
+#             errors['NIN'] = 'Invalid NIN. Expected 14 alphanumeric characters e.g. CM20100012345678.'
+#         elif Customer.objects.filter(NIN=NIN).exists():
+#             errors['NIN'] = f'A customer with NIN {NIN} is already registered.'
+
+#         # Phone: required and must match Uganda mobile format
+#         if not phone:
+#             errors['phone'] = 'Phone number is required.'
+#         elif not is_valid_ugandan_phone(phone):
+#             errors['phone'] = 'Enter a valid Ugandan phone number e.g. 0712345678.'
+
+#         # Employer: required — the deposit scheme is for salary earners only
+#         if not employer:
+#             errors['employer'] = 'Employer / workplace is required.'
+
+#         # Preferred product: required — must know what the customer is saving toward
+#         if not preferred_product:
+#             errors['preferred_product'] = 'Please select a preferred product.'
+
+#         # Address: required for delivery and identity verification purposes
+#         if not address:
+#             errors['address'] = 'Physical address is required.'
+
+#         if errors:
+#             return render(request, 'customer_registration.html', {
+#                 'customers': customers, 'errors': errors, 'form_data': form_data,
+#             })
+        
+
+#         if not address:
+#             errors['address'] = 'Physical address is required.'
+
+#         reg_date = timezone.now().date()  
+#         if not sale_date_raw:
+#             errors['date'] = 'Registration date is required.'
+#         else:
+#             try:
+#                 reg_date = timezone.datetime.strptime(sale_date_raw, '%Y-%m-%d').date()
+#                 if reg_date > timezone.now().date():
+#                     errors['date'] = 'Registration date cannot be in the future.'
+#             except ValueError:
+#                 errors['date'] = 'Invalid date format.'
+
+#         if errors:   
+#             return render(request, 'customer_registration.html', {
+#                 'customers': customers, 'errors': errors, 'form_data': form_data,
+#             })
+        
+
+#         Customer.objects.create(
+#             full_name=full_name, NIN=NIN, phone=phone,
+#             employer=employer, address=address, preferred_product=preferred_product, registration_date=reg_date, 
+#         )
+#         messages.success(request, f'{full_name} registered successfully!')
+#         return redirect('customer_registration')
+
+#     return render(request, 'customer_registration.html', {'customers': customers})
+
 @login_required
 def customer_registration(request):
-    """
-    List registered customers and handle new registrations.
-
-    Validation enforces:
-    - Ugandan NIN format (14 alphanumeric chars).
-    - Uniqueness of NIN across all customers.
-    - Valid Ugandan mobile phone number.
-    - Employer/workplace is required (scheme is for salary earners only).
-    - Preferred product must be selected.
-    - Physical address is required.
-    """
     role = get_user_role(request.user)
     if role == 'stockmanager':
         messages.error(request, 'You are not authorized to access customer registration.')
@@ -959,17 +1064,18 @@ def customer_registration(request):
         employer          = request.POST.get('employer', '').strip()
         address           = request.POST.get('address', '').strip()
         preferred_product = request.POST.get('preferred_product', '').strip()
+        sale_date_raw     = request.POST.get('date', '').strip()
 
         errors    = {}
         form_data = {
             'full_name': full_name, 'NIN': NIN, 'phone': phone,
-            'employer': employer, 'address': address, 'preferred_product': preferred_product,
+            'employer': employer, 'address': address,
+            'preferred_product': preferred_product, 'date': sale_date_raw,
         }
 
         if not full_name:
             errors['full_name'] = 'Full name is required.'
 
-        # NIN: required, correct format, and not already in use
         if not NIN:
             errors['NIN'] = 'NIN is required.'
         elif not is_valid_nin(NIN):
@@ -977,23 +1083,30 @@ def customer_registration(request):
         elif Customer.objects.filter(NIN=NIN).exists():
             errors['NIN'] = f'A customer with NIN {NIN} is already registered.'
 
-        # Phone: required and must match Uganda mobile format
         if not phone:
             errors['phone'] = 'Phone number is required.'
         elif not is_valid_ugandan_phone(phone):
             errors['phone'] = 'Enter a valid Ugandan phone number e.g. 0712345678.'
 
-        # Employer: required — the deposit scheme is for salary earners only
         if not employer:
             errors['employer'] = 'Employer / workplace is required.'
 
-        # Preferred product: required — must know what the customer is saving toward
         if not preferred_product:
             errors['preferred_product'] = 'Please select a preferred product.'
 
-        # Address: required for delivery and identity verification purposes
         if not address:
             errors['address'] = 'Physical address is required.'
+
+        reg_date = timezone.now().date()
+        if not sale_date_raw:
+            errors['date'] = 'Registration date is required.'
+        else:
+            try:
+                reg_date = timezone.datetime.strptime(sale_date_raw, '%Y-%m-%d').date()
+                if reg_date > timezone.now().date():
+                    errors['date'] = 'Registration date cannot be in the future.'
+            except ValueError:
+                errors['date'] = 'Invalid date format.'
 
         if errors:
             return render(request, 'customer_registration.html', {
@@ -1002,7 +1115,9 @@ def customer_registration(request):
 
         Customer.objects.create(
             full_name=full_name, NIN=NIN, phone=phone,
-            employer=employer, address=address, preferred_product=preferred_product,
+            employer=employer, address=address,
+            preferred_product=preferred_product,
+            registration_date=reg_date,
         )
         messages.success(request, f'{full_name} registered successfully!')
         return redirect('customer_registration')
@@ -1094,7 +1209,6 @@ def customer_delete(request, pk):
 # Status lifecycle: active → ready_pickup → collected (forward-only).
 # Stock managers cannot access this section.
 
-
 @login_required
 def customer_deposit(request):
 
@@ -1131,8 +1245,8 @@ def customer_deposit(request):
         nin            = request.POST.get('nin', '').strip()
         product_id     = request.POST.get('product_id', '')
         amount_raw     = request.POST.get('amount_deposited', '')
-        payment_method = request.POST.get('payment_method', 'cash')
-        payment_date   = request.POST.get('payment_date', '')
+        payment_method = request.POST.get('payment_method', '').strip()
+        payment_date   = request.POST.get('payment_date', '').strip()
         quantity_raw   = request.POST.get('quantity', '0') or '0'
 
         errors    = {}
@@ -1141,7 +1255,7 @@ def customer_deposit(request):
             'payment_method': payment_method, 'payment_date': payment_date, 'quantity': quantity_raw,
         }
 
-        # Resolve customer by NIN — raises a field error if not found
+        # Customer NIN
         if not nin:
             errors['nin'] = 'Customer NIN is required.'
         else:
@@ -1150,15 +1264,34 @@ def customer_deposit(request):
             except Customer.DoesNotExist:
                 errors['nin'] = f'No customer found with NIN {nin}.'
 
+        # Product
         if not product_id:
             errors['product_id'] = 'Please select a product.'
 
-        amount_deposited, err = parse_positive_decimal(amount_raw, 'Deposit amount')
-        if err: errors['amount_deposited'] = err
+        # Amount
+        if not amount_raw:
+            errors['amount_deposited'] = 'Deposit amount is required.'
+        else:
+            amount_deposited, err = parse_positive_decimal(amount_raw, 'Deposit amount')
+            if err: errors['amount_deposited'] = err
 
-        # min_value=0: a deposit can be for tracking purposes with no unit reservation
+        # Payment method
+        if not payment_method:
+            errors['payment_method'] = 'Please select a payment method.'
+
+        # Quantity
         quantity, err = parse_positive_int(quantity_raw, 'Quantity', min_value=0)
         if err: errors['quantity'] = err
+
+        # Payment date (optional but validated if provided)
+        parsed_date = timezone.now().date()
+        if payment_date:
+            try:
+                parsed_date = timezone.datetime.strptime(payment_date, '%Y-%m-%d').date()
+                if parsed_date > timezone.now().date():
+                    errors['payment_date'] = 'Payment date cannot be in the future.'
+            except ValueError:
+                errors['payment_date'] = 'Invalid date format.'
 
         if errors:
             return render(request, 'customer_deposit.html', {
@@ -1169,19 +1302,15 @@ def customer_deposit(request):
             })
 
         product = get_object_or_404(Product, id=product_id)
-        deposit = CustomerDeposit.objects.create(
+        CustomerDeposit.objects.create(
             customer=customer,
             product=product,
             amount_deposited=amount_deposited,
             unit_price=product.unit_price,
             quantity=quantity,
             payment_method=payment_method,
+            date=parsed_date,
         )
-
-        # Only override the auto-set date when the user explicitly provides one
-        if payment_date:
-            deposit.date = payment_date
-            deposit.save()
 
         messages.success(
             request,
@@ -1193,6 +1322,115 @@ def customer_deposit(request):
         'customer_groups': build_groups(),
         'products':        Product.objects.all(),
     })
+# @login_required
+# def customer_deposit(request):
+
+#     role = get_user_role(request.user)
+#     if role == 'stockmanager':
+#         messages.error(request, 'You are not authorized to access customer deposits.')
+#         return redirect('/dashboard/stockmanager/')
+
+#     def build_groups():
+#         """Return deposits grouped by customer with aggregated totals."""
+#         all_deposits = CustomerDeposit.objects.select_related(
+#             'customer', 'product'
+#         ).order_by('customer__full_name', '-date')
+
+#         grouped = defaultdict(list)
+#         for d in all_deposits:
+#             grouped[d.customer].append(d)
+
+#         customer_groups = []
+#         for customer, dep_list in grouped.items():
+#             total_deposited   = sum(d.amount_deposited   for d in dep_list)
+#             total_paid_pickup = sum(d.amount_paid_on_pickup for d in dep_list)
+#             customer_groups.append({
+#                 'customer':          customer,
+#                 'deposits':          dep_list,
+#                 'total_deposited':   total_deposited,
+#                 'total_paid_pickup': total_paid_pickup,
+#                 'remaining':         total_deposited - total_paid_pickup,
+#                 'total_units':       sum(d.units_equivalent for d in dep_list),
+#             })
+#         return customer_groups
+
+#     if request.method == 'POST':
+#         nin            = request.POST.get('nin', '').strip()
+#         product_id     = request.POST.get('product_id', '')
+#         amount_raw     = request.POST.get('amount_deposited', '')
+#         payment_method = request.POST.get('payment_method', 'cash')
+#         payment_date   = request.POST.get('payment_date', '')
+#         quantity_raw   = request.POST.get('quantity', '0') or '0'
+#         payment_date = payment_date.strip()  # Remove extra whitespace
+
+#         errors    = {}
+#         form_data = {
+#             'nin': nin, 'product_id': product_id, 'amount_deposited': amount_raw,
+#             'payment_method': payment_method, 'payment_date': payment_date, 'quantity': quantity_raw,
+#         }
+
+
+
+#         # Resolve customer by NIN — raises a field error if not found
+#         if not nin:
+#             errors['nin'] = 'Customer NIN is required.'
+#         else:
+#             try:
+#                 customer = Customer.objects.get(NIN=nin)
+#             except Customer.DoesNotExist:
+#                 errors['nin'] = f'No customer found with NIN {nin}.'
+
+#         if not product_id:
+#             errors['product_id'] = 'Please select a product.'
+
+#         # amount_deposited, err = parse_positive_decimal(amount_raw, 'Deposit amount')
+#         # if err: errors['amount_deposited'] = err
+
+#         if not amount_raw:
+#             errors['amount_deposited'] = 'Deposit amount is required.'
+#         else:
+#             amount_deposited, err = parse_positive_decimal(amount_raw, 'Deposit amount')
+#             if err: errors['amount_deposited'] = err
+
+#         # min_value=0: a deposit can be for tracking purposes with no unit reservation
+#         quantity, err = parse_positive_int(quantity_raw, 'Quantity', min_value=0)
+#         if err: errors['quantity'] = err
+
+#         if errors:
+#             return render(request, 'customer_deposit.html', {
+#                 'customer_groups': build_groups(),
+#                 'products':        Product.objects.all(),
+#                 'errors':          errors,
+#                 'form_data':       form_data,
+#             })
+            
+
+#         product = get_object_or_404(Product, id=product_id)
+#         deposit = CustomerDeposit.objects.create(
+#             customer=customer,
+#             product=product,
+#             amount_deposited=amount_deposited,
+#             unit_price=product.unit_price,
+#             quantity=quantity,
+#             payment_method=payment_method,
+#             date=payment_date if payment_date else timezone.now().date()
+#         )
+
+#         # Only override the auto-set date when the user explicitly provides one
+#         if payment_date:
+#             deposit.date = payment_date
+#             deposit.save()
+
+#         messages.success(
+#             request,
+#             f'Deposit of UGX {int(amount_deposited):,} recorded for {customer.full_name}!'
+#         )
+#         return redirect('customer_deposit')
+
+#     return render(request, 'customer_deposit.html', {
+#         'customer_groups': build_groups(),
+#         'products':        Product.objects.all(),
+#     })
 
 
 @login_required

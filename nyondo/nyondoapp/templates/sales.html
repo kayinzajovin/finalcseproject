@@ -258,11 +258,20 @@
             </div>
 
             <!-- Sale Date -->
-            <div>
+            {% comment %} <div>
               <label>Sale Date</label>
               <input type="date" name="sale_date"
                 value="{{ form_data.sale_date|default:'' }}" />
-            </div>
+            </div> {% endcomment %}
+            <div>
+  <label>Sale Date</label>
+  <input type="date" name="date"
+  value="{{ form_data.date|default:'' }}"
+  class="{% if errors.date %}field-error{% endif %}" />
+{% if errors.date %}
+  <span class="error-msg"><i class="fa-solid fa-triangle-exclamation"></i> {{ errors.date }}</span>
+{% endif %}
+</div>
 
             <!-- Delivery Distance -->
             <div>

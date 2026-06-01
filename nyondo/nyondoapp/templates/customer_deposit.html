@@ -618,12 +618,18 @@ tr:hover td {
                 readonly />
             </div>
 
-            <!-- Payment Date -->
-            <div>
-              <label>Payment Date</label>
-              <input type="date" name="payment_date"
-                value="{{ form_data.payment_date|default:'' }}" />
-            </div>
+          
+          <!-- Payment Date -->
+<!-- Payment Date -->
+<div>
+  <label>Payment Date</label>
+  <input type="date" name="payment_date"
+    value="{{ form_data.payment_date|default:'' }}"
+    class="{% if errors.payment_date %}input-error{% endif %}" />
+  {% if errors.payment_date %}
+    <span class="field-error"><i class="fa-solid fa-triangle-exclamation"></i> {{ errors.payment_date }}</span>
+  {% endif %}
+</div>
 
             <!-- Payment Method -->
             <div>
