@@ -6,152 +6,445 @@
     <title>Sales — NYONDO Hardware</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-+0r6rrwMZceTYFygJXRL7Hhdhsq6TOcKPEbb9Rwzc2b4EkJmO+iSWoZVata3u0G3UcNYI9dZe4UfgZ7HU5a3HQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
-      * { box-sizing: border-box; margin: 0; padding: 0; font-family: Georgia, serif; }
-      body { background: #f4f6f8; color: #1f2937; }
+    /*
+   RESET & GLOBAL STYLES
+*/
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Georgia, serif;
+}
 
-      /* ── SIDEBAR ── */
-      .sidebar {
-        position: fixed; left: 0; top: 0; width: 240px; height: 100vh;
-        background: #1f2937; color: #fff; padding: 25px 20px; overflow-y: auto;
-      }
-      .logo-box {
-        width: 55px; height: 55px; background: #f59e0b; color: #1f2937;
-        border-radius: 10px; display: flex; align-items: center;
-        justify-content: center; font-size: 28px; font-weight: bold; margin: 0 auto 10px;
-      }
-      .sidebar h2 { text-align: center; font-size: 17px; margin-bottom: 4px; }
-      .sidebar p.tagline {
-        text-align: center; font-size: 12px; color: #94a3b8;
-        font-style: italic; margin-bottom: 30px;
-      }
-      .role-badge {
-        display: block; text-align: center; background: #f59e0b; color: #1f2937;
-        font-size: 11px; font-weight: bold; padding: 3px 10px; border-radius: 20px;
-        margin: 0 auto 20px; width: fit-content; letter-spacing: 1px; text-transform: uppercase;
-      }
-      .menu a {
-        display: block; color: #cbd5e1; text-decoration: none;
-        padding: 11px 12px; border-radius: 8px; font-size: 15px; margin-bottom: 4px; cursor: pointer;
-      }
-      .menu a:hover { background: #374151; color: #fff; }
-      .menu a.active { background: #f59e0b; color: #1f2937; font-weight: bold; }
+body {
+    background: #f4f6f8;
+    color: #1f2937;
+}
 
-      /* ── MAIN ── */
-      .main { margin-left: 240px; padding: 35px 40px; }
-      .page-title {
-        font-size: 22px; font-weight: bold;
-        border-left: 5px solid #f59e0b; padding-left: 12px; margin-bottom: 25px;
-      }
+/*
+   SIDEBAR
+*/
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 240px;
+    height: 100vh;
+    padding: 25px 20px;
+    background: #1f2937;
+    color: #fff;
+    overflow-y: auto;
+}
 
-      /* ── PAGE-LEVEL ALERTS (success / auth errors only) ── */
-      .alert-success {
-        background: #dcfce7; color: #166534; padding: 12px 16px;
-        border-radius: 8px; margin-bottom: 20px; font-weight: bold; font-size: 14px;
-      }
-      .alert-error {
-        background: #fee2e2; color: #991b1b; padding: 12px 16px;
-        border-radius: 8px; margin-bottom: 20px; font-weight: bold; font-size: 14px;
-      }
+.logo-box {
+    width: 55px;
+    height: 55px;
+    margin: 0 auto 10px;
+    background: #f59e0b;
+    color: #1f2937;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    font-weight: bold;
+}
 
-      /* ── FORM CARD ── */
-      .form-card {
-        background: #fff; border-radius: 12px; padding: 30px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 35px;
-      }
-      .form-card h3 {
-        font-size: 16px; color: #f59e0b;
-        border-bottom: 1px solid #e5e7eb; padding-bottom: 10px; margin-bottom: 20px;
-      }
-      .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.sidebar h2 {
+    text-align: center;
+    font-size: 17px;
+    margin-bottom: 4px;
+}
 
-      label { display: block; font-size: 13px; font-weight: bold; margin-bottom: 6px; color: #374151; }
+.sidebar p.tagline {
+    text-align: center;
+    font-size: 12px;
+    color: #94a3b8;
+    font-style: italic;
+    margin-bottom: 30px;
+}
 
-      input, select {
-        width: 100%; padding: 11px 13px; border: 1.5px solid #d1d5db;
-        border-radius: 8px; font-size: 14px; outline: none;
-      }
-      input:focus, select:focus { border-color: #f59e0b; }
+.role-badge {
+    display: block;
+    width: fit-content;
+    margin: 0 auto 20px;
+    padding: 3px 10px;
+    background: #f59e0b;
+    color: #1f2937;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
 
-      /* ── INLINE VALIDATION — same as stock.html ── */
-      .field-error { border-color: #dc2626 !important; }
-      .error-msg { color: #dc2626; font-size: 12px; margin-top: 5px; display: block; }
+/* Navigation Menu */
+.menu a {
+    display: block;
+    padding: 11px 12px;
+    margin-bottom: 4px;
+    color: #cbd5e1;
+    text-decoration: none;
+    font-size: 15px;
+    border-radius: 8px;
+    cursor: pointer;
+}
 
-      /* transport note */
-      .transport-note {
-        margin-top: 18px; background: #fff7ed;
-        border-left: 4px solid #f59e0b; padding: 12px 16px;
-        border-radius: 8px; font-size: 14px; color: #1f2937;
-      }
+.menu a:hover {
+    background: #374151;
+    color: #fff;
+}
 
-      /* order total */
-      .total-box {
-        margin-top: 18px; background: #1f2937; color: #ffffff;
-        padding: 16px 20px; border-radius: 10px; font-size: 16px;
-      }
-      .total-box span { color: #f59e0b; font-size: 20px; font-weight: bold; }
+.menu a.active {
+    background: #f59e0b;
+    color: #1f2937;
+    font-weight: bold;
+}
 
-      .btn-submit {
-        margin-top: 20px; background: #f59e0b; color: #1f2937;
-        padding: 13px 30px; border: none; border-radius: 8px;
-        font-size: 15px; font-weight: bold; cursor: pointer;
-      }
-      .btn-submit:hover { background: #1f2937; color: #f59e0b; }
+/*
+   MAIN CONTENT
+*/
+.main {
+    margin-left: 240px;
+    padding: 35px 40px;
+}
 
-      /* ── TABLE ── */
-      .table-section {
-        background: #fff; border-radius: 12px; padding: 25px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-      }
-      .table-section h3 {
-        font-size: 16px; margin-bottom: 18px;
-        border-left: 4px solid #f59e0b; padding-left: 10px;
-      }
-      table { width: 100%; border-collapse: collapse; font-size: 14px; }
-      th { background: #1f2937; color: #f59e0b; padding: 12px 14px; text-align: left; font-size: 13px; }
-      td { padding: 11px 14px; border-bottom: 1px solid #e5e7eb; color: #374151; }
-      tr:hover td { background: #fff7ed; }
+.page-title {
+    margin-bottom: 25px;
+    padding-left: 12px;
+    border-left: 5px solid #f59e0b;
+    font-size: 22px;
+    font-weight: bold;
+}
 
-      .btn-edit {
-        background: #1f2937; color: #f59e0b; padding: 5px 10px; border-radius: 6px;
-        font-size: 9px; font-weight: bold; text-decoration: none; display: flex;
-        margin-right: 5px; align-items: center; gap: 8px; margin-bottom: 3px; margin-top: 3px;
-      }
-      .btn-edit:hover { background: #f59e0b; color: #1f2937; }
-      .btn-delete {
-        background: #fee2e2; color: #991b1b; padding: 5px 10px; border-radius: 6px;
-        font-size: 9px; font-weight: bold; text-decoration: none; display: flex;
-        align-items: center; gap: 8px; margin-bottom: 3px; margin-top: 3px;
-      }
-      .btn-delete:hover { background: #dc2626; color: #fff; }
-      .btn-print {
-        background: #1f2937; color: #f59e0b; padding: 5px 10px; border-radius: 6px;
-        font-size: 9px; font-weight: bold; text-decoration: none; display: flex;
-        margin-left: 2px; align-items: center; gap: 8px; margin-bottom: 3px; margin-top: 3px;
-      }
-      .btn-print:hover { background: #f59e0b; color: #1f2937; }
+/*
+   ALERT MESSAGES
+*/
+.alert-success,
+.alert-error {
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: bold;
+}
 
-      /* ── RESPONSIVE ── */
-      @media (max-width: 992px) {
-        .main { padding: 25px; }
-        .form-grid { grid-template-columns: 1fr; }
-        table { font-size: 13px; }
-        .btn-edit, .btn-delete, .btn-print { font-size: 10px; padding: 6px 8px; }
-      }
-      @media (max-width: 600px) {
-        .sidebar { width: 100%; height: auto; position: relative; padding: 15px; text-align: center; }
-        .menu { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
-        .menu a { margin-bottom: 0; font-size: 13px; padding: 8px 10px; }
-        .main { margin-left: 0; padding: 15px; }
-        .page-title { font-size: 18px; }
-        .form-card { padding: 18px; }
-        .form-grid { grid-template-columns: 1fr; gap: 12px; }
-        .table-section { overflow-x: auto; }
-        table { min-width: 700px; }
-        th, td { font-size: 12px; padding: 8px; }
-        td:last-child { display: flex; flex-direction: column; gap: 6px; }
-        .btn-edit, .btn-delete, .btn-print { width: 100%; justify-content: center; font-size: 11px; }
-        .total-box { font-size: 14px; }
-      }
+.alert-success {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.alert-error {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+/*
+   FORM CARD
+*/
+.form-card {
+    background: #fff;
+    padding: 30px;
+    margin-bottom: 35px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.form-card h3 {
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e5e7eb;
+    color: #f59e0b;
+    font-size: 16px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+}
+
+/*
+   FORM ELEMENTS
+*/
+label {
+    display: block;
+    margin-bottom: 6px;
+    color: #374151;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+input,
+select {
+    width: 100%;
+    padding: 11px 13px;
+    border: 1.5px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+}
+
+input:focus,
+select:focus {
+    border-color: #f59e0b;
+}
+
+/*
+   INLINE VALIDATION
+*/
+.field-error {
+    border-color: #dc2626 !important;
+}
+
+.error-msg {
+    display: block;
+    margin-top: 5px;
+    color: #dc2626;
+    font-size: 12px;
+}
+
+/*
+   TRANSPORT NOTE
+*/
+.transport-note {
+    margin-top: 18px;
+    padding: 12px 16px;
+    background: #fff7ed;
+    border-left: 4px solid #f59e0b;
+    border-radius: 8px;
+    color: #1f2937;
+    font-size: 14px;
+}
+
+/*
+   ORDER TOTAL BOX
+*/
+.total-box {
+    margin-top: 18px;
+    padding: 16px 20px;
+    background: #1f2937;
+    color: #ffffff;
+    border-radius: 10px;
+    font-size: 16px;
+}
+
+.total-box span {
+    color: #f59e0b;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+/*
+   BUTTONS
+*/
+.btn-submit {
+    margin-top: 20px;
+    padding: 13px 30px;
+    background: #f59e0b;
+    color: #1f2937;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn-submit:hover {
+    background: #1f2937;
+    color: #f59e0b;
+}
+
+/*
+   TABLE SECTION
+*/
+.table-section {
+    background: #fff;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.table-section h3 {
+    margin-bottom: 18px;
+    padding-left: 10px;
+    border-left: 4px solid #f59e0b;
+    font-size: 16px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+th {
+    padding: 12px 14px;
+    background: #1f2937;
+    color: #f59e0b;
+    text-align: left;
+    font-size: 13px;
+}
+
+td {
+    padding: 11px 14px;
+    border-bottom: 1px solid #e5e7eb;
+    color: #374151;
+}
+
+tr:hover td {
+    background: #fff7ed;
+}
+
+/*
+   ACTION BUTTONS
+*/
+.btn-edit,
+.btn-delete,
+.btn-print {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 10px;
+    margin-top: 3px;
+    margin-bottom: 3px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 9px;
+    font-weight: bold;
+}
+
+.btn-edit {
+    background: #1f2937;
+    color: #f59e0b;
+    margin-right: 5px;
+}
+
+.btn-edit:hover {
+    background: #f59e0b;
+    color: #1f2937;
+}
+
+.btn-delete {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.btn-delete:hover {
+    background: #dc2626;
+    color: #fff;
+}
+
+.btn-print {
+    background: #1f2937;
+    color: #f59e0b;
+    margin-left: 2px;
+}
+
+.btn-print:hover {
+    background: #f59e0b;
+    color: #1f2937;
+}
+
+/*
+   TABLET RESPONSIVENESS
+*/
+@media (max-width: 992px) {
+    .main {
+        padding: 25px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    table {
+        font-size: 13px;
+    }
+
+    .btn-edit,
+    .btn-delete,
+    .btn-print {
+        padding: 6px 8px;
+        font-size: 10px;
+    }
+}
+
+/*
+   MOBILE RESPONSIVENESS
+*/
+@media (max-width: 600px) {
+    .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+        padding: 15px;
+        text-align: center;
+    }
+
+    .menu {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 6px;
+    }
+
+    .menu a {
+        margin-bottom: 0;
+        padding: 8px 10px;
+        font-size: 13px;
+    }
+
+    .main {
+        margin-left: 0;
+        padding: 15px;
+    }
+
+    .page-title {
+        font-size: 18px;
+    }
+
+    .form-card {
+        padding: 18px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .table-section {
+        overflow-x: auto;
+    }
+
+    table {
+        min-width: 700px;
+    }
+
+    th,
+    td {
+        padding: 8px;
+        font-size: 12px;
+    }
+
+    td:last-child {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .btn-edit,
+    .btn-delete,
+    .btn-print {
+        width: 100%;
+        justify-content: center;
+        font-size: 11px;
+    }
+
+    .total-box {
+        font-size: 14px;
+    }
+}
     </style>
   </head>
   <body>

@@ -292,13 +292,13 @@
   </head>
   <body>
 
-    <!-- ═══════════════════════════ SIDEBAR ═══════════════════════════ -->
+    <!-- SIDEBAR -->
     <div class="sidebar">
       <div class="logo-box">N</div>
       <h2>NYONDO</h2>
       <p class="tagline">Hardware Management System</p>
       <div class="menu">
-        <a onclick="window.location.href = '/'">🏠 Home</a>
+        <a onclick="window.location.href = '/'"> Home</a>
         <a onclick="window.location.href = '/dashboard/admin/'"><i class="fa-solid fa-chart-pie"></i> Dashboard</a>
         <a onclick="window.location.href = '/stock/'"><i class="fa-solid fa-box"></i> Stock</a>
         <a onclick="window.location.href = '/sales/'"><i class="fa-solid fa-coins"></i> Sales</a>
@@ -307,11 +307,11 @@
         </a>
         <a onclick="window.location.href = '/customer_deposit/'"><i class="fa-solid fa-credit-card"></i> Customer Deposit</a>
         <a onclick="window.location.href = '/supplier_credit/'"><i class="fa-solid fa-truck"></i> Supplier Credit</a>
-        <a onclick="window.location.href = '/login/'">🚪 Logout</a>
+        <a onclick="window.location.href = '/login/'"> Logout</a>
       </div>
     </div>
 
-    <!-- ═══════════════════════════ MAIN ═══════════════════════════ -->
+    <!-- MAIN -->
     <div class="main">
       <div class="page-title"><i class="fa-solid fa-users"></i> Customer Registration</div>
 
@@ -333,7 +333,7 @@
         program. Customer names must match their <strong>National ID (NIN)</strong> exactly.
       </div>
 
-      <!-- ─── REGISTRATION FORM ─── -->
+      <!--  REGISTRATION FORM  -->
       <div class="form-card">
         <h3>+ New Customer Registration</h3>
 
@@ -364,7 +364,7 @@
               <input
                 type="text"
                 name="NIN"
-                placeholder="e.g. CM20100012345678"
+                placeholder="e.g. CM201000123458"
                 maxlength="20"
                 value="{{ form_data.NIN|default:'' }}"
                 class="{% if errors.NIN %}input-error{% endif %}"
@@ -478,7 +478,7 @@
         </form>
       </div><!-- /form-card -->
 
-      <!-- ─── REGISTERED CUSTOMERS TABLE ─── -->
+      <!--  REGISTERED CUSTOMERS TABLE  -->
       <div class="table-section">
         <h3>Registered Scheme Members</h3>
         <table>

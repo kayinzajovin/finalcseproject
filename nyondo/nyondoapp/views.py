@@ -4,20 +4,50 @@
 # Handles all HTTP request/response logic for: authentication, role-based dashboards,
 # stock management, sales, suppliers, customers, and customer deposits.
 
+# Import the context module from Python's multiprocessing package
 from multiprocessing import context
 
+# Import Django shortcuts used to render pages, redirect users, and fetch objects safely
 from django.shortcuts import render, redirect, get_object_or_404
+
+# Import functions used for user authentication (login verification)
 from django.contrib.auth import authenticate, login, logout
+
+# Import decorator that restricts views to logged-in users only
 from django.contrib.auth.decorators import login_required
+
+# Import Django's messaging framework for displaying success, error, and warning messages
 from django.contrib import messages
+
+# Import Django timezone utilities for working with dates and times
 from django.utils import timezone
+
+# Import wraps decorator used when creating custom decorators
 from functools import wraps
+
+# Import Decimal for accurate money calculations and InvalidOperation for handling decimal errors
 from decimal import Decimal, InvalidOperation
+
+# Import defaultdict, a dictionary that automatically creates default values
 from collections import defaultdict
+
+# Import Python's regular expression module for pattern matching and validation
 import re
 
-from .models import Product, Supplier, Sale, CustomerDeposit, StockArrival, Customer
+# Import application models used to interact with database tables
+from .models import (
+    Product,          # Stores product information
+    Supplier,         # Stores supplier information
+    Sale,             # Stores sales records
+    CustomerDeposit,  # Stores customer deposit records
+    StockArrival,     # Stores stock arrival records
+    Customer          # Stores customer information
+)
+
+# Import HttpResponse for returning custom HTTP responses
 from django.http import HttpResponse
+
+# Import render_to_string to convert HTML templates into text strings
 from django.template.loader import render_to_string
 
 
@@ -129,7 +159,10 @@ def allowed_roles(roles, message=None):
         message: Optional flash error shown to the redirected user.
     """
     def decorator(view_func):
+        #@wraps is to preserve information about the original function when you decorate it.
         @wraps(view_func)
+        #allows a function to accept any number of named arguments.
+        # This is necessary because different views have different URL parameters (e.g. pk for edits).
         def _wrapped(request, *args, **kwargs):
             role    = get_user_role(request.user)
             allowed = set(roles) if isinstance(roles, (list, tuple, set)) else {roles}
@@ -146,6 +179,7 @@ def allowed_roles(roles, message=None):
                     return redirect('/dashboard/salesperson/')
                 return redirect('/dashboard/admin/')
 
+# If all checks pass, call the original view and pass along the request and any arguments
             return view_func(request, *args, **kwargs)
         return _wrapped
     return decorator
@@ -252,7 +286,7 @@ def dashboard_admin(request):
     sales_today_total = sum(s.total_price for s in sales_today)
     sales_today_count = sales_today.count()
 
-    #  Monthly financial summary ─
+    #  Monthly financial summary 
     sales_month   = Sale.objects.filter(date__month=this_month, date__year=this_year)
     revenue_month = sum(s.total_price for s in sales_month)
     # Cost basis: current buying price × quantity sold (not historical cost)
@@ -263,7 +297,7 @@ def dashboard_admin(request):
     deposit_members = Customer.objects.count()
     pending_pickups = CustomerDeposit.objects.filter(status='ready_pickup').count()
 
-    #  Supplier credit ─
+    #  Supplier credit 
     suppliers             = Supplier.objects.all()
     supplier_credit_total = sum(s.credit_amount for s in suppliers)
     supplier_count        = suppliers.count()
@@ -305,13 +339,13 @@ def dashboard_salesperson(request):
 
     today = timezone.now().date()
 
-    #  Today's sales summary ─
+    #  Today's sales summary 
     sales_today       = Sale.objects.filter(date__date=today)
     sales_today_total = sum(s.total_price for s in sales_today)
     sales_today_count = sales_today.count()
     transport_today   = sum(s.transport_fee for s in sales_today)
 
-    #  Today's deposit summary ─
+    #  Today's deposit summary 
     deposits_today       = CustomerDeposit.objects.filter(date=today)
     deposits_today_total = sum(d.amount_deposited for d in deposits_today)
     deposits_today_count = deposits_today.count()
@@ -364,17 +398,17 @@ def dashboard_stockmanager(request):
     low_stock_count = Product.objects.filter(quantity__gte=5, quantity__lt=10).count()
     well_stocked    = Product.objects.filter(quantity__gte=10).count()
 
-    #  Inventory valuation ─
+    #  Inventory valuation 
     # The difference between sell value and cost value is the potential gross margin
     # locked in current inventory — useful for cash-flow awareness.
     stock_cost_value = sum(p.unit_cost  * p.quantity for p in products)
     stock_sell_value = sum(p.unit_price * p.quantity for p in products)
 
-    #  Supplier credit ─
+    #  Supplier credit 
     supplier_credit_total = sum(s.credit_amount for s in suppliers)
     supplier_count        = suppliers.count()
 
-    #  Recent arrivals ─
+    #  Recent arrivals 
     recent_arrivals    = StockArrival.objects.order_by('-date')[:5]
     week_ago           = timezone.now() - timezone.timedelta(days=7)
     arrivals_this_week = StockArrival.objects.filter(date__gte=week_ago).count()
@@ -457,7 +491,7 @@ def stock(request):
         unit_price, err = parse_positive_decimal(unit_price_raw, 'Unit price')
         if err: errors['unit_price'] = err
 
-        #  Cross-field validation: selling price must cover buying price ─
+        #  Cross-field validation: selling price must cover buying price 
         # Only runs when both fields individually parsed without error
         if not errors.get('unit_cost') and not errors.get('unit_price') and unit_price and unit_cost:
             if unit_price < unit_cost:
@@ -857,7 +891,7 @@ def supplier_credit(request):
         messages.success(request, f'Supplier {name} credit saved!')
         return redirect('supplier_credit')
 
-    # Summary stats for the GET view───────
+    # Summary stats for the GET view
     total_credit        = sum(s.credit_amount for s in suppliers)
     supplier_count      = suppliers.count()
     suppliers_with_debt = suppliers.filter(credit_amount__gt=0).count()
@@ -931,10 +965,12 @@ def supplier_edit(request, pk):
 def supplier_delete(request, pk):
     """Permanently remove a supplier record."""
     role = get_user_role(request.user)
+    # Salespersons are blocked from all supplier management, including deletion.
     if role == 'salesperson':
         messages.error(request, 'You are not authorized to delete suppliers.')
         return redirect('/dashboard/salesperson/')
 
+# Deleting a supplier will cascade-delete related StockArrivals depending on model FK settings.
     supplier = get_object_or_404(Supplier, id=pk)
     name = supplier.name
     supplier.delete()
@@ -943,120 +979,18 @@ def supplier_delete(request, pk):
 
 
 
-# CUSTOMERS
-# Register and manage deposit-scheme members.
-# Stock managers are blocked; admins and salespersons have full access.
-# NIN uniqueness is enforced to prevent duplicate registrations.
-
-
-# @login_required
-# def customer_registration(request):
-#     """
-#     List registered customers and handle new registrations.
-
-#     Validation enforces:
-#     - Ugandan NIN format (14 alphanumeric chars).
-#     - Uniqueness of NIN across all customers.
-#     - Valid Ugandan mobile phone number.
-#     - Employer/workplace is required (scheme is for salary earners only).
-#     - Preferred product must be selected.
-#     - Physical address is required.
-#     """
-#     role = get_user_role(request.user)
-#     if role == 'stockmanager':
-#         messages.error(request, 'You are not authorized to access customer registration.')
-#         return redirect('/dashboard/stockmanager/')
-
-#     customers = Customer.objects.all()
-
-#     if request.method == 'POST':
-#         full_name         = request.POST.get('full_name', '').strip()
-#         NIN               = request.POST.get('NIN', '').strip().upper()
-#         phone             = request.POST.get('phone', '').strip()
-#         employer          = request.POST.get('employer', '').strip()
-#         address           = request.POST.get('address', '').strip()
-#         preferred_product = request.POST.get('preferred_product', '').strip()
-#         sale_date_raw     = request.POST.get('date', '').strip()
-
-#         errors    = {}
-#         form_data = {
-#             'full_name': full_name, 'NIN': NIN, 'phone': phone,
-#             'employer': employer, 'address': address, 'preferred_product': preferred_product, 'date': sale_date_raw,
-#         }
-
-#         if not full_name:
-#             errors['full_name'] = 'Full name is required.'
-
-#         # NIN: required, correct format, and not already in use
-#         if not NIN:
-#             errors['NIN'] = 'NIN is required.'
-#         elif not is_valid_nin(NIN):
-#             errors['NIN'] = 'Invalid NIN. Expected 14 alphanumeric characters e.g. CM20100012345678.'
-#         elif Customer.objects.filter(NIN=NIN).exists():
-#             errors['NIN'] = f'A customer with NIN {NIN} is already registered.'
-
-#         # Phone: required and must match Uganda mobile format
-#         if not phone:
-#             errors['phone'] = 'Phone number is required.'
-#         elif not is_valid_ugandan_phone(phone):
-#             errors['phone'] = 'Enter a valid Ugandan phone number e.g. 0712345678.'
-
-#         # Employer: required — the deposit scheme is for salary earners only
-#         if not employer:
-#             errors['employer'] = 'Employer / workplace is required.'
-
-#         # Preferred product: required — must know what the customer is saving toward
-#         if not preferred_product:
-#             errors['preferred_product'] = 'Please select a preferred product.'
-
-#         # Address: required for delivery and identity verification purposes
-#         if not address:
-#             errors['address'] = 'Physical address is required.'
-
-#         if errors:
-#             return render(request, 'customer_registration.html', {
-#                 'customers': customers, 'errors': errors, 'form_data': form_data,
-#             })
-        
-
-#         if not address:
-#             errors['address'] = 'Physical address is required.'
-
-#         reg_date = timezone.now().date()  
-#         if not sale_date_raw:
-#             errors['date'] = 'Registration date is required.'
-#         else:
-#             try:
-#                 reg_date = timezone.datetime.strptime(sale_date_raw, '%Y-%m-%d').date()
-#                 if reg_date > timezone.now().date():
-#                     errors['date'] = 'Registration date cannot be in the future.'
-#             except ValueError:
-#                 errors['date'] = 'Invalid date format.'
-
-#         if errors:   
-#             return render(request, 'customer_registration.html', {
-#                 'customers': customers, 'errors': errors, 'form_data': form_data,
-#             })
-        
-
-#         Customer.objects.create(
-#             full_name=full_name, NIN=NIN, phone=phone,
-#             employer=employer, address=address, preferred_product=preferred_product, registration_date=reg_date, 
-#         )
-#         messages.success(request, f'{full_name} registered successfully!')
-#         return redirect('customer_registration')
-
-#     return render(request, 'customer_registration.html', {'customers': customers})
 
 @login_required
 def customer_registration(request):
     role = get_user_role(request.user)
+    # Salespersons and stock managers are blocked from customer registration, as this is an admin-only function.
     if role == 'stockmanager':
         messages.error(request, 'You are not authorized to access customer registration.')
         return redirect('/dashboard/stockmanager/')
 
     customers = Customer.objects.all()
 
+# The registration form is intentionally simple to minimize barriers to signing up new customers.
     if request.method == 'POST':
         full_name         = request.POST.get('full_name', '').strip()
         NIN               = request.POST.get('NIN', '').strip().upper()
@@ -1322,127 +1256,12 @@ def customer_deposit(request):
         'customer_groups': build_groups(),
         'products':        Product.objects.all(),
     })
-# @login_required
-# def customer_deposit(request):
 
-#     role = get_user_role(request.user)
-#     if role == 'stockmanager':
-#         messages.error(request, 'You are not authorized to access customer deposits.')
-#         return redirect('/dashboard/stockmanager/')
-
-#     def build_groups():
-#         """Return deposits grouped by customer with aggregated totals."""
-#         all_deposits = CustomerDeposit.objects.select_related(
-#             'customer', 'product'
-#         ).order_by('customer__full_name', '-date')
-
-#         grouped = defaultdict(list)
-#         for d in all_deposits:
-#             grouped[d.customer].append(d)
-
-#         customer_groups = []
-#         for customer, dep_list in grouped.items():
-#             total_deposited   = sum(d.amount_deposited   for d in dep_list)
-#             total_paid_pickup = sum(d.amount_paid_on_pickup for d in dep_list)
-#             customer_groups.append({
-#                 'customer':          customer,
-#                 'deposits':          dep_list,
-#                 'total_deposited':   total_deposited,
-#                 'total_paid_pickup': total_paid_pickup,
-#                 'remaining':         total_deposited - total_paid_pickup,
-#                 'total_units':       sum(d.units_equivalent for d in dep_list),
-#             })
-#         return customer_groups
-
-#     if request.method == 'POST':
-#         nin            = request.POST.get('nin', '').strip()
-#         product_id     = request.POST.get('product_id', '')
-#         amount_raw     = request.POST.get('amount_deposited', '')
-#         payment_method = request.POST.get('payment_method', 'cash')
-#         payment_date   = request.POST.get('payment_date', '')
-#         quantity_raw   = request.POST.get('quantity', '0') or '0'
-#         payment_date = payment_date.strip()  # Remove extra whitespace
-
-#         errors    = {}
-#         form_data = {
-#             'nin': nin, 'product_id': product_id, 'amount_deposited': amount_raw,
-#             'payment_method': payment_method, 'payment_date': payment_date, 'quantity': quantity_raw,
-#         }
-
-
-
-#         # Resolve customer by NIN — raises a field error if not found
-#         if not nin:
-#             errors['nin'] = 'Customer NIN is required.'
-#         else:
-#             try:
-#                 customer = Customer.objects.get(NIN=nin)
-#             except Customer.DoesNotExist:
-#                 errors['nin'] = f'No customer found with NIN {nin}.'
-
-#         if not product_id:
-#             errors['product_id'] = 'Please select a product.'
-
-#         # amount_deposited, err = parse_positive_decimal(amount_raw, 'Deposit amount')
-#         # if err: errors['amount_deposited'] = err
-
-#         if not amount_raw:
-#             errors['amount_deposited'] = 'Deposit amount is required.'
-#         else:
-#             amount_deposited, err = parse_positive_decimal(amount_raw, 'Deposit amount')
-#             if err: errors['amount_deposited'] = err
-
-#         # min_value=0: a deposit can be for tracking purposes with no unit reservation
-#         quantity, err = parse_positive_int(quantity_raw, 'Quantity', min_value=0)
-#         if err: errors['quantity'] = err
-
-#         if errors:
-#             return render(request, 'customer_deposit.html', {
-#                 'customer_groups': build_groups(),
-#                 'products':        Product.objects.all(),
-#                 'errors':          errors,
-#                 'form_data':       form_data,
-#             })
-            
-
-#         product = get_object_or_404(Product, id=product_id)
-#         deposit = CustomerDeposit.objects.create(
-#             customer=customer,
-#             product=product,
-#             amount_deposited=amount_deposited,
-#             unit_price=product.unit_price,
-#             quantity=quantity,
-#             payment_method=payment_method,
-#             date=payment_date if payment_date else timezone.now().date()
-#         )
-
-#         # Only override the auto-set date when the user explicitly provides one
-#         if payment_date:
-#             deposit.date = payment_date
-#             deposit.save()
-
-#         messages.success(
-#             request,
-#             f'Deposit of UGX {int(amount_deposited):,} recorded for {customer.full_name}!'
-#         )
-#         return redirect('customer_deposit')
-
-#     return render(request, 'customer_deposit.html', {
-#         'customer_groups': build_groups(),
-#         'products':        Product.objects.all(),
-#     })
 
 
 @login_required
 def deposit_edit(request, pk):
-    """
-    Edit a deposit's status, pickup payment, or quantity.
-
-    Status transitions are forward-only (active → ready_pickup → collected).
-    Attempting to revert a status is rejected with a validation error.
-    update_fields is used on save() to prevent accidentally overwriting the
-    original deposit date field.
-    """
+   
     role = get_user_role(request.user)
     if role == 'stockmanager':
         messages.error(request, 'You are not authorized to edit deposits.')
