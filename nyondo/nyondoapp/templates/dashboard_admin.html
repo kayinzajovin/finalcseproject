@@ -338,7 +338,7 @@
     <div class="sidebar">
       <div class="logo-box">N</div>
       <h2>NYONDO</h2>
-      <span class="role-badge">🔑 Admin</span>
+      <span class="role-badge"> Admin</span>
 
       <div class="menu">
         <div class="menu-label">Overview</div>
@@ -363,13 +363,8 @@
           ><i class="fa-solid fa-credit-card"></i> Customer Deposits</a
         >
 
-        <div class="menu-label">Admin</div>
-        <a onclick="window.location.href = '#'"><i class="fa-solid fa-user"></i> Manage Staff</a>
-        <a onclick="window.location.href = '#'"><i class="fa-solid fa-chart-line"></i> Reports</a>
-       
-
         <div class="menu-label">Account</div>
-        <a onclick="window.location.href = '/login/'">🚪 Logout</a>
+        <a onclick="window.location.href = '/login/'"> Logout</a>
       </div>
     </div>
 
@@ -381,32 +376,10 @@
       <div class="topbar">
         <div>
           <h1>Admin Dashboard</h1>
-          <p>Welcome back, Administrator — full system overview</p>
+          <p>Welcome back, Administrator  full system overview</p>
         </div>
         <div class="date-box" id="admin-date">Loading...</div>
       </div>
-
-      <!-- PROFIT SUMMARY -->
-      {% comment %}
-      <div class="profit-bar">
-        <div class="item">
-          <h4>Revenue This Month</h4>
-          <div class="v">UGX 18,450,000</div>
-        </div>
-        <div class="item">
-          <h4>Cost of Goods</h4>
-          <div class="v">UGX 13,200,000</div>
-        </div>
-        <div class="item">
-          <h4>Gross Profit</h4>
-          <div class="v">UGX 5,250,000</div>
-        </div>
-        <div class="item">
-          <h4>Supplier Debt</h4>
-          <div class="v">UGX 8,400,000</div>
-        </div>
-      </div>
-      {% endcomment %}
 
       <div class="profit-bar">
         <div class="item">
@@ -428,59 +401,6 @@
       </div>
 
       <!-- STAT CARDS -->
-      {% comment %}
-      <div class="cards">
-        <div class="card">
-          <div class="icon"><i class="fa-solid fa-box"></i></div>
-          <h4>Total Stock Items</h4>
-          <div class="val">250</div>
-          <div class="sub">Across all products</div>
-        </div>
-        <div class="card">
-          <div class="icon"><i class="fa-solid fa-coins"></i></div>
-          <h4>Sales Today</h4>
-          <div class="val">UGX 1,250,000</div>
-          <div class="sub">8 transactions</div>
-        </div>
-        <div class="card alert">
-          <div class="icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
-          <h4>Low Stock Items</h4>
-          <div class="val">12</div>
-          <div class="sub">Needs restocking</div>
-        </div>
-        <div class="card">
-          <div class="icon"><i class="fa-solid fa-users"></i></div>
-          <h4>Deposit Members</h4>
-          <div class="val">38</div>
-          <div class="sub">Active scheme accounts</div>
-        </div>
-        <div class="card">
-          <div class="icon"><i class="fa-solid fa-truck"></i></div>
-          <h4>Supplier Credit</h4>
-          <div class="val">UGX 8.4M</div>
-          <div class="sub">5 suppliers</div>
-        </div>
-        <div class="card">
-          <div class="icon"><i class="fa-solid fa-user"></i></div>
-          <h4>Staff Accounts</h4>
-          <div class="val">4</div>
-          <div class="sub">Active users</div>
-        </div>
-        <div class="card">
-          <div class="icon"><i class="fa-solid fa-credit-card"></i></div>
-          <h4>Pending Pickups</h4>
-          <div class="val">7</div>
-          <div class="sub">Deposit scheme orders</div>
-        </div>
-        <div class="card">
-          <div class="icon"><i class="fa-solid fa-chart-line"></i></div>
-          <h4>Monthly Sales</h4>
-          <div class="val">UGX 18.4M</div>
-          <div class="sub">June 2025</div>
-        </div>
-      </div>
-      {% endcomment %}
-
       <div class="cards">
         <div class="card">
           <div class="icon"><i class="fa-solid fa-box"></i></div>
@@ -556,49 +476,6 @@
 
       <!-- TWO COLUMN: Recent Sales + Low Stock -->
       <div class="two-col">
-        <!-- Recent Sales -->
-        {% comment %}
-        <div class="box">
-          <div class="box-title">Recent Sales</div>
-          <table>
-            <thead>
-              <tr>
-                <th>Customer</th>
-                <th>Product</th>
-                <th>Amount</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>John Mukasa</td>
-                <td>Cement CEM II</td>
-                <td>560,000</td>
-                <td><span class="b-green">Paid</span></td>
-              </tr>
-              <tr>
-                <td>Sarah Namutebi</td>
-                <td>Iron Bar 12mm</td>
-                <td>405,000</td>
-                <td><span class="b-green">Paid</span></td>
-              </tr>
-              <tr>
-                <td>Moses Kato</td>
-                <td>Iron Sheets 26G</td>
-                <td>900,000</td>
-                <td><span class="b-green">Paid</span></td>
-              </tr>
-              <tr>
-                <td>Grace Tendo</td>
-                <td>Nails 3 inch</td>
-                {% endcomment %} {% comment %}
-                <td>85,000</td>
-                <td><span class="b-green">Paid</span></td>
-              </tr>
-            </tbody>
-          </table>
-          {% endcomment %}
-
           <div class="box">
             <div class="box-title">Recent Sales</div>
             <table>
@@ -631,44 +508,6 @@
         </div>
 
         <!-- Low Stock Alert -->
-        {% comment %}
-        <div class="box">
-          <div class="box-title"><i class="fa-solid fa-triangle-exclamation"></i> Low Stock Alerts</div>
-          <table>
-            <thead>
-              <tr>
-                <th>Product</th>
-                <th>Qty Left</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Iron Bar 12mm</td>
-                <td>8 bundles</td>
-                <td><span class="b-red">Critical</span></td>
-              </tr>
-              <tr>
-                <td>Nails 3 inch</td>
-                <td>5 packs</td>
-                <td><span class="b-red">Critical</span></td>
-              </tr>
-              <tr>
-                <td>Barbed Wire (High)</td>
-                <td>12 rolls</td>
-                <td><span class="b-amber">Low</span></td>
-              </tr>
-              <tr>
-                <td>Wheelbarrow</td>
-                <td>3 pcs</td>
-                <td><span class="b-amber">Low</span></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-      {% endcomment %}
-
       <div class="box">
         <div class="box-title"><i class="fa-solid fa-triangle-exclamation"></i> Low Stock Alerts</div>
         <table>
@@ -706,47 +545,6 @@
       <br>
 
       <!-- Supplier Credit Overview -->
-      {% comment %}
-      <div class="box">
-        <div class="box-title">Supplier Credit Overview</div>
-        <table>
-          <thead>
-            <tr>
-              <th>Supplier</th>
-              <th>Product</th>
-              <th>Amount Owed</th>
-              <th>Due Date</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Hima Cement</td>
-              <td>Cement CEM II N</td>
-              <td>UGX 7,500,000</td>
-              <td>2025-06-30</td>
-              <td><span class="b-red">Unpaid</span></td>
-            </tr>
-            <tr>
-              <td>Steel & Tubes Ltd</td>
-              <td>Iron Bar 12mm</td>
-              <td>UGX 1,440,000</td>
-              <td>2025-06-15</td>
-              <td><span class="b-amber">Partial</span></td>
-            </tr>
-            <tr>
-              <td>Roofing Centre</td>
-              <td>Iron Sheets 26G</td>
-              <td>UGX 1,800,000</td>
-              <td>2025-05-20</td>
-              <td><span class="b-green">Paid</span></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-    {% endcomment %}
-
     <div class="box">
       <div class="box-title">Supplier Credit Overview</div>
       <table>

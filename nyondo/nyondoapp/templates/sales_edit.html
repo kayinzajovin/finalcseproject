@@ -216,7 +216,7 @@
       <p class="tagline">Hardware Management System</p>
       <div class="menu">
         {% if request.user.groups.all.0.name == 'admin' %}
-          <a onclick="window.location.href = '/'">🏠 Home</a>
+          <a onclick="window.location.href = '/'"> Home</a>
           <a onclick="window.location.href = '/dashboard/admin/'"><i class="fa-solid fa-chart-pie"></i> Dashboard</a>
           <a onclick="window.location.href = '/stock/'"><i class="fa-solid fa-box"></i> Stock</a>
           <a onclick="window.location.href = '/sales/'" class="active"><i class="fa-solid fa-coins"></i> Sales</a>
@@ -229,7 +229,7 @@
           <a onclick="window.location.href = '/customer_registration/'"><i class="fa-solid fa-users"></i> Register Customer</a>
           <a onclick="window.location.href = '/customer_deposit/'"><i class="fa-solid fa-credit-card"></i> Customer Deposit</a>
         {% endif %}
-        <a onclick="window.location.href = '/logout/'">🚪 Logout</a>
+        <a onclick="window.location.href = '/logout/'"> Logout</a>
       </div>
     </div>
 

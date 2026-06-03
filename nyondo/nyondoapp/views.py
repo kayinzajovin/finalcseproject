@@ -4,8 +4,7 @@
 # Handles all HTTP request/response logic for: authentication, role-based dashboards,
 # stock management, sales, suppliers, customers, and customer deposits.
 
-# Import the context module from Python's multiprocessing package
-from multiprocessing import context
+
 
 # Import Django shortcuts used to render pages, redirect users, and fetch objects safely
 from django.shortcuts import render, redirect, get_object_or_404
@@ -44,15 +43,6 @@ from .models import (
     Customer          # Stores customer information
 )
 
-# Import HttpResponse for returning custom HTTP responses
-from django.http import HttpResponse
-
-# Import render_to_string to convert HTML templates into text strings
-from django.template.loader import render_to_string
-
-
-
-
 # VALIDATION HELPERS
 # Reusable input-validation utilities shared across all views.
 # These centralise error messages and keep view logic free of boilerplate.
@@ -75,18 +65,7 @@ def is_valid_nin(nin):
 
 
 def parse_positive_decimal(value, field_name, min_value=1):
-    """
-    Safely parse `value` into a Decimal.
 
-    Args:
-        value:      Raw string from POST data.
-        field_name: Human-readable label used in error messages.
-        min_value:  Minimum acceptable value (default 1). Pass 0 to allow zero.
-
-    Returns:
-        (Decimal, None)  on success.
-        (None, str)      on failure, where str is a user-facing error message.
-    """
     try:
         result = Decimal(str(value).strip())
         if result < min_value:
@@ -97,18 +76,7 @@ def parse_positive_decimal(value, field_name, min_value=1):
 
 
 def parse_positive_int(value, field_name, min_value=1):
-    """
-    Safely parse `value` into an integer.
-
-    Args:
-        value:      Raw string from POST data.
-        field_name: Human-readable label used in error messages.
-        min_value:  Minimum acceptable value (default 1). Pass 0 to allow zero.
-
-    Returns:
-        (int, None)  on success.
-        (None, str)  on failure, where str is a user-facing error message.
-    """
+ 
     try:
         result = int(str(value).strip())
         if result < min_value:
@@ -126,12 +94,7 @@ def parse_positive_int(value, field_name, min_value=1):
 
 
 def get_user_role(user):
-    """
-    Derive the user's effective role from their Django group membership.
-    'admin' takes priority when a user belongs to multiple groups.
-
-    Returns one of: 'admin' | 'salesperson' | 'stockmanager' | None
-    """
+ 
     groups = user.groups.values_list('name', flat=True)
     if 'admin' in groups:
         return 'admin'
@@ -143,21 +106,7 @@ def get_user_role(user):
 
 
 def allowed_roles(roles, message=None):
-    """
-    View decorator factory that restricts access to users whose role is in `roles`.
-
-    Unauthorised users are redirected to their own dashboard (not a generic 403)
-    so they land somewhere useful rather than an error page.
-
-    Usage:
-        @login_required
-        @allowed_roles(['admin', 'stockmanager'], message='Access denied.')
-        def my_view(request): ...
-
-    Args:
-        roles:   A list, tuple, or set of allowed role strings.
-        message: Optional flash error shown to the redirected user.
-    """
+   
     def decorator(view_func):
         #@wraps is to preserve information about the original function when you decorate it.
         @wraps(view_func)
@@ -196,14 +145,7 @@ def index(request):
 
 
 def login_view(request):
-    """
-    Handle user authentication.
-
-    GET:  Render the login form.
-    POST: Validate credentials and redirect each role to its own dashboard.
-          If a user authenticates but has no group, they are immediately logged
-          out to prevent a broken session with no valid role.
-    """
+   
     if request.method == 'POST':
         username = request.POST.get('username', '').strip()
         password = request.POST.get('password', '')
@@ -258,14 +200,7 @@ def logout_view(request):
 
 @login_required
 def dashboard_admin(request):
-    """
-    Admin dashboard: business-wide overview.
-
-    Displays today's sales, monthly revenue/cost/gross-profit, stock health,
-    pending customer pickups, and total outstanding supplier credit.
-    Gross profit uses the product's current unit_cost as the cost basis
-    (not the historical cost at time of sale).
-    """
+  
     # Non-admins are silently sent to their own dashboard
     role = get_user_role(request.user)
     if role == 'salesperson':
@@ -325,12 +260,7 @@ def dashboard_admin(request):
 
 @login_required
 def dashboard_salesperson(request):
-    """
-    Salesperson dashboard: daily sales and deposit activity.
-
-    Shows today's sales totals, transport fees collected, deposits received,
-    pending pickups that need attention, and newly registered customers.
-    """
+   
     role = get_user_role(request.user)
     if role == 'admin':
         return redirect('/dashboard/admin/')
@@ -375,13 +305,7 @@ def dashboard_salesperson(request):
 
 @login_required
 def dashboard_stockmanager(request):
-    """
-    Stock manager dashboard: warehouse health overview.
-
-    Breaks stock into three tiers (critical < 5, low 5–9, well-stocked ≥ 10),
-    shows cost vs sell value gap (potential margin sitting in the warehouse),
-    and summarises recent stock arrivals.
-    """
+   
     role = get_user_role(request.user)
     if role == 'admin':
         return redirect('/dashboard/admin/')
@@ -440,14 +364,7 @@ def dashboard_stockmanager(request):
 
 @login_required
 def stock(request):
-    """
-    List all products and handle new stock arrivals.
-
-    GET:  Render the stock list.
-    POST: Validate and save a new product/top-up. If the product name already
-          exists, its quantity is incremented (top-up) rather than creating a
-          duplicate record. A StockArrival record is always written for audit.
-    """
+ 
     role = get_user_role(request.user)
     if role == 'salesperson':
         messages.error(request, 'You are not authorized to access stock management.')
@@ -530,12 +447,7 @@ def stock(request):
 
 @login_required
 def stock_edit(request, pk):
-    """
-    Edit an existing product's name, prices, and/or quantity.
-
-    Quantity min_value=0 is intentional: a product can be marked as out-of-stock
-    (quantity=0) without deleting the record and losing its sales history.
-    """
+  
     role = get_user_role(request.user)
     if role == 'salesperson':
         messages.error(request, 'You are not authorized to edit stock.')
@@ -593,10 +505,7 @@ def stock_edit(request, pk):
 
 @login_required
 def stock_delete(request, pk):
-    """
-    Permanently delete a product record.
-    Note: this also cascades to related Sales/StockArrivals depending on model FK settings.
-    """
+    
     role = get_user_role(request.user)
     if role == 'salesperson':
         messages.error(request, 'You are not authorized to delete stock.')
@@ -618,15 +527,7 @@ def stock_delete(request, pk):
 
 @login_required
 def sales(request):
-    """
-    List all sales and record new ones.
-
-    POST flow:
-      1. Validate product selection, quantity, and optional delivery distance.
-      2. Check that enough stock exists before committing.
-      3. Create the Sale record (Sale.save() auto-calculates transport_fee).
-      4. Decrement product.quantity to keep inventory accurate.
-    """
+   
     role     = get_user_role(request.user)
     sales_qs = Sale.objects.all().order_by('-date')
     products = Product.objects.all()
@@ -695,6 +596,7 @@ def sales(request):
             unit_price=product.unit_price,
             total_price=total_price,
             distance_km=distance,
+            date=sale_date,
         )
         product.quantity -= quantity
         product.save()
@@ -707,16 +609,7 @@ def sales(request):
 
 @login_required
 def sales_edit(request, pk):
-    """
-    Edit an existing sale record.
-
-    Stock adjustment logic:
-    - If the same product is kept: net-adjust quantity (old qty added back, new qty deducted).
-    - If the product changes: fully restore old product's stock, fully deduct from new product's stock.
-
-    The available_stock ceiling is (current stock + original sale qty) to avoid a false
-    'not enough stock' error when simply changing the quantity of the same product.
-    """
+   
     role = get_user_role(request.user)
     if role == 'stockmanager':
         messages.error(request, 'You are not authorized to edit sales.')
@@ -791,10 +684,7 @@ def sales_edit(request, pk):
 
 @login_required
 def sales_delete(request, pk):
-    """
-    Delete a sale and restore the sold units back to product inventory.
-    Inventory is always restored before the sale record is removed.
-    """
+    
     role = get_user_role(request.user)
     if role == 'stockmanager':
         messages.error(request, 'You are not authorized to delete sales.')
@@ -811,103 +701,124 @@ def sales_delete(request, pk):
     messages.success(request, 'Sale deleted and stock restored!')
     return redirect('sales')
 
-
-
-# SUPPLIERS
-# Track suppliers and their outstanding credit balances.
-# Salespersons are blocked from all supplier management.
-
-
 @login_required
 def supplier_credit(request):
-    """
-    List suppliers with credit balances and add/update supplier records.
 
-    Uses get_or_create so submitting the same supplier name is an update,
-    not a duplicate. Credit amount represents money still owed to the supplier.
-    """
     role = get_user_role(request.user)
     if role == 'salesperson':
         messages.error(request, 'You are not authorized to access supplier credit.')
         return redirect('/dashboard/salesperson/')
 
-    products  = Product.objects.all()
+    products = Product.objects.all()
     suppliers = Supplier.objects.all()
 
-    if request.method == 'POST':
-        name         = request.POST.get('name', '').strip()
-        phone        = request.POST.get('phone', '').strip()
-        address      = request.POST.get('address', '').strip()
-        product_id   = request.POST.get('product_id', '')
-        quantity_raw = request.POST.get('quantity', '0') or '0'
-        credit_raw   = request.POST.get('credit_amount', '')
+    # Initialize for GET requests
+    form_data = {}
+    errors = {}
 
-        errors    = {}
+    if request.method == 'POST':
+        name = request.POST.get('name', '').strip()
+        phone = request.POST.get('phone', '').strip()
+        address = request.POST.get('address', '').strip()
+        product_id = request.POST.get('product_id', '').strip()
+        quantity_raw = request.POST.get('quantity', '0') or '0'
+        credit_raw = request.POST.get('credit_amount', '')
+
+        errors = {}
         form_data = {
-            'name': name, 'phone': phone, 'address': address,
-            'product_id': product_id, 'quantity': quantity_raw, 'credit_amount': credit_raw,
+            'name': name,
+            'phone': phone,
+            'address': address,
+            'product_id': product_id,
+            'quantity': quantity_raw,
+            'credit_amount': credit_raw,
         }
 
+        # NAME validation
         if not name:
             errors['name'] = 'Supplier name is required.'
+        elif len(name) < 2:
+            errors['name'] = 'Supplier name must be at least 2 characters.'
+        elif len(name) > 200:
+            errors['name'] = 'Supplier name must be less than 200 characters.'
 
-        # Phone is optional but must be valid if supplied
-        if phone and not is_valid_ugandan_phone(phone):
-            errors['phone'] = 'Enter a valid Ugandan phone number e.g. 0712345678.'
+        # PHONE validation
+        if not phone:
+            errors['phone'] = 'Phone number is required.'
+        elif not is_valid_ugandan_phone(phone):
+            errors['phone'] = 'Enter a valid Ugandan phone number (e.g., 0712345678, 256712345678, or +256712345678)'
 
-        # min_value=0: a brand-new supplier may have no outstanding balance yet
-        credit_amount, err = parse_positive_decimal(credit_raw, 'Credit amount', min_value=0)
-        if err: errors['credit_amount'] = err
+        # PRODUCT validation
+        product = None
+        if not product_id:
+            errors['product_id'] = 'Please select a product.'
+        elif not Product.objects.filter(id=product_id).exists():
+            errors['product_id'] = 'Selected product does not exist.'
+        else:
+            product = Product.objects.get(id=product_id)
 
-        quantity, err = parse_positive_int(quantity_raw, 'Quantity', min_value=0)
-        if err: errors['quantity'] = err
+        # QUANTITY validation
+        quantity, err = parse_positive_int(quantity_raw, 'Quantity', min_value=1)
+        if err:
+            errors['quantity'] = err
+        elif quantity and product and quantity > 999999:
+            errors['quantity'] = 'Quantity is too high. Maximum 999,999 units.'
 
-        if errors:
-            return render(request, 'supplier_credit.html', {
-                'suppliers': suppliers, 'products': products,
-                'errors': errors, 'form_data': form_data,
-            })
+        # CREDIT AMOUNT validation
+        credit_amount, err = parse_positive_decimal(credit_raw, 'Credit amount', min_value=0.01)
+        if err:
+            errors['credit_amount'] = err
+        elif credit_amount and credit_amount > 999999999:
+            errors['credit_amount'] = 'Credit amount is too high. Maximum UGX 999,999,999'
 
-        # Resolve optional product FK (product_id may be empty string)
-        product  = get_object_or_404(Product, id=product_id) if product_id else None
+        # ADDRESS validation (optional field - only validate if provided)
+        if address and len(address) > 255:
+            errors['address'] = 'Address must be less than 255 characters.'
 
-        supplier, created = Supplier.objects.get_or_create(
-            name=name,
-            defaults={
-                'phone': phone, 'address': address,
-                'product': product, 'quantity': quantity,
-                'credit_amount': credit_amount,
-            }
-        )
-        if not created:
-            # Supplier already exists: overwrite all editable fields
-            supplier.credit_amount = credit_amount
-            supplier.phone         = phone
-            supplier.address       = address
-            supplier.product       = product
-            supplier.quantity      = quantity
-            supplier.save()
+        # If validation passes, save the data
+        if not errors:
+            supplier, created = Supplier.objects.get_or_create(
+                name=name,
+                defaults={
+                    'phone': phone,
+                    'address': address,
+                    'product': product,
+                    'quantity': quantity,
+                    'credit_amount': credit_amount,
+                }
+            )
 
-        messages.success(request, f'Supplier {name} credit saved!')
-        return redirect('supplier_credit')
+            if not created:
+                supplier.phone = phone
+                supplier.address = address
+                supplier.product = product
+                supplier.quantity = quantity
+                supplier.credit_amount = credit_amount
+                supplier.save()
 
-    # Summary stats for the GET view
-    total_credit        = sum(s.credit_amount for s in suppliers)
-    supplier_count      = suppliers.count()
+            messages.success(request, f'Supplier {name} credit saved!')
+            return redirect('supplier_credit')
+
+    # Calculate summary stats
+    total_credit = sum(s.credit_amount for s in suppliers)
+    supplier_count = suppliers.count()
     suppliers_with_debt = suppliers.filter(credit_amount__gt=0).count()
 
-    return render(request, 'supplier_credit.html', {
-        'suppliers':          suppliers,
-        'total_credit':       total_credit,
-        'supplier_count':     supplier_count,
+    context = {
+        'suppliers': suppliers,
+        'total_credit': total_credit,
+        'supplier_count': supplier_count,
         'suppliers_with_debt': suppliers_with_debt,
-        'products':           products,
-    })
-
+        'products': products,
+        'errors': errors,
+        'form_data': form_data,
+    }
+    
+    return render(request, 'supplier_credit.html', context)
 
 @login_required
 def supplier_edit(request, pk):
-    """Edit an existing supplier's contact details, linked product, and credit balance."""
+    
     role = get_user_role(request.user)
     if role == 'salesperson':
         messages.error(request, 'You are not authorized to edit suppliers.')
@@ -963,7 +874,7 @@ def supplier_edit(request, pk):
 
 @login_required
 def supplier_delete(request, pk):
-    """Permanently remove a supplier record."""
+   
     role = get_user_role(request.user)
     # Salespersons are blocked from all supplier management, including deletion.
     if role == 'salesperson':
@@ -1061,12 +972,7 @@ def customer_registration(request):
 
 @login_required
 def customer_edit(request, pk):
-    """
-    Edit an existing customer record.
-
-    NIN uniqueness check uses exclude(id=pk) so the customer's own NIN
-    doesn't falsely trigger a duplicate error when other fields are changed.
-    """
+  
     role = get_user_role(request.user)
     if role == 'stockmanager':
         messages.error(request, 'You are not authorized to edit customers.')
@@ -1335,14 +1241,7 @@ def deposit_delete(request, pk):
 @login_required
 @allowed_roles(['admin', 'stockmanager'], message='You are not authorized to access supplier payments.')
 def supplier_pay(request, supplier_id):
-    """
-    Record a payment against a supplier's credit balance.
 
-    Validation rules:
-    - Amount must be a positive number.
-    - Amount cannot exceed the supplier's current outstanding balance
-      (prevents accidentally overpaying and going into negative credit).
-    """
     supplier = get_object_or_404(Supplier, id=supplier_id)
 
     if request.method == 'POST':
@@ -1399,7 +1298,7 @@ def sale_receipt(request, pk):
 # When the balance reaches zero the deposit is automatically marked 'collected'.
 
 
-
+@login_required
 def pay_deposit(request, deposit_id):
    
     deposit = get_object_or_404(CustomerDeposit, id=deposit_id)

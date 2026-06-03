@@ -205,7 +205,7 @@
       <h2>NYONDO</h2>
 
       {% if request.user.groups.all.0.name == 'admin' %}
-      <span class="role-badge">🔑 Admin</span>
+      <span class="role-badge"> Admin</span>
       {% elif request.user.groups.all.0.name == 'stockmanager' %}
       <span class="role-badge"><i class="fa-solid fa-box"></i> Stock Manager</span>
       {% endif %}
@@ -214,7 +214,7 @@
       <div class="menu">
         {% if request.user.groups.all.0.name == 'admin' %}
         <!-- admin sees all pages -->
-        <a onclick="window.location.href = '/'">🏠 Home</a>
+        <a onclick="window.location.href = '/'"> Home</a>
         <a onclick="window.location.href = '/dashboard/admin/'"><i class="fa-solid fa-chart-pie"></i> Dashboard</a>
         <a onclick="window.location.href = '/stock/'" class="active"
           ><i class="fa-solid fa-box"></i> Stock</a
@@ -244,13 +244,13 @@
         <a onclick="window.location.href = '/sales/'"><i class="fa-solid fa-coins"></i> View Sales</a>
         {% endif %}
 
-        <a onclick="window.location.href = '/logout/'">🚪 Logout</a>
+        <a onclick="window.location.href = '/logout/'">Logout</a>
       </div>
     </div>
 
     <!-- MAIN CONTENT -->
     <div class="main">
-      <div class="page-title">✏️ Edit Stock Item</div>
+      <div class="page-title"> Edit Stock Item</div>
 
       <div class="form-card">
         <h3>Update Product Details — {{ product.name }}</h3>
@@ -290,7 +290,7 @@
             </div>
           </div>
           <div class="btn-row">
-            <button class="btn-save" type="submit">💾 Save Changes</button>
+            <button class="btn-save" type="submit"> Save Changes</button>
             <a href="/stock/" class="btn-cancel">✖ Cancel</a>
           </div>
         </form>
