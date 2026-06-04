@@ -3,7 +3,7 @@ from django.core.validators import MinValueValidator, RegexValidator
 from django.core.exceptions import ValidationError
 
 
-# --- Reusable validators ---
+# Reusable validators 
 
 # Ugandan phone: accepts 07XXXXXXXX, 256XXXXXXXXX, or +256XXXXXXXXX
 ugandan_phone_validator = RegexValidator(
@@ -21,7 +21,7 @@ nin_validator = RegexValidator(
 class Product(models.Model):
     name = models.CharField(max_length=200)
 
-    # unit_cost must be at least 1 UGX — zero/negative buying price makes no sense
+    # unit_cost must be at least 1 UGX  zero/negative buying price makes no sense
     unit_cost = models.DecimalField(
         max_digits=10,
         decimal_places=2,
@@ -42,7 +42,7 @@ class Product(models.Model):
     )
 
     def clean(self):
-        # unit_price should never be less than unit_cost — selling at a loss is a data error
+        # unit_price should never be less than unit_cost  selling at a loss is a data error
         if self.unit_price and self.unit_cost:
             if self.unit_price < self.unit_cost:
                 raise ValidationError({
@@ -66,13 +66,13 @@ class Supplier(models.Model):
 
     product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True, blank=True)
 
-    # quantity supplied must be 0 or more — negative makes no sense
+    # quantity supplied must be 0 or more  negative makes no sense
     quantity = models.IntegerField(
         default=0,
         validators=[MinValueValidator(0, message='Quantity cannot be negative')]
     )
 
-    # credit_amount is what we owe this supplier — must be 0 or more
+    # credit_amount is what we owe this supplier  must be 0 or more
     credit_amount = models.DecimalField(
         max_digits=10,
         decimal_places=2,
@@ -90,19 +90,19 @@ class StockArrival(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     supplier = models.ForeignKey(Supplier, on_delete=models.SET_NULL, null=True, blank=True)
 
-    # must receive at least 1 unit — recording 0 or negative arrival is meaningless
+    # must receive at least 1 unit  recording 0 or negative arrival is meaningless
     quantity_received = models.IntegerField(
         validators=[MinValueValidator(1, message='Quantity received must be at least 1')]
     )
 
-    # cost at the time stock arrived — must be positive
+    # cost at the time stock arrived  must be positive
     unit_cost = models.DecimalField(
         max_digits=10,
         decimal_places=2,
         validators=[MinValueValidator(1, message='Unit cost must be at least 1 UGX')]
     )
 
-    # selling price set when stock arrived — must be positive
+    # selling price set when stock arrived  must be positive
     unit_price = models.DecimalField(
         max_digits=10,
         decimal_places=2,
@@ -131,21 +131,21 @@ class Sale(models.Model):
         validators=[MinValueValidator(1, message='Sale quantity must be at least 1')]
     )
 
-    # price per unit at time of sale — must be positive
+    # price per unit at time of sale  must be positive
     unit_price = models.DecimalField(
         max_digits=10,
         decimal_places=2,
         validators=[MinValueValidator(1, message='Unit price must be at least 1 UGX')]
     )
 
-    # total before transport — must be positive (quantity x unit_price)
+    # total before transport  must be positive (quantity x unit_price)
     total_price = models.DecimalField(
         max_digits=10,
         decimal_places=2,
         validators=[MinValueValidator(1, message='Total price must be at least 1 UGX')]
     )
 
-    # delivery distance in km — 0 means pickup (no delivery), cannot be negative
+    # delivery distance in km  0 means pickup (no delivery), cannot be negative
     distance_km = models.DecimalField(
         max_digits=6,
         decimal_places=2,
@@ -153,7 +153,7 @@ class Sale(models.Model):
         validators=[MinValueValidator(0, message='Distance cannot be negative')]
     )
 
-    # auto-set in save() — no validator needed here since we control it
+    # auto-set in save()  no validator needed here since we control it
     transport_fee = models.DecimalField(
         max_digits=10,
         decimal_places=2,
@@ -163,7 +163,7 @@ class Sale(models.Model):
     date = models.DateTimeField(auto_now_add=True)
 
     def clean(self):
-        # total_price must match quantity x unit_price — catches form tampering or data entry errors
+        # total_price must match quantity x unit_price  catches form tampering or data entry errors
         if self.quantity and self.unit_price and self.total_price:
             expected = self.quantity * self.unit_price
             if abs(float(self.total_price) - float(expected)) > 0.01:  # allow tiny float rounding
@@ -233,7 +233,7 @@ class Customer(models.Model):
         ('iron_sheet_30', 'Iron Sheets 30G'),
     ]
 
-    # constrained to the choices list above — Django enforces this at form level
+    # constrained to the choices list above  Django enforces this at form level
     preferred_product = models.CharField(max_length=50, choices=PRODUCT_CHOICES)
 
     registration_date = models.DateField(auto_now_add=True)
@@ -259,14 +259,14 @@ class CustomerDeposit(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     product  = models.ForeignKey(Product, on_delete=models.CASCADE)
 
-    # deposit must be a real positive amount — zero deposits are meaningless
+    # deposit must be a real positive amount  zero deposits are meaningless
     amount_deposited = models.DecimalField(
         max_digits=10,
         decimal_places=2,
         validators=[MinValueValidator(1, message='Deposit amount must be at least 1 UGX')]
     )
 
-    # price per unit at the time of this deposit — used to compute units_equivalent
+    # price per unit at the time of this deposit  used to compute units_equivalent
     unit_price = models.DecimalField(
         max_digits=10,
         decimal_places=2,
@@ -290,16 +290,16 @@ class CustomerDeposit(models.Model):
         validators=[MinValueValidator(0, message='Amount paid on pickup cannot be negative')]
     )
 
-    # constrained to PAYMENT_CHOICES — Django enforces at form level
+    # constrained to PAYMENT_CHOICES  Django enforces at form level
     payment_method = models.CharField(max_length=20, choices=PAYMENT_CHOICES, default='cash')
 
-    # constrained to STATUS_CHOICES — Django enforces at form level
+    # constrained to STATUS_CHOICES  Django enforces at form level
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='active')
 
     date = models.DateField(auto_now_add=True)
 
     def clean(self):
-        # deposit cannot exceed what would be needed for 9999 units — sanity ceiling
+        # deposit cannot exceed what would be needed for 9999 units  sanity ceiling
         if self.amount_deposited and self.unit_price:
             if float(self.unit_price) > 0:
                 max_reasonable_units = 9999
@@ -310,7 +310,7 @@ class CustomerDeposit(models.Model):
                     })
 
         # status can only move forward: active → ready_pickup → collected
-        # (only enforced on updates — skip for new records)
+        # (only enforced on updates  skip for new records)
         if self.pk:
             try:
                 old = CustomerDeposit.objects.get(pk=self.pk)

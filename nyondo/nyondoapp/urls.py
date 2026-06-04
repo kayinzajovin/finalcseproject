@@ -14,27 +14,27 @@ urlpatterns = [
     path('dashboard/stockmanager/', views.dashboard_stockmanager, name='dashboard_stockmanager'),
   
 
-    # stock — list, edit, delete
+    # stock  list, edit, delete
     path('stock/', views.stock, name='stock'),
     path('stock/edit/<int:pk>/', views.stock_edit, name='stock_edit'),
     path('stock/delete/<int:pk>/', views.stock_delete, name='stock_delete'),
     path('sales/edit/<int:pk>/', views.sales_edit, name='sales_edit'),
 
-    # sales — list, delete
+    # sales  list, delete
     path('sales/', views.sales, name='sales'),
     path('sales/delete/<int:pk>/', views.sales_delete, name='sales_delete'),
 
-    # supplier credit — list, edit, delete
+    # supplier credit  list, edit, delete
     path('supplier_credit/', views.supplier_credit, name='supplier_credit'),
     path('supplier_credit/edit/<int:pk>/', views.supplier_edit, name='supplier_edit'),
     path('supplier_credit/delete/<int:pk>/', views.supplier_delete, name='supplier_delete'),
 
-    # customer registration — list, edit, delete
+    # customer registration  list, edit, delete
     path('customer_registration/', views.customer_registration, name='customer_registration'),
     path('customer_registration/edit/<int:pk>/', views.customer_edit, name='customer_edit'),
     path('customer_registration/delete/<int:pk>/', views.customer_delete, name='customer_delete'),
 
-    # customer deposit — list, edit, delete 
+    # customer deposit  list, edit, delete 
     path('customer_deposit/', views.customer_deposit, name='customer_deposit'),
     path('customer_deposit/edit/<int:pk>/', views.deposit_edit, name='deposit_edit'),
     path('customer_deposit/delete/<int:pk>/', views.deposit_delete, name='deposit_delete'),
