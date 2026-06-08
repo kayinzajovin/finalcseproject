@@ -455,7 +455,7 @@ tr:hover td {
       <h2>NYONDO</h2>
 
       {% if request.user.groups.all.0.name == 'admin' %}
-        <span class="role-badge">🔑 Admin</span>
+        <span class="role-badge"> Admin</span>
       {% elif request.user.groups.all.0.name == 'salesperson' %}
         <span class="role-badge"><i class="fa-solid fa-coins"></i> Salesperson</span>
       {% elif request.user.groups.all.0.name == 'stockmanager' %}
